@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { AstronomicalCalendar } from './AstronomicalCalendar.ts';
 import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
@@ -98,6 +98,106 @@ export class ZmanimCalendar extends AstronomicalCalendar {
   }
 
   /**
+	 * Is astronomical <em>chatzos</em> used for <em>zmanim</em> calculations. The default value of <code>true</code> will
+	 * keep the standard astronomical <em>chatzos</em> calculation, while setting it to <code>false</code> will use half of
+	 * a solar day calculation for <em>chatzos</em>.
+	 * @see #isUseAstronomicalChatzos()
+	 * @see #setUseAstronomicalChatzos(boolean)
+	 * @see #getChatzos()
+	 * @see #getSunTransit()
+	 * @see #getChatzosAsHalfDay()
+	 * @see #useAstronomicalChatzosForOtherZmanim
+	 */
+	private useAstronomicalChatzos:boolean = true;
+
+	/**
+	 * Is {@link #getSunTransit() astronomical <em>chatzos</em>} used for {@link #getChatzos()} for enhanced accuracy. For
+	 * example as the day is lengthens, the second half of the day is longer than the first and astronomical <em>chatzos</em>
+	 * would be a drop earlier than half of the time between sunrise and sunset.
+	 * 
+	 * @todo In the future, if this is set to true, the following may change to enhance accuracy. {@link #getSofZmanShmaGRA()
+	 * <em>Sof zman Shma</em> GRA} would be calculated as 3 <em>shaaos zmaniyos</em> after sunrise, but the <em>shaaos
+	 * zmaniyos</em> would be calculated a a 6th of the time between sunrise and <em>chatzos</em>, as opposed to a 12th of the
+	 * time between sunrise and sunset. {@link #getMinchaGedola() <em>mincha gedola</em>} will be calculated as half a
+	 * <em>shaah zmanis</em> of afternoon hours (a 6th of the time between <em>chatzos</em> and sunset after astronomical
+	 * <em>chatzos</em> as opposed to 6.5 <em>shaaos zmaniyos</em> after sunrise. {@link #getPlagHamincha() <em>Plag
+	 * hamincha</em>} would be calculated as 4.75 <em>shaaos zmaniyos</em> after astronomical <em>chatzos</em> as opposed to 10.75
+	 * <em>shaaos zmaniyos</em> after sunrise. Etc.
+	 * 
+	 * @return if the use of astronomical <em>chatzos</em> is active.
+	 * @see #useAstronomicalChatzos
+	 * @see #setUseAstronomicalChatzos(boolean)
+	 * @see #getChatzos()
+	 * @see #getSunTransit()
+	 * @see #getChatzosAsHalfDay()
+	 * @see #isUseAstronomicalChatzosForOtherZmanim()
+	 */
+	public isUseAstronomicalChatzos(): boolean {
+		return this.useAstronomicalChatzos;
+	}
+
+	/**
+	 * Sets if astronomical <em>chatzos</em> should be used in calculations of other <em>zmanim</em> for enhanced accuracy.
+	 * @param useAstronomicalChatzos set to true to use astronomical in <em>chatzos</em> in <em>zmanim</em> calculations.
+	 * @see #useAstronomicalChatzos
+	 * @see #isUseAstronomicalChatzos()
+	 * @see #getChatzos()
+	 * @see #getSunTransit()
+	 * @see #getChatzosAsHalfDay()
+	 * @see #setUseAstronomicalChatzosForOtherZmanim(boolean)
+	 */
+	public setUseAstronomicalChatzos(useAstronomicalChatzos: boolean) {
+		this.useAstronomicalChatzos = useAstronomicalChatzos;
+	}
+
+	/**
+	 * Is astronomical <em>chatzos</em> used for <em>zmanim</em> calculations besides <em>chatzos</em> itself for enhanced
+	 * accuracy. The default value of <code>false</code> will keep the standard start to end of day calculations, while setting
+	 * it to <code>true</code> will use half of a solar day calculation for <em>zmanim</em>.
+	 * @see #isUseAstronomicalChatzosForOtherZmanim()
+	 * @see #setUseAstronomicalChatzosForOtherZmanim(boolean)
+	 * @see #isUseAstronomicalChatzos()
+	 * @see #setUseAstronomicalChatzos(boolean)
+	 * @see #getChatzos()
+	 */
+	private useAstronomicalChatzosForOtherZmanim:boolean = false;
+
+	/**
+	 * Is astronomical <em>chatzos</em> used for <em>zmanim</em> calculations besides <em>chatzos</em> itself for enhanced
+	 * accuracy. For example as the day is lengthening (as we approach spring season), the second half of the day is longer than
+	 * the first and astronomical <em>chatzos</em> would be a drop earlier than half of the time between sunrise and sunset.
+	 * Conversely, the second half of the day would be shorter in the fall season as the days start getting shorter.
+	 * 
+	 * @todo In the future, if this is set to true, the following may change to enhance accuracy. {@link #getSofZmanShmaGRA()
+	 * <em>Sof zman Shma</em> GRA} would be calculated as 3 <em>shaaos zmaniyos</em> after sunrise, but the <em>shaaos
+	 * zmaniyos</em> would be calculated a a 6th of the time between sunrise and <em>chatzos</em>, as opposed to a 12th of the
+	 * time between sunrise and sunset. {@link #getMinchaGedola() <em>mincha gedola</em>} will be calculated as half a
+	 * <em>shaah zmanis</em> of afternoon hours (a 6th of the time between <em>chatzos</em> and sunset after astronomical
+	 * <em>chatzos</em> as opposed to 6.5 <em>shaaos zmaniyos</em> after sunrise. {@link #getPlagHamincha() <em>Plag
+	 * hamincha</em>} would be calculated as 4.75 <em>shaaos zmaniyos</em> after astronomical <em>chatzos</em> as opposed to 10.75
+	 * <em>shaaos zmaniyos</em> after sunrise. Etc.
+	 * 
+	 * @return if the use of astronomical <em>chatzos</em> is active.
+	 * @see #useAstronomicalChatzosForOtherZmanim
+	 * @see #setUseAstronomicalChatzosForOtherZmanim(boolean)
+	 * @see #useAstronomicalChatzos
+	 * @see #setUseAstronomicalChatzos(boolean)
+	 */
+	public isUseAstronomicalChatzosForOtherZmanim():boolean {
+		return this.useAstronomicalChatzosForOtherZmanim;
+	}
+
+	/**
+	 * Sets if astronomical <em>chatzos</em> should be used in calculations of other <em>zmanim</em> for enhanced accuracy.
+	 * @param useAstronomicalChatzosForOtherZmanim set to true to use astronomical in <em>chatzos</em> in <em>zmanim</em> calculations.
+	 * @see #useAstronomicalChatzos
+	 * @see #isUseAstronomicalChatzos()
+	 */
+	public setUseAstronomicalChatzosForOtherZmanim(useAstronomicalChatzosForOtherZmanim: boolean) {
+		this.useAstronomicalChatzosForOtherZmanim = useAstronomicalChatzosForOtherZmanim;
+	}
+
+  /**
 	 * The zenith of 16.1&deg; below geometric zenith (90&deg;). This calculation is used for determining <em>alos</em>
 	 * (dawn) and <em>tzais</em> (nightfall) in some opinions. It is based on the calculation that the time between dawn
 	 * and sunrise (and sunset to nightfall) is 72 minutes, the time that is takes to walk 4 <em>mil</em> at 18 minutes
@@ -148,7 +248,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         {@link AstronomicalCalendar#getSunrise()} if it is true.
 	 * @see AstronomicalCalendar#getSunrise()
 	 */
-  protected getElevationAdjustedSunrise(): DateTime | null {
+  protected getElevationAdjustedSunrise(): Temporal.ZonedDateTime | null {
     if (this.isUseElevation()) {
       return super.getSunrise();
     }
@@ -164,7 +264,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         {@link AstronomicalCalendar#getSunset()} if it is true.
 	 * @see AstronomicalCalendar#getSunset()
 	 */
-  protected getElevationAdjustedSunset(): DateTime | null {
+  protected getElevationAdjustedSunset(): Temporal.ZonedDateTime | null {
     if (this.isUseElevation()) {
       return super.getSunset();
     }
@@ -186,7 +286,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see #ZENITH_8_POINT_5
 	 * ComplexZmanimCalendar#getTzaisGeonim8Point5Degrees() that returns an identical time to this generic <em>tzais</em>
 	 */
-  public getTzais(): DateTime | null {
+  public getTzais(): Temporal.ZonedDateTime | null {
     return this.getSunsetOffsetByDegrees(ZmanimCalendar.ZENITH_8_POINT_5);
   }
 
@@ -207,7 +307,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         low enough below the horizon for this calculation, a null will be returned. See detailed explanation on
 	 *         top of the {@link AstronomicalCalendar} documentation.
 	 */
-  public getAlosHashachar(): DateTime | null {
+  public getAlosHashachar(): Temporal.ZonedDateTime | null {
     return this.getSunriseOffsetByDegrees(ZmanimCalendar.ZENITH_16_POINT_1);
   }
 
@@ -224,7 +324,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         a null will be returned. See detailed explanation on top of the {@link AstronomicalCalendar}
 	 *         documentation.
 	 */
-  public getAlos72(): DateTime | null {
+  public getAlos72(): Temporal.ZonedDateTime | null {
     return ZmanimCalendar.getTimeOffset(this.getElevationAdjustedSunrise(), -72 * ZmanimCalendar.MINUTE_MILLIS);
   }
 
@@ -240,7 +340,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         where there is at least one day where the sun does not rise, and one where it does not set, a null will
 	 *         be returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
 	 */
-  public getChatzos(): DateTime | null {
+  public getChatzos(): Temporal.ZonedDateTime | null {
     return this.getSunTransit();
   }
 
@@ -266,7 +366,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         a year where the sun does not rise, and one where it does not set, a null will be returned. See detailed
 	 *         explanation on top of the {@link AstronomicalCalendar} documentation.
 	 */
-  public getSofZmanShma(startOfDay: DateTime | null, endOfDay: DateTime | null): DateTime | null {
+  public getSofZmanShma(startOfDay: Temporal.ZonedDateTime | null, endOfDay: Temporal.ZonedDateTime | null): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 3);
   }
 
@@ -288,7 +388,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         and one where it does not set, a null will be returned. See the detailed explanation on top of the {@link
 	 *         AstronomicalCalendar} documentation.
 	 */
-  public getSofZmanShmaGRA(): DateTime | null {
+  public getSofZmanShmaGRA(): Temporal.ZonedDateTime | null {
     return this.getSofZmanShma(this.getElevationAdjustedSunrise(), this.getElevationAdjustedSunset());
   }
 
@@ -309,7 +409,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see ComplexZmanimCalendar#getAlos72()
 	 * @see ComplexZmanimCalendar#getSofZmanShmaMGA72Minutes() that 
 	 */
-  public getSofZmanShmaMGA(): DateTime | null {
+  public getSofZmanShmaMGA(): Temporal.ZonedDateTime | null {
     return this.getSofZmanShma(this.getAlos72(), this.getTzais72());
   }
 
@@ -328,7 +428,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         and one where it does not set, a null will be returned See detailed explanation on top of the
 	 *         {@link AstronomicalCalendar} documentation.
 	 */
-  public getTzais72(): DateTime | null {
+  public getTzais72(): Temporal.ZonedDateTime | null {
     return ZmanimCalendar.getTimeOffset(this.getElevationAdjustedSunset(), 72 * ZmanimCalendar.MINUTE_MILLIS);
   }
 
@@ -347,7 +447,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see #getCandleLightingOffset()
 	 * @see #setCandleLightingOffset(double)
 	 */
-  public getCandleLighting(): DateTime | null {
+  public getCandleLighting(): Temporal.ZonedDateTime | null {
     return ZmanimCalendar.getTimeOffset(this.getSeaLevelSunset(), -this.getCandleLightingOffset() * ZmanimCalendar.MINUTE_MILLIS);
   }
 
@@ -373,7 +473,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         one day a year where the sun does not rise, and one where it does not set, a null will be returned. See
 	 *         detailed explanation on top of the {@link AstronomicalCalendar} documentation.
 	 */
-  public getSofZmanTfila(startOfDay: DateTime | null, endOfDay: DateTime | null): DateTime | null {
+  public getSofZmanTfila(startOfDay: Temporal.ZonedDateTime | null, endOfDay: Temporal.ZonedDateTime | null): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 4);
   }
 
@@ -394,7 +494,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         does not set, a null will be returned. See detailed explanation on top of the {@link AstronomicalCalendar}
 	 *         documentation.
 	 */
-  public getSofZmanTfilaGRA(): DateTime | null {
+  public getSofZmanTfilaGRA(): Temporal.ZonedDateTime | null {
     return this.getSofZmanTfila(this.getElevationAdjustedSunrise(), this.getElevationAdjustedSunset());
   }
 
@@ -414,7 +514,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see #getShaahZmanisMGA()
 	 * @see #getAlos72()
 	 */
-  public getSofZmanTfilaMGA(): DateTime | null {
+  public getSofZmanTfilaMGA(): Temporal.ZonedDateTime | null {
     return this.getSofZmanTfila(this.getAlos72(), this.getTzais72());
   }
 
@@ -440,7 +540,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
   *         at least one day a year where the sun does not rise, and one where it does not set, a null will be
   *         returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
   */
-  public getMinchaGedola(startOfDay: DateTime | null = this.getElevationAdjustedSunrise(), endOfDay: DateTime | null = this.getElevationAdjustedSunset()): DateTime | null {
+  public getMinchaGedola(startOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunset()): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 6.5);
   }
 
@@ -470,7 +570,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see ComplexZmanimCalendar#getSamuchLeMinchaKetana16Point1Degrees()
 	 * @see ComplexZmanimCalendar#getSamuchLeMinchaKetana72Minutes()
 	 */
-  public getSamuchLeMinchaKetana(startOfDay: DateTime, endOfDay: DateTime): DateTime | null {
+  public getSamuchLeMinchaKetana(startOfDay: Temporal.ZonedDateTime, endOfDay: Temporal.ZonedDateTime): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 9);
   }
 
@@ -497,7 +597,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    *         at least one day a year where the sun does not rise, and one where it does not set, a null will be
    *         returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    */
-  public getMinchaKetana(startOfDay: DateTime | null = this.getElevationAdjustedSunrise(), endOfDay: DateTime | null = this.getElevationAdjustedSunset()): DateTime | null {
+  public getMinchaKetana(startOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunset()): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 9.5);
   }
 
@@ -521,7 +621,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    *         at least one day a year where the sun does not rise, and one where it does not set, a null will be
    *         returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    */
-  public getPlagHamincha(startOfDay: DateTime | null = this.getElevationAdjustedSunrise(), endOfDay: DateTime | null = this.getElevationAdjustedSunset()): DateTime | null {
+  public getPlagHamincha(startOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunset()): Temporal.ZonedDateTime | null {
     return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 10.75);
   }
 
@@ -663,7 +763,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    * @see JewishCalendar#hasCandleLighting()
    * @see JewishCalendar#setInIsrael(boolean)
    */
-  public isAssurBemlacha(currentTime: DateTime, tzais: DateTime, inIsrael: boolean): boolean {
+  public isAssurBemlacha(currentTime: Temporal.ZonedDateTime, tzais: Temporal.ZonedDateTime, inIsrael: boolean): boolean {
     const jewishCalendar: JewishCalendar = new JewishCalendar();
     const date = this.getDate();
     jewishCalendar.setGregorianDate(date.year, date.month - 1, date.day);
@@ -703,7 +803,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    *         where it does not set, a null will be  returned. See detailed explanation on top of the {@link
     *         AstronomicalCalendar} documentation.
    */
-  public getShaahZmanisBasedZman(startOfDay: DateTime | null, endOfDay: DateTime | null, hours: number): DateTime | null {
+  public getShaahZmanisBasedZman(startOfDay: Temporal.ZonedDateTime | null, endOfDay: Temporal.ZonedDateTime | null, hours: number): Temporal.ZonedDateTime | null {
     const shaahZmanis: number = this.getTemporalHour(startOfDay, endOfDay);
     return ZmanimCalendar.getTimeOffset(startOfDay, shaahZmanis * hours);
   }
@@ -727,9 +827,9 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         explanation on top of the page.
 	 */
 	public getPercentOfShaahZmanisFromDegrees(degrees:number, sunset: boolean):number|null {
-		const seaLevelSunrise: DateTime | null = this.getSeaLevelSunrise();
-		const seaLevelSunset: DateTime | null = this.getSeaLevelSunset();
-		let twilight: DateTime | null = null;
+		const seaLevelSunrise: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise();
+		const seaLevelSunset: Temporal.ZonedDateTime | null = this.getSeaLevelSunset();
+		let twilight: Temporal.ZonedDateTime | null = null;
 		if (sunset) {
 			twilight = this.getSunsetOffsetByDegrees(ZmanimCalendar.GEOMETRIC_ZENITH + degrees);
 		} else {
@@ -738,12 +838,12 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 		if (seaLevelSunrise == null || seaLevelSunset == null || twilight == null) {
 			return Long_MIN_VALUE;
 		}
-		const shaahZmanis = (seaLevelSunset.toMillis() - seaLevelSunrise.toMillis()) / 12.0;
+		const shaahZmanis = seaLevelSunset.until(seaLevelSunrise).total({ unit: 'milliseconds' }) / 12.0;
 		let riseSetToTwilight;
 		if (sunset) {
-			riseSetToTwilight = twilight.toMillis() - seaLevelSunset.toMillis();
+			riseSetToTwilight = twilight.until(seaLevelSunset).total({ unit: 'milliseconds' });
 		} else {
-			riseSetToTwilight = seaLevelSunrise.toMillis() - twilight.toMillis();
+			riseSetToTwilight = seaLevelSunrise.until(twilight).total({ unit: 'milliseconds' });
 		}
 		return riseSetToTwilight / shaahZmanis;
 	}

@@ -1,5 +1,3 @@
-import { DateTimeFormatOptions } from 'luxon';
-
 import { Daf } from './Daf.ts';
 import { JewishDate } from './JewishDate.ts';
 import { JewishCalendar, Parsha } from './JewishCalendar.ts';
@@ -56,7 +54,7 @@ export class HebrewDateFormatter {
   /**
    * The internal DateFormat.&nbsp; See {@link #isLongWeekFormat()} and {@link #setLongWeekFormat(boolean)}.
    */
-  private weekFormat: DateTimeFormatOptions | null = null;
+  private weekFormat: Intl.DateTimeFormatOptions | null = null;
 
   /**
    * List of transliterated parshiyos using the default <em>Ashkenazi</em> pronunciation.&nbsp; The formatParsha method
@@ -640,8 +638,8 @@ export class HebrewDateFormatter {
 
     const dateTime = jewishDate.getDate();
     return this.weekFormat
-      ? dateTime.toLocaleString(this.weekFormat)
-      : dateTime.toISO()!;
+      ? dateTime.toLocaleString(undefined, this.weekFormat)
+      : dateTime.toString();
   }
 
   /**

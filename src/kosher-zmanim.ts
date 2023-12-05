@@ -1,5 +1,5 @@
-import * as _Luxon from 'luxon';
-import * as _Big from 'big.js'
+import { Temporal } from '@js-temporal/polyfill';
+import _Big from 'big.js';
 
 import { GeoLocation } from './util/GeoLocation.ts';
 import { ZmanimCalendar } from './ZmanimCalendar.ts';
@@ -14,7 +14,7 @@ export function getZmanimJson(options: Options): JsonOutput {
     ? new ComplexZmanimCalendar(geoLocation)
     : new ZmanimCalendar(geoLocation);
 
-  zmanimCalendar.setDate(options.date || _Luxon.DateTime.local());
+  zmanimCalendar.setDate(options.date || Temporal.Now.zonedDateTimeISO());
   return ZmanimFormatter.toJSON(zmanimCalendar);
 }
 
@@ -22,7 +22,7 @@ export interface Options {
   /**
    * @default Current date and time
    */
-  date?: Date | string | number | _Luxon.DateTime;
+  date?: Date | string | number | Temporal.ZonedDateTime;
   /**
    * IANA timezone ID
    */
@@ -59,9 +59,9 @@ export * from './hebrewcalendar/JewishCalendar.ts';
 export * from './hebrewcalendar/Daf.ts';
 export * from './hebrewcalendar/YomiCalculator.ts';
 export * from './hebrewcalendar/YerushalmiYomiCalculator.ts';
+//export * from './hebrewcalendar/TefilaRules.ts'
 
-export * from './hebrewcalendar/HebrewDateFormatter.ts';
+//export * from './hebrewcalendar/HebrewDateFormatter.ts';
 export * from './util/ZmanimFormatter.ts';
 
-export const Luxon = _Luxon;
-export const BigNumber = _Big
+export { _Big, Temporal};

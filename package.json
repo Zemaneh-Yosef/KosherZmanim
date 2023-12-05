@@ -7,21 +7,15 @@
   "bugs": "BehindTheMath/KosherZmanim/issues",
   "homepage": "BehindTheMath/KosherZmanim",
   "repository": "BehindTheMath/KosherZmanim",
-  "main": "dist/lib-cjs/kosher-zmanim.js",
-  "types": "dist/types/kosher-zmanim.d.ts",
-  "module": "dist/lib-es6/kosher-zmanim.js",
+  "main": "dist/kosher-zmanim.esm.js",
+  "types": "dist/kosher-zmanim.esm.d.ts",
   "type": "module",
   "scripts": {
     "clean": "rimraf dist/* -g",
-    "build": "npm run clean && npm run build:all && npm run webpack",
-    "build:all": "npm run build:cjs && npm run build:es6 && npm run build:types",
-    "build:cjs": "tsc -p ./src/",
-    "build:es6": "tsc -p ./src/tsconfig-es6.json",
-    "build:types": "tsc -p ./src/tsconfig-types.json",
+    "build": "npm run clean && rollup -c",
     "lint": "eslint --ext .ts src tests",
     "test": "ts-mocha -p tests/tsconfig.json tests/**/*.test.ts",
     "prepublishOnly": "npm run build",
-    "webpack": "webpack"
   },
   "keywords": [
     "zmanim",
@@ -30,40 +24,34 @@
     "kosher-zmanim",
     "kosherjava"
   ],
-  "unpkg": "dist/kosher-zmanim.min.js",
   "files": [
     "dist/*"
   ],
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
-    "big.js": "^6.2.1",
-    "luxon": "^3.3.0"
+    "big.js": "^6.2.1"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@types/big.js": "^6.1.6",
-    "@types/chai": "^4.3.5",
-    "@types/luxon": "^3.3.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.60.0",
-    "@typescript-eslint/parser": "^5.60.0",
-    "chai": "^4.3.7",
-    "esbuild": "^0.18.8",
-    "eslint": "^8.43.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/big.js": "^6.2.2",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.3",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "chai": "^4.3.10",
+    "esbuild": "^0.19.8",
+    "eslint": "^8.55.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
     "mocha": "^10.2.0",
-    "rimraf": "^5.0.1",
-    "rollup-plugin-dts": "^5.3.0",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "ts-loader": "^9.4.3",
+    "rimraf": "^5.0.5",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.0",
+    "ts-loader": "^9.5.1",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.3",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^5.88.0",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.3.2"
   }
 }

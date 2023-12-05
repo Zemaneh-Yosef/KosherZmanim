@@ -1,7 +1,7 @@
+import { Temporal } from '@js-temporal/polyfill';
+
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-
-import { DateTime } from 'luxon';
 
 import * as KosherZmanim from '../src/kosher-zmanim';
 
@@ -9,11 +9,11 @@ import { omit } from './utils';
 
 describe('Test kosher-zmanim', function () {
   it('It returns the correct metadata for Basic Zmanim', function () {
-    const date = new Date();
     const locationName: string = 'Lakewood';
     const latitude: number = 40.0821;
     const longitude: number = -74.2097;
     const timeZoneId: string = 'America/New_York';
+    const date = Temporal.Now.zonedDateTimeISO(timeZoneId);
 
     const options: KosherZmanim.Options = {
       date,
@@ -27,7 +27,7 @@ describe('Test kosher-zmanim', function () {
 
     const expected = {
       algorithm: 'US National Oceanic and Atmospheric Administration Algorithm',
-      date: DateTime.fromJSDate(date).toFormat('yyyy-MM-dd'),
+      date: date.toPlainDate().toString(),
       elevation: '10.0',
       latitude: latitude.toString(),
       location: locationName,
@@ -42,10 +42,10 @@ describe('Test kosher-zmanim', function () {
   });
 
   it('It returns the correct metadata for Complex Zmanim', function () {
-    const date = new Date();
     const latitude: number = 40.0821;
     const longitude: number = -74.2097;
     const timeZoneId: string = 'America/New_York';
+    const date = Temporal.Now.zonedDateTimeISO(timeZoneId);
 
     const options: KosherZmanim.Options = {
       date,
@@ -59,7 +59,7 @@ describe('Test kosher-zmanim', function () {
 
     const expected = {
       algorithm: 'US National Oceanic and Atmospheric Administration Algorithm',
-      date: DateTime.fromJSDate(date).toFormat('yyyy-MM-dd'),
+      date: date.toPlainDate().toString(),
       elevation: '10.0',
       latitude: latitude.toString(),
       location: null,
@@ -71,5 +71,16 @@ describe('Test kosher-zmanim', function () {
     assert.deepStrictEqual(omit(zmanimJson.metadata, ['timeZoneName', 'timeZoneOffset']), expected);
     assert.oneOf(zmanimJson.metadata.timeZoneName, ['Eastern Daylight Time', 'Eastern Standard Time']);
     assert.oneOf(zmanimJson.metadata.timeZoneOffset, ['-4.0', '-5.0']);
+  });
+
+  it('Update year when JewishDate.setGregorianDayOfMonth() is called', function () {
+    const JSDate = new Date("2023-09-01")
+    const JewDate = new KosherZmanim.JewishDate(JSDate);
+
+    assert.equal(JewDate.getJewishYear(), 5783);
+
+    JewDate.setGregorianDayOfMonth(999);
+
+    assert.equal(JewDate.getJewishYear(), 5784)
   });
 });

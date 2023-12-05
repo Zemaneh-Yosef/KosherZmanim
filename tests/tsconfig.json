@@ -6,7 +6,10 @@
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "../typings/"
+    ]
   },
   "include": [
     "**/*.ts"

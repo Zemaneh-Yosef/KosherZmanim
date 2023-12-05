@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { Calendar, IntegerUtils } from '../polyfills/Utils.ts';
 import { IllegalArgumentException } from '../polyfills/errors.ts';
@@ -948,19 +948,19 @@ export class JewishDate {
   constructor(jewishYear: number, jewishMonth: number, jewishDayOfMonth: number);
   constructor(molad: number);
   constructor(date: Date);
-  constructor(date: DateTime);
+  constructor(date: Temporal.PlainDate);
   constructor();
-  constructor(jewishYearOrDateTimeOrDateOrMolad?: number | Date | DateTime, jewishMonth?: number, jewishDayOfMonth?: number) {
-    if (!jewishYearOrDateTimeOrDateOrMolad) {
+  constructor(jewishYearOrPlainDateOrDateOrMolad?: number | Date | Temporal.PlainDate, jewishMonth?: number, jewishDayOfMonth?: number) {
+    if (!jewishYearOrPlainDateOrDateOrMolad) {
       this.resetDate();
     } else if (jewishMonth) {
-      this.setJewishDate(jewishYearOrDateTimeOrDateOrMolad as number, jewishMonth, jewishDayOfMonth!);
-    } else if (jewishYearOrDateTimeOrDateOrMolad instanceof Date) {
-      this.setDate(DateTime.fromJSDate(jewishYearOrDateTimeOrDateOrMolad as Date));
-    } else if (DateTime.isDateTime(jewishYearOrDateTimeOrDateOrMolad)) {
-      this.setDate(jewishYearOrDateTimeOrDateOrMolad as DateTime);
-    } else if (typeof jewishYearOrDateTimeOrDateOrMolad === 'number') {
-      const molad = jewishYearOrDateTimeOrDateOrMolad as number;
+      this.setJewishDate(jewishYearOrPlainDateOrDateOrMolad as number, jewishMonth, jewishDayOfMonth!);
+    } else if (jewishYearOrPlainDateOrDateOrMolad instanceof Date) {
+      this.setDate(Temporal.Instant.fromEpochMilliseconds(jewishYearOrPlainDateOrDateOrMolad.valueOf()).toZonedDateTimeISO('UTC').toPlainDate());
+    } else if (jewishYearOrPlainDateOrDateOrMolad instanceof Temporal.PlainDate) {
+      this.setDate(jewishYearOrPlainDateOrDateOrMolad);
+    } else if (typeof jewishYearOrPlainDateOrDateOrMolad === 'number') {
+      const molad = jewishYearOrPlainDateOrDateOrMolad as number;
       this.absDateToDate(JewishDate.moladToAbsDate(molad));
       // long chalakimSince = getChalakimSinceMoladTohu(year, JewishDate.TISHREI);// tishrei
       const conjunctionDay: number = Math.trunc(molad / JewishDate.CHALAKIM_PER_DAY);
@@ -1037,7 +1037,7 @@ export class JewishDate {
    * @throws IllegalArgumentException
    *             if the {@link Calendar#ERA} is {@link GregorianCalendar#BC}
    */
-  public setDate(date: DateTime): void {
+  public setDate(date: Temporal.PlainDate): void {
     if (date.year < 1) {
       throw new IllegalArgumentException(`Dates with a BC era are not supported. The year ${date.year} is invalid.`);
     }
@@ -1192,8 +1192,8 @@ export class JewishDate {
    *
    * @return The {@link java.util.Calendar}
    */
-  public getDate(): DateTime {
-    return DateTime.fromObject({
+  public getDate(): Temporal.PlainDate {
+    return Temporal.PlainDate.from({
       year: this.gregorianYear,
       month: this.gregorianMonth,
       day: this.gregorianDayOfMonth,
@@ -1204,7 +1204,7 @@ export class JewishDate {
    * Resets this date to the current system date.
    */
   public resetDate(): void {
-    this.setDate(DateTime.local());
+    this.setDate(Temporal.Now.plainDateISO());
   }
 
   /**

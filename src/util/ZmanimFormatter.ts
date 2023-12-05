@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { TimeZone, Utils, padZeros } from '../polyfills/Utils.ts';
 import { Time } from './Time.ts';
@@ -83,7 +83,7 @@ export class ZmanimFormatter {
   /**
    * @see #setDateFormat(SimpleDateFormat)
    */
-  private dateFormat!: string;
+  private dateFormat!: Parameters<Date["toLocaleString"]>;
 
   /**
    * @see #setTimeZone(TimeZone)
@@ -143,7 +143,7 @@ export class ZmanimFormatter {
    */
   public static readonly XSD_DURATION_FORMAT: number = 5;
 
-  public static readonly XSD_DATE_FORMAT = 'yyyy-LL-dd\'T\'HH:mm:ss';
+  public static readonly XSD_DATE_FORMAT: Parameters<Date["toLocaleString"]> = ['toISODate']//'yyyy-LL-dd\'T\'HH:mm:ss';
 
   /**
    * constructor that defaults to this will use the format "h:mm:ss" for dates and 00.00.00.0 for {@link Time}.
@@ -169,22 +169,18 @@ export class ZmanimFormatter {
    * @param timeZone the TimeZone Object
    */
   constructor(timeZoneId: string);
-  constructor(format: number, dateFormat: string, timeZoneId: string);
-  constructor(formatOrTimeZone: number | string, dateFormat?: string, timeZoneId?: string) {
+  constructor(format: number, dateFormat: Parameters<Date["toLocaleString"]>, timeZoneId: string);
+  constructor(formatOrTimeZone: number | string, dateFormat?: Parameters<Date["toLocaleString"]>, timeZoneId?: string) {
     let format: number;
     if (dateFormat) {
       format = formatOrTimeZone as number;
     } else {
       format = 0;
-      dateFormat = 'h:mm:ss';
+      dateFormat = ['', { hour: this.prependZeroHours ? '2-digit' : 'numeric', minute: '2-digit', second: '2-digit'}];
       timeZoneId = formatOrTimeZone as string;
     }
 
     this.setTimeZone(timeZoneId!);
-
-    if (this.prependZeroHours) {
-      this.hourNF = 2;
-    }
 
     this.setTimeFormat(format);
     this.setDateFormat(dateFormat);
@@ -220,7 +216,7 @@ export class ZmanimFormatter {
    * Sets the SimpleDateFormat Object
    * @param dateFormat the SimpleDateFormat Object to set
    */
-  public setDateFormat(dateFormat: string): void {
+  public setDateFormat(dateFormat: Parameters<Date["toLocaleString"]>): void {
     this.dateFormat = dateFormat;
   }
 
@@ -228,7 +224,7 @@ export class ZmanimFormatter {
    * returns the SimpleDateFormat Object
    * @return the SimpleDateFormat Object
    */
-  public getDateFormat(): string {
+  public getDateFormat(): Parameters<Date["toLocaleString"]> {
     return this.dateFormat;
   }
 
@@ -309,14 +305,11 @@ export class ZmanimFormatter {
    * @param dateTime - the date to format
    * @return the formatted String
    */
-  public formatDateTime(dateTime: DateTime): string {
+  public formatDateTime(dateTime: Temporal.ZonedDateTime): string {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const _dateTime = dateTime.setZone(this.getTimeZone());
+    const _dateTime = dateTime.with({ timeZone: this.getTimeZone() });
 
-    if (this.dateFormat === ZmanimFormatter.XSD_DATE_FORMAT) {
-      return this.getXSDateTime(_dateTime);
-    }
-    return _dateTime.toFormat(this.dateFormat);
+    return _dateTime.toLocaleString(...this.dateFormat);
   }
 
   /**
@@ -332,9 +325,8 @@ export class ZmanimFormatter {
    * @param dateTime - the UTC Date Object
    * @return the XSD dateTime
    */
-  public getXSDateTime(dateTime: DateTime): string {
-    return dateTime.setZone(this.getTimeZone())
-      .toFormat(ZmanimFormatter.XSD_DATE_FORMAT.concat('ZZ'));
+  public getXSDateTime(dateTime: Temporal.ZonedDateTime): string {
+    return dateTime.with({ timeZone: this.getTimeZone() }).toString();
   }
 
   /**
@@ -519,10 +511,8 @@ export class ZmanimFormatter {
   }
 
   private static getOutputMetadata(astronomicalCalendar: AstronomicalCalendar): OutputMetadata {
-    const df: string = 'yyyy-MM-dd';
-
     return {
-      date: astronomicalCalendar.getDate().toFormat(df),
+      date: astronomicalCalendar.getDate().toPlainDate().toString(),
       type: astronomicalCalendar.getClassName(),
       algorithm: astronomicalCalendar.getAstronomicalCalculator().getCalculatorName(),
       location: astronomicalCalendar.getGeoLocation().getLocationName(),
@@ -532,7 +522,7 @@ export class ZmanimFormatter {
       timeZoneName: TimeZone.getDisplayName(astronomicalCalendar.getGeoLocation().getTimeZone(), astronomicalCalendar.getDate())!,
       timeZoneID: astronomicalCalendar.getGeoLocation().getTimeZone(),
       timeZoneOffset: ZmanimFormatter.formatDecimal(TimeZone.getOffset(astronomicalCalendar.getGeoLocation().getTimeZone(),
-        astronomicalCalendar.getDate().valueOf()) / ZmanimFormatter.HOUR_MILLIS),
+        astronomicalCalendar.getDate().epochMilliseconds) / ZmanimFormatter.HOUR_MILLIS),
     };
   }
 
@@ -558,14 +548,14 @@ export class ZmanimFormatter {
         value: astronomicalCalendar[method as keyof AstronomicalCalendar],
       }))
       // Filter for return values of type Date or number
-      .filter(methodObj => DateTime.isDateTime(methodObj.value) || typeof methodObj.value === 'number' || methodObj.value === null)
+      .filter(methodObj => methodObj.value instanceof Temporal.ZonedDateTime || typeof methodObj.value === 'number' || methodObj.value === null)
       // Separate the Dates and numbers
       .forEach(methodObj => {
         const tagName: string = methodObj.methodName.substring(3);
-        if (DateTime.isDateTime(methodObj.value)) {
+        if (methodObj.value instanceof Temporal.ZonedDateTime) {
           // dateList.add(new KosherZmanim.Zman(methodObj.value, tagName));
           const zman: ZmanWithZmanDate = {
-            zman: methodObj.value as DateTime,
+            zman: methodObj.value,
             label: tagName,
           };
           dateList.push(zman);
@@ -586,12 +576,11 @@ export class ZmanimFormatter {
     durationList = durationList.filter((zman: ZmanWithDuration) => zman.duration > 1000)
       .sort(Zman.compareDurationOrder);
 
-    const timesData = Object.assign(
-      {},
-      Object.fromEntries(dateList.map(zman => [zman.label, formatter.formatDateTime(zman.zman)])),
-      Object.fromEntries(durationList.map(zman => [zman.label, formatter.format(Math.trunc(zman.duration))])),
-      Object.fromEntries(otherList.map(tagName => [tagName, 'N/A'])),
-    );
+    const timesData = {
+      ...Object.fromEntries(dateList.map(zman => [zman.label, formatter.formatDateTime(zman.zman)])),
+      ...Object.fromEntries(durationList.map(zman => [zman.label, formatter.format(Math.trunc(zman.duration))])),
+      ...Object.fromEntries(otherList.map(tagName => [tagName, 'N/A'])),
+    };
 
     return timesData;
   }

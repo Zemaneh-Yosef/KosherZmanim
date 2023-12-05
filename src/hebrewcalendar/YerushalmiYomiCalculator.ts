@@ -1,4 +1,4 @@
-import { DateTime, Interval } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { Calendar } from '../polyfills/Utils.ts';
 import { Daf } from './Daf.ts';
@@ -16,7 +16,7 @@ export class YerushalmiYomiCalculator {
   /**
    * The start date of the first Daf Yomi Yerushalmi cycle of February 2, 1980 / 15 Shevat, 5740.
    */
-  private static readonly DAF_YOMI_START_DAY: DateTime = DateTime.fromObject({
+  private static readonly DAF_YOMI_START_DAY: Temporal.PlainDate = Temporal.PlainDate.from({
     year: 1980,
     month: Calendar.FEBRUARY + 1,
     day: 2,
@@ -44,9 +44,9 @@ export class YerushalmiYomiCalculator {
    *             if the date is prior to the February 2, 1980, the start date of the first Daf Yomi Yerushalmi cycle
    */
   public static getDafYomiYerushalmi(jewishCalendar: JewishCalendar) {
-    let nextCycle: DateTime = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
-    let prevCycle: DateTime = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
-    const requested: DateTime = jewishCalendar.getDate();
+    let nextCycle: Temporal.PlainDate = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
+    let prevCycle: Temporal.PlainDate = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
+    const requested: Temporal.PlainDate = jewishCalendar.getDate();
     let masechta: number = 0;
     let dafYomi: Daf;
 
@@ -55,7 +55,7 @@ export class YerushalmiYomiCalculator {
       return null;
     }
 
-    if (requested < YerushalmiYomiCalculator.DAF_YOMI_START_DAY) {
+    if (Temporal.PlainDate.compare(requested, YerushalmiYomiCalculator.DAF_YOMI_START_DAY) == -1) {
       throw new IllegalArgumentException(`${requested} is prior to organized Daf Yomi Yerushalmi cycles that started on ${YerushalmiYomiCalculator.DAF_YOMI_START_DAY}`);
     }
 
@@ -63,17 +63,17 @@ export class YerushalmiYomiCalculator {
     // nextCycle = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
 
     // Go cycle by cycle, until we get the next cycle
-    while (requested > nextCycle) {
+    while (Temporal.PlainDate.compare(nextCycle, requested) == -1) {
       prevCycle = nextCycle;
 
       // Adds the number of whole shas dafs, and then the number of days that not have daf.
-      nextCycle = nextCycle.plus({ days: YerushalmiYomiCalculator.WHOLE_SHAS_DAFS });
+      nextCycle = nextCycle.add({ days: YerushalmiYomiCalculator.WHOLE_SHAS_DAFS });
       // This needs to be a separate step
-      nextCycle = nextCycle.plus({ days: YerushalmiYomiCalculator.getNumOfSpecialDays(prevCycle, nextCycle) });
+      nextCycle = nextCycle.add({ days: YerushalmiYomiCalculator.getNumOfSpecialDays(prevCycle, nextCycle) });
     }
 
     // Get the number of days from cycle start until request.
-    const dafNo: number = requested.diff(prevCycle, ['days']).days;
+    const dafNo: number = requested.since(prevCycle).total({ unit: 'days' });
 
     // Get the number of special days to subtract
     const specialDays: number = YerushalmiYomiCalculator.getNumOfSpecialDays(prevCycle, requested);
@@ -99,7 +99,7 @@ export class YerushalmiYomiCalculator {
    * @param end - end date to calculate
    * @return the number of special days
    */
-  private static getNumOfSpecialDays(start: DateTime, end: DateTime): number {
+  private static getNumOfSpecialDays(start: Temporal.PlainDate, end: Temporal.PlainDate): number {
     // Find the start and end Jewish years
     const jewishStartYear: number = new JewishCalendar(start).getJewishYear();
     const jewishEndYear: number = new JewishCalendar(end).getJewishYear();
@@ -116,11 +116,20 @@ export class YerushalmiYomiCalculator {
       yomKippur.setJewishYear(i);
       tishaBeav.setJewishYear(i);
 
-      const interval = Interval.fromDateTimes(start, end);
-      if (interval.contains(yomKippur.getDate())) specialDays++;
-      if (interval.contains(tishaBeav.getDate())) specialDays++;
+      const range = [start, end].map(plainDate => plainDate.toZonedDateTime('UTC').epochMilliseconds)
+      const ykCompare = yomKippur.getDate().toZonedDateTime('UTC').epochMilliseconds;
+      const tbCompare = tishaBeav.getDate().toZonedDateTime('UTC').epochMilliseconds;
+
+      if (compare(range[0], ykCompare, range[1])) specialDays++;
+      if (compare(range[0], tbCompare, range[1])) specialDays++;
     }
 
     return specialDays;
   }
 }
+
+function compare(a: number, middle:number, end: number, inclusive=true) {
+  var min = Math.min.apply(Math, [a, end]),
+    max = Math.max.apply(Math, [a, end]);
+  return inclusive ? middle >= min && middle <= max : middle > min && middle < max;
+};

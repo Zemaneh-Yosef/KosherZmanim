@@ -2,12 +2,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 
-import { DateTime } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { MathUtils, StringUtils, TimeZone, Utils, padZeros } from '../src/polyfills/Utils';
 
-const janDateTime = DateTime.fromMillis(1483228800000, { zone: 'UTC' });
-const julyDateTime = DateTime.fromMillis(1498867200000, { zone: 'UTC' });
+const janDateTime = Temporal.Instant.fromEpochMilliseconds(1483228800000).toZonedDateTimeISO('UTC');
+const julyDateTime = Temporal.Instant.fromEpochMilliseconds(1498867200000).toZonedDateTimeISO('UTC');
 
 describe('Test Utils', function () {
   it('Tests Utils.getAllMethodNames()', function () {
@@ -79,13 +79,13 @@ describe('Test TimeZone', function () {
   });
 
   it('Gets the raw offset for Australia/Eucla on 2019/01/01 00:00:00Z', function () {
-    const result = TimeZone.getOffset('Australia/Eucla', janDateTime.valueOf());
+    const result = TimeZone.getOffset('Australia/Eucla', janDateTime.epochMilliseconds);
     const expected = 8.75 * 60 * 60 * 1000;
     assert.strictEqual(result, expected);
   });
 
   it('Gets the raw offset for Australia/Eucla on 2019/07/01 00:00:00Z', function () {
-    const result = TimeZone.getOffset('Australia/Eucla', julyDateTime.valueOf());
+    const result = TimeZone.getOffset('Australia/Eucla', julyDateTime.epochMilliseconds);
     const expected = 8.75 * 60 * 60 * 1000;
     assert.strictEqual(result, expected);
   });

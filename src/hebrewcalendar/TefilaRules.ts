@@ -58,7 +58,7 @@ const { SUNDAY, FRIDAY, SATURDAY } = Calendar;
  * <li>...</li>
  * </ol>
  */
-export default class TefilaRules {
+export class TefilaRules {
   /**
 	 * The default value is <code>true</code>.
 	 * @see #isTachanunRecitedEndOfTishrei()

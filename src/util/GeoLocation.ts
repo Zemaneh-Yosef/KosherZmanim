@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { Temporal } from '@js-temporal/polyfill';
 
 import { MathUtils, TimeZone } from '../polyfills/Utils.ts';
 import { IllegalArgumentException, UnsupportedError } from '../polyfills/errors.ts';
@@ -613,7 +613,7 @@ export class GeoLocation {
       .concat(`\nElevation:\t\t\t${this.getElevation().toString()} Meters`)
       .concat(`\nTimezone ID:\t\t\t${this.getTimeZone()}`)
       .concat(`\nTimezone Display Name:\t\t${TimeZone.getDisplayName(this.getTimeZone())}`)
-      .concat(` (${TimeZone.getDisplayName(this.getTimeZone(), DateTime.local(), true)})`)
+      .concat(` (${TimeZone.getDisplayName(this.getTimeZone(), Temporal.Now.zonedDateTimeISO(), true)})`)
       .concat(`\nTimezone GMT Offset:\t\t${(TimeZone.getRawOffset(this.getTimeZone()) / GeoLocation.HOUR_MILLIS).toString()}`)
       .concat(`\nTimezone DST Offset:\t\t${(TimeZone.getDSTSavings(this.getTimeZone()) / GeoLocation.HOUR_MILLIS).toString()}`);
   }

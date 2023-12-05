@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run main.ts"
+  },
+  "imports": {
+    "luxon": "npm:luxon",
+    "big.js": "npm:big.js",
+    "@js-temporal/polyfill": "npm:@js-temporal/polyfill"
+  }
+}

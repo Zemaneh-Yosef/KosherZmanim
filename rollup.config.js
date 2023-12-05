@@ -1,22 +1,24 @@
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
-import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [
   {
     input: `src/kosher-zmanim.ts`,
-    plugins: [esbuild(), resolve()],
+    plugins: [esbuild({
+      minify: true
+    }), nodeResolve()],
     output: [
       {
         file: `dist/kosher-zmanim.esm.js`,
         format: 'esm',
-        sourcemap: true,
+        sourcemap: true
       },
     ]
   },
   {
     input: `src/kosher-zmanim.ts`,
-    plugins: [dts(), resolve()],
+    plugins: [dts(), nodeResolve()],
     output: {
       file: `dist/kosher-zmanim.esm.d.ts`,
       format: 'es',

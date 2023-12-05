@@ -1,5 +1,4 @@
 import { Temporal } from '@js-temporal/polyfill';
-import { DateTime, Info } from 'luxon';
 
 export namespace Utils {
   // https://stackoverflow.com/a/40577337/8037425
@@ -34,13 +33,12 @@ export namespace TimeZone {
   export function getRawOffset(timeZoneId: string): number {
     const timeZone = Temporal.TimeZone.from(timeZoneId);
     const msCount = [
-      { month: 7, day: 1, year: new Date().getFullYear() },
-      { month: 1, day: 1, year: new Date().getFullYear() }
+      { month: 7, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId },
+      { month: 1, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId }
     ]
-    .map(monthDay => Temporal.PlainDate.from(monthDay))
-    .map(plainMonthDay => timeZone.getInstantFor!(plainMonthDay))
+    .map(monthDay => Temporal.ZonedDateTime.from(monthDay).toInstant())
     .map(instant => timeZone.getOffsetNanosecondsFor(instant))
-    .map(nanoSeconds => nanoSeconds / 1e6)
+    .map(nanoSeconds => nanoSeconds / 1000000)
 
     return Math.min(...msCount);
   }
@@ -48,11 +46,12 @@ export namespace TimeZone {
   /**
    * Returns a name in the specified style of this TimeZone suitable for presentation to the user in the default locale.
    * @param {string} timeZoneId
-   * @param {DateTime} [date]
+   * @param {Temporal.ZonedDateTime} [date]
    * @param {boolean} [short]
    */
-  export function getDisplayName(timeZoneId: string, date: DateTime = DateTime.local(), short: boolean = false): string | null {
-    return Info.normalizeZone(timeZoneId).offsetName(date.toMillis(), { format: short ? 'short' : 'long' });
+  export function getDisplayName(timeZoneId: string, date: Temporal.ZonedDateTime = Temporal.Now.zonedDateTimeISO(), short: boolean = false): string | null {
+    let dtf = new Intl.DateTimeFormat('en-US', { timeZone: timeZoneId, timeZoneName: 'long' });
+    return dtf.formatToParts().find(part => part.type === 'timeZoneName')!.value; // result: 'Eastern Standard Time'
   }
 
   /**
@@ -63,7 +62,17 @@ export namespace TimeZone {
    * @return {number}
    */
   export function getDSTSavings(timeZoneId: string): number {
-    return Info.hasDST(timeZoneId) ? 3600000 : 0;
+    const timeZone = Temporal.TimeZone.from(timeZoneId);
+    const msCount = [
+      { month: 7, day: 1, year: new Date().getFullYear() },
+      { month: 1, day: 1, year: new Date().getFullYear() }
+    ]
+    .map(monthDay => Temporal.PlainDate.from(monthDay))
+    .map(plainMonthDay => timeZone.getInstantFor!(plainMonthDay))
+    .map(instant => timeZone.getOffsetNanosecondsFor(instant))
+    .map(nanoSeconds => nanoSeconds / 1e6)
+
+    return Math.abs(msCount[0] - msCount[1]);
   }
 
   /**
@@ -76,7 +85,8 @@ export namespace TimeZone {
    * @param {number} millisSinceEpoch
    */
   export function getOffset(timeZoneId: string, millisSinceEpoch: number): number {
-    return Info.normalizeZone(timeZoneId).offset(millisSinceEpoch) * 60 * 1000;
+    const timeZone = Temporal.TimeZone.from(timeZoneId);
+    return timeZone.getOffsetNanosecondsFor(Temporal.Instant.fromEpochMilliseconds(millisSinceEpoch)) / 1e6;
   }
 }
 
