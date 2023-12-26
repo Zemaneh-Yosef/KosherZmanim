@@ -38,7 +38,7 @@ export class NOAACalculator extends AstronomicalCalculator {
   /**
    * @see AstronomicalCalculator#getUTCSunrise(Calendar, GeoLocation, double, boolean)
    */
-  public getUTCSunrise(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
+  public getUTCSunrise(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
     const elevation: number = adjustForElevation ? geoLocation.getElevation() : 0;
     const adjustedZenith: number = this.adjustZenith(zenith, elevation);
 
@@ -59,7 +59,7 @@ export class NOAACalculator extends AstronomicalCalculator {
   /**
    * @see AstronomicalCalculator#getUTCSunset(Calendar, GeoLocation, double, boolean)
    */
-  public getUTCSunset(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
+  public getUTCSunset(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
     const elevation: number = adjustForElevation ? geoLocation.getElevation() : 0;
     const adjustedZenith: number = this.adjustZenith(zenith, elevation);
 
@@ -85,7 +85,7 @@ export class NOAACalculator extends AstronomicalCalculator {
    * @return the Julian day corresponding to the date Note: Number is returned for start of day. Fractional days
    *         should be added later.
    */
-  private static getJulianDay(date: Temporal.ZonedDateTime): number {
+  private static getJulianDay(date: Temporal.PlainDate): number {
     let { year, month } = date;
     const { day } = date;
     if (month <= 2) {
@@ -352,7 +352,7 @@ export class NOAACalculator extends AstronomicalCalculator {
    * @return solar elevation in degrees - horizon is 0 degrees, civil twilight is -6 degrees
    */
 
-  public static getSolarElevation(date: Temporal.ZonedDateTime, lat: number, lon: number): number {
+  /*public static getSolarElevation(date: Temporal.PlainDate, lat: number, lon: number): number {
     const julianDay: number = NOAACalculator.getJulianDay(date);
     const julianCenturies: number = NOAACalculator.getJulianCenturiesFromJulianDay(julianDay);
 
@@ -367,7 +367,7 @@ export class NOAACalculator extends AstronomicalCalculator {
     const latRad: number = MathUtils.degreesToRadians(lat);
     return MathUtils.radiansToDegrees(Math.asin((Math.sin(latRad) * Math.sin(decRad))
       + (Math.cos(latRad) * Math.cos(decRad) * Math.cos(hourAngleRad))));
-  }
+  } */
 
   /**
    * Return the <a href="https://en.wikipedia.org/wiki/Celestial_coordinate_system">Solar Azimuth</a> for the
@@ -383,7 +383,7 @@ export class NOAACalculator extends AstronomicalCalculator {
    * @return FIXME
    */
 
-  public static getSolarAzimuth(date: Temporal.ZonedDateTime, latitude: number, lon: number): number {
+  /* public static getSolarAzimuth(date: Temporal.PlainDate, latitude: number, lon: number): number {
     const julianDay: number = NOAACalculator.getJulianDay(date);
     const julianCenturies: number = NOAACalculator.getJulianCenturiesFromJulianDay(julianDay);
 
@@ -399,7 +399,7 @@ export class NOAACalculator extends AstronomicalCalculator {
 
     return MathUtils.radiansToDegrees(Math.atan(Math.sin(hourAngleRad)
       / ((Math.cos(hourAngleRad) * Math.sin(latRad)) - (Math.tan(decRad) * Math.cos(latRad))))) + 180;
-  }
+  } */
 
   /**
    * Return the <a href="https://en.wikipedia.org/wiki/Universal_Coordinated_Time">Universal Coordinated Time</a> (UTC)
@@ -447,7 +447,7 @@ export class NOAACalculator extends AstronomicalCalculator {
     return timeUTC;
   }
 
-  public getUTCNoon(calendar: Temporal.ZonedDateTime, geoLocation: GeoLocation) {
+  public getUTCNoon(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
     const julianDay = NOAACalculator.getJulianDay(calendar);
     const julianCenturies = NOAACalculator.getJulianCenturiesFromJulianDay(julianDay);
 		

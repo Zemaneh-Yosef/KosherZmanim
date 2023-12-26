@@ -28,7 +28,7 @@ export class SunTimesCalculator extends AstronomicalCalculator {
   /**
    * @see AstronomicalCalculator#getUTCSunrise(Calendar, GeoLocation, double, boolean)
    */
-  public getUTCSunrise(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
+  public getUTCSunrise(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
     const elevation: number = adjustForElevation ? geoLocation.getElevation() : 0;
     const adjustedZenith: number = this.adjustZenith(zenith, elevation);
 
@@ -40,7 +40,7 @@ export class SunTimesCalculator extends AstronomicalCalculator {
   /**
    * @see AstronomicalCalculator#getUTCSunset(Calendar, GeoLocation, double, boolean)
    */
-  public getUTCSunset(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
+  public getUTCSunset(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number {
     const elevation: number = adjustForElevation ? geoLocation.getElevation() : 0;
     const adjustedZenith: number = this.adjustZenith(zenith, elevation);
 
@@ -219,7 +219,7 @@ export class SunTimesCalculator extends AstronomicalCalculator {
    * @return the time as a double. If an error was encountered in the calculation (expected behavior for some
    *         locations such as near the poles, {@link Double.NaN} will be returned.
    */
-  private static getTimeUTC(date: Temporal.ZonedDateTime, longitude: number, latitude: number, zenith: number,
+  private static getTimeUTC(date: Temporal.PlainDate, longitude: number, latitude: number, zenith: number,
       isSunrise: boolean): number {
     const dayOfYear: number = date.dayOfYear;
     const sunMeanAnomaly: number = SunTimesCalculator.getMeanAnomaly(dayOfYear, longitude, isSunrise);
@@ -263,7 +263,7 @@ export class SunTimesCalculator extends AstronomicalCalculator {
 	 *            The location information used for astronomical calculating sun times.
 	 * @return the time in minutes from zero UTC
 	 */
-  public getUTCNoon(calendar: Temporal.ZonedDateTime, geoLocation: GeoLocation) {
+  public getUTCNoon(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
     const sunrise = this.getUTCSunrise(calendar, geoLocation, 90, false);
     const sunset = this.getUTCSunset(calendar, geoLocation, 90, false);
     let noon = (sunrise + ((sunset - sunrise) / 2));

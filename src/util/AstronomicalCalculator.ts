@@ -109,7 +109,7 @@ export abstract class AstronomicalCalculator {
    *         {@link java.lang.Double#NaN} will be returned.
    * @see #getElevationAdjustment(double)
    */
-  public abstract getUTCSunrise(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number,
+  public abstract getUTCSunrise(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number,
       adjustForElevation: boolean): number; // eslint-disable-line @typescript-eslint/indent
 
   /**
@@ -133,7 +133,7 @@ export abstract class AstronomicalCalculator {
    *         {@link java.lang.Double#NaN} will be returned.
    * @see #getElevationAdjustment(double)
    */
-  public abstract getUTCSunset(date: Temporal.ZonedDateTime, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number;
+  public abstract getUTCSunset(date: Temporal.PlainDate, geoLocation: GeoLocation, zenith: number, adjustForElevation: boolean): number;
 
   /**
 	 * Return <a href="https://en.wikipedia.org/wiki/Noon#Solar_noon">solar noon</a> (UTC) for the given day at the
@@ -148,7 +148,7 @@ export abstract class AstronomicalCalculator {
 	 * 
 	 * @return the time in minutes from zero UTC
 	 */
-  public abstract getUTCNoon(calendar: Temporal.ZonedDateTime, geoLocation: GeoLocation): number;
+  public abstract getUTCNoon(calendar: Temporal.PlainDate, geoLocation: GeoLocation): number;
 
   /**
    * Method to return the adjustment to the zenith required to account for the elevation. Since a person at a higher

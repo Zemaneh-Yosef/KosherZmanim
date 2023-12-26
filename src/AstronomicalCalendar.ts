@@ -78,7 +78,7 @@ export class AstronomicalCalendar {
   /**
    * The Java Calendar encapsulated by this class to track the current date used by the class
    */
-  private date!: Temporal.ZonedDateTime;
+  private date!: Temporal.PlainDate;
 
   /**
    * the {@link GeoLocation} used for calculations.
@@ -331,7 +331,7 @@ export class AstronomicalCalendar {
    * @see #setAstronomicalCalculator(AstronomicalCalculator) for changing the calculator class.
    */
   constructor(geoLocation: GeoLocation) {
-    this.setDate(Temporal.Now.zonedDateTimeISO(geoLocation.getTimeZone()));
+    this.setDate(Temporal.Now.plainDateISO());
     this.setGeoLocation(geoLocation); // duplicate call
     this.setAstronomicalCalculator(new NOAACalculator());
   }
@@ -513,8 +513,8 @@ export class AstronomicalCalendar {
     }
     let calculatedTime: number = time;
 
-    const adjustedDate: Temporal.ZonedDateTime = this.getAdjustedDate();
-    let cal = Temporal.ZonedDateTime.from({ timeZone: "UTC", year: adjustedDate.year, month: adjustedDate.month, day: adjustedDate.day });
+    const adjustedDate: Temporal.PlainDate = this.getAdjustedDate();
+    let cal = adjustedDate.toZonedDateTime("UTC");
 
     const hours: number = Math.trunc(calculatedTime); // retain only the hours
     calculatedTime -= hours;
@@ -672,7 +672,7 @@ export class AstronomicalCalendar {
    * @see GeoLocation#getAntimeridianAdjustment()
    * @return the adjusted Calendar
    */
-  private getAdjustedDate(): Temporal.ZonedDateTime {
+  private getAdjustedDate(): Temporal.PlainDate {
     const offset: -1 | 0 | 1 = this.getGeoLocation().getAntimeridianAdjustment();
     if (offset === 0) return this.getDate();
     return this.getDate().add({ days: offset });
@@ -736,7 +736,6 @@ export class AstronomicalCalendar {
    */
   public setGeoLocation(geoLocation: GeoLocation): void {
     this.geoLocation = geoLocation;
-    this.date = this.date.withTimeZone(geoLocation.getTimeZone());
   }
 
   /**
@@ -769,7 +768,7 @@ export class AstronomicalCalendar {
    *
    * @return Returns the calendar.
    */
-  public getDate(): Temporal.ZonedDateTime {
+  public getDate(): Temporal.PlainDate {
     return this.date;
   }
 
@@ -777,15 +776,13 @@ export class AstronomicalCalendar {
    * @param calendar
    *            The calendar to set.
    */
-  public setDate(date: Temporal.ZonedDateTime | Date | string | number): void {
-    if (date instanceof Temporal.ZonedDateTime) {
+  public setDate(date: Temporal.PlainDate | Date | string | number): void {
+    if (date instanceof Temporal.PlainDate) {
       this.date = date;
     } else if (date instanceof Date) {
-      this.date = new Temporal.ZonedDateTime(BigInt(date.valueOf() * 1000000), this.geoLocation.getTimeZone());
+      this.date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(this.geoLocation.getTimeZone()).toPlainDate();
     } else if (typeof date === 'string') {
-      this.date = Temporal.Instant.from(date).toZonedDateTimeISO(this.geoLocation.getTimeZone());
-    } else if (typeof date === 'number') {
-      this.date = new Temporal.ZonedDateTime(BigInt(date * 1000000), this.geoLocation.getTimeZone());
+      this.date = Temporal.PlainDate.from(date);
     }
   }
 

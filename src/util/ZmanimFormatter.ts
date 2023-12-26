@@ -512,17 +512,17 @@ export class ZmanimFormatter {
 
   private static getOutputMetadata(astronomicalCalendar: AstronomicalCalendar): OutputMetadata {
     return {
-      date: astronomicalCalendar.getDate().toPlainDate().toString(),
+      date: astronomicalCalendar.getDate().toString(),
       type: astronomicalCalendar.getClassName(),
       algorithm: astronomicalCalendar.getAstronomicalCalculator().getCalculatorName(),
       location: astronomicalCalendar.getGeoLocation().getLocationName(),
       latitude: astronomicalCalendar.getGeoLocation().getLatitude().toString(),
       longitude: astronomicalCalendar.getGeoLocation().getLongitude().toString(),
       elevation: ZmanimFormatter.formatDecimal(astronomicalCalendar.getGeoLocation().getElevation()),
-      timeZoneName: TimeZone.getDisplayName(astronomicalCalendar.getGeoLocation().getTimeZone(), astronomicalCalendar.getDate())!,
+      timeZoneName: TimeZone.getDisplayName(astronomicalCalendar.getGeoLocation().getTimeZone())!,
       timeZoneID: astronomicalCalendar.getGeoLocation().getTimeZone(),
       timeZoneOffset: ZmanimFormatter.formatDecimal(TimeZone.getOffset(astronomicalCalendar.getGeoLocation().getTimeZone(),
-        astronomicalCalendar.getDate().epochMilliseconds) / ZmanimFormatter.HOUR_MILLIS),
+        astronomicalCalendar.getDate().toZonedDateTime(astronomicalCalendar.getGeoLocation().getTimeZone()).epochMilliseconds) / ZmanimFormatter.HOUR_MILLIS),
     };
   }
 

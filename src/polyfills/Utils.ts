@@ -46,10 +46,8 @@ export namespace TimeZone {
   /**
    * Returns a name in the specified style of this TimeZone suitable for presentation to the user in the default locale.
    * @param {string} timeZoneId
-   * @param {Temporal.ZonedDateTime} [date]
-   * @param {boolean} [short]
    */
-  export function getDisplayName(timeZoneId: string, date: Temporal.ZonedDateTime = Temporal.Now.zonedDateTimeISO(), short: boolean = false): string | null {
+  export function getDisplayName(timeZoneId: string): string | null {
     let dtf = new Intl.DateTimeFormat('en-US', { timeZone: timeZoneId, timeZoneName: 'long' });
     return dtf.formatToParts().find(part => part.type === 'timeZoneName')!.value; // result: 'Eastern Standard Time'
   }
