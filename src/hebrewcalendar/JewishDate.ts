@@ -1275,52 +1275,16 @@ export class JewishDate {
    *         goes to 13 for Adar II
    */
   public getJewishMonth(): number {
-    switch (this.date.withCalendar("hebrew").month) {
-      case 1:
-        return JewishDate.TISHREI;
-      case 2:
-        return JewishDate.CHESHVAN;
-      case 3:
-        return JewishDate.KISLEV;
-      case 4:
-        return JewishDate.TEVES;
-      case 5:
-        return JewishDate.SHEVAT;
-      case 6:
-        return JewishDate.ADAR
-      case 7:
-        if (this.isJewishLeapYear())
-          return JewishDate.ADAR_II;
-        else
-          return JewishDate.NISSAN;
-      case 8:
-        if (this.isJewishLeapYear())
-          return JewishDate.NISSAN;
-        else
-          return JewishDate.IYAR;
-      case 9:
-        if (this.isJewishLeapYear())
-          return JewishDate.IYAR;
-        else
-          return JewishDate.SIVAN;
-      case 10:
-        if (this.isJewishLeapYear())
-          return JewishDate.SIVAN;
-        else
-          return JewishDate.TAMMUZ;
-      case 11:
-        if (this.isJewishLeapYear())
-          return JewishDate.TAMMUZ;
-        else
-          return JewishDate.AV;
-      case 12:
-        if (this.isJewishLeapYear())
-          return JewishDate.AV;
-        else
-          return JewishDate.ELUL;
-      case 13:
-        return JewishDate.ELUL;
-    };
+    let hebCal = this.date.withCalendar("hebrew");
+
+    let cutOffNum = 6;
+    if (hebCal.monthsInYear == 13)
+      ++cutOffNum;
+
+    if (hebCal.month <= cutOffNum)
+      return hebCal.month + 6;
+    else
+      return hebCal.month - cutOffNum;
   }
 
   /**
