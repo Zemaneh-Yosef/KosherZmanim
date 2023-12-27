@@ -172,14 +172,7 @@ export class JewishDate {
    */
   public static readonly SHELAIMIM: number = 2;
 
-  /** the internal Jewish month. */
-  private jewishMonth!: number;
-
-  /** the internal Jewish day. */
-  private jewishDay!: number;
-
-  /** the internal Jewish year. */
-  private jewishYear!: number;
+  private date: Temporal.PlainDate;
 
   /** the internal count of <em>molad</em> hours. */
   private moladHours!: number;
@@ -288,23 +281,8 @@ export class JewishDate {
    * @return the last day of the Gregorian month
    */
   public getLastDayOfGregorianMonth(month: number): number {
-    return JewishDate.getLastDayOfGregorianMonth(month, this.gregorianYear);
+    return this.date.with({ month }).daysInMonth;
   }
-
-  /**
-   * The month, where 1 == January, 2 == February, etc... Note that this is different than the Java's Calendar class
-   * where January ==0
-   */
-  private gregorianMonth!: number;
-
-  /** The day of the Gregorian month */
-  private gregorianDayOfMonth!: number;
-
-  /** The Gregorian year */
-  private gregorianYear!: number;
-
-  /** 1 == Sunday, 2 == Monday, etc... */
-  private dayOfWeek!: number;
 
   /** Returns the absolute date (days since January 1, 0001 on the Gregorian calendar).
    * @see #getAbsDate()
@@ -536,7 +514,8 @@ export class JewishDate {
    * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
    */
   public getChalakimSinceMoladTohu(): number {
-    return JewishDate.getChalakimSinceMoladTohu(this.jewishYear, this.jewishMonth);
+    const hebrewCalendar = this.date.withCalendar("hebrew")
+    return JewishDate.getChalakimSinceMoladTohu(hebrewCalendar.year, hebrewCalendar.month);
   }
 
   /**
@@ -801,29 +780,6 @@ export class JewishDate {
   }
 
   /**
-   * Computes the Jewish date from the absolute date.
-   */
-  private absDateToJewishDate(): void {
-    // Approximation from below
-    this.jewishYear = Math.trunc((this.gregorianAbsDate - JewishDate.JEWISH_EPOCH) / 366);
-    // Search forward for year from the approximation
-    while (this.gregorianAbsDate >= JewishDate.jewishDateToAbsDate(this.jewishYear + 1, JewishDate.TISHREI, 1)) {
-      this.jewishYear++;
-    }
-    // Search forward for month from either Tishri or Nisan.
-    if (this.gregorianAbsDate < JewishDate.jewishDateToAbsDate(this.jewishYear, JewishDate.NISSAN, 1)) {
-      this.jewishMonth = JewishDate.TISHREI; // Start at Tishri
-    } else {
-      this.jewishMonth = JewishDate.NISSAN; // Start at Nisan
-    }
-    while (this.gregorianAbsDate > JewishDate.jewishDateToAbsDate(this.jewishYear, this.jewishMonth, this.getDaysInJewishMonth())) {
-      this.jewishMonth++;
-    }
-    // Calculate the day by subtraction
-    this.jewishDay = this.gregorianAbsDate - JewishDate.jewishDateToAbsDate(this.jewishYear, this.jewishMonth, 1) + 1;
-  }
-
-  /**
    * Returns the absolute date of Jewish date. ND+ER
    *
    * @param year
@@ -951,16 +907,15 @@ export class JewishDate {
   constructor(date: Temporal.PlainDate);
   constructor();
   constructor(jewishYearOrPlainDateOrDateOrMolad?: number | Date | Temporal.PlainDate, jewishMonth?: number, jewishDayOfMonth?: number) {
-    if (!jewishYearOrPlainDateOrDateOrMolad) {
-      this.resetDate();
-    } else if (jewishMonth) {
+    this.date = Temporal.Now.plainDateISO();
+    if (jewishMonth) {
       this.setJewishDate(jewishYearOrPlainDateOrDateOrMolad as number, jewishMonth, jewishDayOfMonth!);
     } else if (jewishYearOrPlainDateOrDateOrMolad instanceof Date) {
       this.setDate(Temporal.Instant.fromEpochMilliseconds(jewishYearOrPlainDateOrDateOrMolad.valueOf()).toZonedDateTimeISO('UTC').toPlainDate());
     } else if (jewishYearOrPlainDateOrDateOrMolad instanceof Temporal.PlainDate) {
       this.setDate(jewishYearOrPlainDateOrDateOrMolad);
     } else if (typeof jewishYearOrPlainDateOrDateOrMolad === 'number') {
-      const molad = jewishYearOrPlainDateOrDateOrMolad as number;
+      const molad = jewishYearOrPlainDateOrDateOrMolad;
       this.absDateToDate(JewishDate.moladToAbsDate(molad));
       // long chalakimSince = getChalakimSinceMoladTohu(year, JewishDate.TISHREI);// tishrei
       const conjunctionDay: number = Math.trunc(molad / JewishDate.CHALAKIM_PER_DAY);
@@ -1042,13 +997,7 @@ export class JewishDate {
       throw new IllegalArgumentException(`Dates with a BC era are not supported. The year ${date.year} is invalid.`);
     }
 
-    this.gregorianMonth = date.month;
-    this.gregorianDayOfMonth = date.day;
-    this.gregorianYear = date.year;
-    this.gregorianAbsDate = JewishDate.gregorianDateToAbsDate(this.gregorianYear, this.gregorianMonth, this.gregorianDayOfMonth); // init the date
-    this.absDateToJewishDate();
-
-    this.dayOfWeek = Math.abs(this.gregorianAbsDate % 7) + 1; // set day of week
+    this.date = date;
   }
 
   /**
@@ -1102,15 +1051,8 @@ export class JewishDate {
     if (dayOfMonth > JewishDate.getLastDayOfGregorianMonth(month, year)) {
       dayOfMonth = JewishDate.getLastDayOfGregorianMonth(month, year);
     }
-    // init month, date, year
-    this.gregorianMonth = month;
-    this.gregorianDayOfMonth = dayOfMonth;
-    this.gregorianYear = year;
 
-    this.gregorianAbsDate = JewishDate.gregorianDateToAbsDate(this.gregorianYear, this.gregorianMonth, this.gregorianDayOfMonth); // init date
-    this.absDateToJewishDate();
-
-    this.dayOfWeek = Math.abs(this.gregorianAbsDate % 7) + 1; // set day of week
+    this.date = new Temporal.PlainDate(year, month, dayOfMonth);
   }
 
   /**
@@ -1174,17 +1116,12 @@ export class JewishDate {
       dayOfMonth = JewishDate.getDaysInJewishMonth(month, year);
     }
 
-    this.jewishMonth = month;
-    this.jewishDay = dayOfMonth;
-    this.jewishYear = year;
-    this.moladHours = hours;
-    this.moladMinutes = minutes;
-    this.moladChalakim = chalakim;
+    let fixedMonth = month - 6;
+    if (fixedMonth < 1) {
+      fixedMonth += Temporal.PlainDate.from({ year, month, day: dayOfMonth, calendar: "hebrew" }).monthsInYear;
+    }
 
-    this.gregorianAbsDate = JewishDate.jewishDateToAbsDate(this.jewishYear, this.jewishMonth, this.jewishDay); // reset Gregorian date
-    this.absDateToDate(this.gregorianAbsDate);
-
-    this.dayOfWeek = Math.abs(this.gregorianAbsDate % 7) + 1; // reset day of week
+    this.date = Temporal.PlainDate.from({ year, month: fixedMonth, day: dayOfMonth, calendar: "hebrew" }).withCalendar("iso8601")
   }
 
   /**
@@ -1193,11 +1130,7 @@ export class JewishDate {
    * @return The {@link java.util.Calendar}
    */
   public getDate(): Temporal.PlainDate {
-    return Temporal.PlainDate.from({
-      year: this.gregorianYear,
-      month: this.gregorianMonth,
-      day: this.gregorianDayOfMonth,
-    });
+    return this.date;
   }
 
   /**
@@ -1221,10 +1154,10 @@ export class JewishDate {
       'Kislev', 'Teves', 'Shevat', 'Adar', 'Adar II', 'Adar I'];
 
     let formattedMonth: string;
-    if (this.isJewishLeapYear() && this.jewishMonth === JewishDate.ADAR) {
+    if (this.isJewishLeapYear() && this.getJewishMonth() === JewishDate.ADAR) {
       formattedMonth = transliteratedMonths[13]; // return Adar I, not Adar in a leap year
     } else {
-      formattedMonth = transliteratedMonths[this.jewishMonth - 1];
+      formattedMonth = transliteratedMonths[this.getJewishMonth() - 1];
     }
 
     return `${this.getJewishDayOfMonth()} ${formattedMonth}, ${this.getJewishYear()}`;
@@ -1253,88 +1186,18 @@ export class JewishDate {
    * @see Calendar#roll(int, int)
    */
   public forward(field: number, amount: number): void {
-    if (field !== Calendar.DATE && field !== Calendar.MONTH && field !== Calendar.YEAR) {
+    if (![Calendar.DATE, Calendar.MONTH, Calendar.YEAR].includes(field)) {
       throw new IllegalArgumentException('Unsupported field was passed to Forward. Only Calendar.DATE, Calendar.MONTH or Calendar.YEAR are supported.');
     }
     if (amount < 1) {
       throw new IllegalArgumentException('JewishDate.forward() does not support amounts less than 1. See JewishDate.back()');
     }
     if (field === Calendar.DATE) {
-      // Change Gregorian date
-      for (let i = 0; i < amount; i++) {
-        if (this.gregorianDayOfMonth === JewishDate.getLastDayOfGregorianMonth(this.gregorianMonth, this.gregorianYear)) {
-          this.gregorianDayOfMonth = 1;
-
-          // if last day of year
-          if (this.gregorianMonth === 12) {
-            this.gregorianYear++;
-          } else {
-            this.gregorianMonth++;
-          }
-        } else {
-          // if not last day of month
-          this.gregorianDayOfMonth++;
-        }
-
-        // Change the Jewish Date
-        if (this.jewishDay === this.getDaysInJewishMonth()) {
-          // if it last day of elul (i.e. last day of Jewish year)
-          if (this.jewishMonth === JewishDate.ELUL) {
-            this.jewishYear++;
-            this.jewishMonth++;
-            this.jewishDay = 1;
-          } else if (this.jewishMonth === JewishDate.getLastMonthOfJewishYear(this.jewishYear)) {
-            // if it is the last day of Adar, or Adar II as case may be
-            this.jewishMonth = JewishDate.NISSAN;
-            this.jewishDay = 1;
-          } else {
-            this.jewishMonth++;
-            this.jewishDay = 1;
-          }
-        } else {
-          // if not last date of month
-          this.jewishDay++;
-        }
-
-        if (this.dayOfWeek === 7) {
-          // if last day of week, loop back to Sunday
-          this.dayOfWeek = 1;
-        } else {
-          this.dayOfWeek++;
-        }
-
-        // increment the absolute date
-        this.gregorianAbsDate++;
-      }
+      this.date = this.date.add({ days: amount })
     } else if (field === Calendar.MONTH) {
-      this.forwardJewishMonth(amount);
+      this.date = this.date.add({ months: amount })
     } else if (field === Calendar.YEAR) {
-      this.setJewishYear(this.getJewishYear() + amount);
-    }
-  }
-
-  /**
-   * Forward the Jewish date by the number of months passed in.
-   * FIXME: Deal with forwarding a date such as 30 Nisan by a month. 30 Iyar does not exist. This should be dealt with similar to
-   * the way that the Java Calendar behaves (not that simple since there is a difference between add() or roll().
-   *
-   * @throws IllegalArgumentException if the amount is less than 1
-   * @param amount the number of months to roll the month forward
-   */
-  private forwardJewishMonth(amount: number): void {
-    if (amount < 1) {
-      throw new IllegalArgumentException('the amount of months to forward has to be greater than zero.');
-    }
-    for (let i = 0; i < amount; i++) {
-      if (this.getJewishMonth() === JewishDate.ELUL) {
-        this.setJewishMonth(JewishDate.TISHREI);
-        this.setJewishYear(this.getJewishYear() + 1);
-      } else if ((!this.isJewishLeapYear() && this.getJewishMonth() === JewishDate.ADAR)
-        || (this.isJewishLeapYear() && this.getJewishMonth() === JewishDate.ADAR_II)) {
-        this.setJewishMonth(JewishDate.NISSAN);
-      } else {
-        this.setJewishMonth(this.getJewishMonth() + 1);
-      }
+      this.date = this.date.add({ years: amount })
     }
   }
 
@@ -1357,55 +1220,15 @@ export class JewishDate {
    * @see Calendar#roll(int, int)
    */
   public back(): void {
-    // Change Gregorian date
-    if (this.gregorianDayOfMonth === 1) { // if first day of month
-      if (this.gregorianMonth === 1) { // if first day of year
-        this.gregorianMonth = 12;
-        this.gregorianYear--;
-      } else {
-        this.gregorianMonth--;
-      }
-      // change to last day of previous month
-      this.gregorianDayOfMonth = JewishDate.getLastDayOfGregorianMonth(this.gregorianMonth, this.gregorianYear);
-    } else {
-      this.gregorianDayOfMonth--;
-    }
-    // change Jewish date
-    if (this.jewishDay === 1) { // if first day of the Jewish month
-      if (this.jewishMonth === JewishDate.NISSAN) {
-        this.jewishMonth = JewishDate.getLastMonthOfJewishYear(this.jewishYear);
-      } else if (this.jewishMonth === JewishDate.TISHREI) { // if Rosh Hashana
-        this.jewishYear--;
-        this.jewishMonth--;
-      } else {
-        this.jewishMonth--;
-      }
-      this.jewishDay = this.getDaysInJewishMonth();
-    } else {
-      this.jewishDay--;
-    }
-
-    if (this.dayOfWeek === 1) { // if first day of week, loop back to Saturday
-      this.dayOfWeek = 7;
-    } else {
-      this.dayOfWeek--;
-    }
-    this.gregorianAbsDate--; // change the absolute date
+    this.date = this.date.subtract({ days: 1 })
   }
 
   /**
    * Indicates whether some other object is "equal to" this one.
    * @see Object#equals(Object)
    */
-  public equals(object: object): boolean {
-    if (this === object as JewishDate) {
-      return true;
-    }
-    if (!(object instanceof JewishDate)) {
-      return false;
-    }
-    const jewishDate: JewishDate = object as JewishDate;
-    return this.gregorianAbsDate === jewishDate.getAbsDate();
+  public equals(object: JewishDate): boolean {
+    return (object instanceof JewishDate && Temporal.PlainDate.compare(this.date, object.getDate()) == 0);
   }
 
   /**
@@ -1414,7 +1237,7 @@ export class JewishDate {
    * they are equal.
    */
   public compareTo(jewishDate: JewishDate): number {
-    return IntegerUtils.compare(this.gregorianAbsDate, jewishDate.getAbsDate());
+    return Temporal.PlainDate.compare(this.date, jewishDate.getDate());
   }
 
   /**
@@ -1423,7 +1246,7 @@ export class JewishDate {
    * @return the Gregorian month (between 0-11). Like the java.util.Calendar, months are 0 based.
    */
   public getGregorianMonth(): number {
-    return this.gregorianMonth - 1;
+    return this.date.withCalendar("iso8601").month - 1;
   }
 
   /**
@@ -1432,7 +1255,7 @@ export class JewishDate {
    * @return the Gregorian day of the mont
    */
   public getGregorianDayOfMonth(): number {
-    return this.gregorianDayOfMonth;
+    return this.date.withCalendar("iso8601").day;
   }
 
   /**
@@ -1441,7 +1264,7 @@ export class JewishDate {
    * @return the Gregorian year
    */
   public getGregorianYear(): number {
-    return this.gregorianYear;
+    return this.date.withCalendar("iso8601").year;
   }
 
   /**
@@ -1452,7 +1275,52 @@ export class JewishDate {
    *         goes to 13 for Adar II
    */
   public getJewishMonth(): number {
-    return this.jewishMonth;
+    switch (this.date.withCalendar("hebrew").month) {
+      case 1:
+        return JewishDate.TISHREI;
+      case 2:
+        return JewishDate.CHESHVAN;
+      case 3:
+        return JewishDate.KISLEV;
+      case 4:
+        return JewishDate.TEVES;
+      case 5:
+        return JewishDate.SHEVAT;
+      case 6:
+        return JewishDate.ADAR
+      case 7:
+        if (this.isJewishLeapYear())
+          return JewishDate.ADAR_II;
+        else
+          return JewishDate.NISSAN;
+      case 8:
+        if (this.isJewishLeapYear())
+          return JewishDate.NISSAN;
+        else
+          return JewishDate.IYAR;
+      case 9:
+        if (this.isJewishLeapYear())
+          return JewishDate.IYAR;
+        else
+          return JewishDate.SIVAN;
+      case 10:
+        if (this.isJewishLeapYear())
+          return JewishDate.SIVAN;
+        else
+          return JewishDate.TAMMUZ;
+      case 11:
+        if (this.isJewishLeapYear())
+          return JewishDate.TAMMUZ;
+        else
+          return JewishDate.AV;
+      case 12:
+        if (this.isJewishLeapYear())
+          return JewishDate.AV;
+        else
+          return JewishDate.ELUL;
+      case 13:
+        return JewishDate.ELUL;
+    };
   }
 
   /**
@@ -1461,7 +1329,7 @@ export class JewishDate {
    * @return the Jewish day of the month
    */
   public getJewishDayOfMonth(): number {
-    return this.jewishDay;
+    return this.date.withCalendar("hebrew").day;
   }
 
   /**
@@ -1470,7 +1338,7 @@ export class JewishDate {
    * @return the Jewish year
    */
   public getJewishYear(): number {
-    return this.jewishYear;
+    return this.date.withCalendar("hebrew").year;
   }
 
   /**
@@ -1479,7 +1347,10 @@ export class JewishDate {
    * @return the day of the week as a number between 1-7.
    */
   public getDayOfWeek(): number {
-    return this.dayOfWeek;
+    let dayOfWeek = this.date.dayOfWeek + 1;
+    if (dayOfWeek == 8)
+      dayOfWeek = 1
+    return dayOfWeek;
   }
 
   /**
@@ -1493,7 +1364,7 @@ export class JewishDate {
    */
   public setGregorianMonth(month: number): void {
     JewishDate.validateGregorianMonth(month);
-    this.setInternalGregorianDate(this.gregorianYear, month + 1, this.gregorianDayOfMonth);
+    this.date = this.date.withCalendar("iso8601").with({ month: month + 1 })
   }
 
   /**
@@ -1506,7 +1377,7 @@ export class JewishDate {
    */
   public setGregorianYear(year: number): void {
     JewishDate.validateGregorianYear(year);
-    this.setInternalGregorianDate(year, this.gregorianMonth, this.gregorianDayOfMonth);
+    this.date = this.date.withCalendar("iso8601").with({ year })
   }
 
   /**
@@ -1519,7 +1390,7 @@ export class JewishDate {
    */
   public setGregorianDayOfMonth(dayOfMonth: number): void {
     JewishDate.validateGregorianDayOfMonth(dayOfMonth);
-    this.setInternalGregorianDate(this.gregorianYear, this.gregorianMonth, dayOfMonth);
+    this.date = this.date.withCalendar("iso8601").with({ day: dayOfMonth })
   }
 
   /**
@@ -1532,7 +1403,8 @@ export class JewishDate {
    *             if a month &lt; 1 or &gt; 12 (or 13 on a leap year) is passed in
    */
   public setJewishMonth(month: number): void {
-    this.setJewishDate(this.jewishYear, month, this.jewishDay);
+    const hebrewCalendar = this.date.withCalendar("hebrew")
+    this.setJewishDate(hebrewCalendar.year, month, hebrewCalendar.day);
   }
 
   /**
@@ -1545,7 +1417,10 @@ export class JewishDate {
    *             previously set are &lt; 18 Teves (preior to Jan 1, 1 AD)
    */
   public setJewishYear(year: number): void {
-    this.setJewishDate(year, this.jewishMonth, this.jewishDay);
+    const hebrewCalendar = this.date.withCalendar("hebrew")
+    this.setJewishDate(year, this.getJewishMonth(), hebrewCalendar.day);
+
+    this.date = this.date.withCalendar("hebrew").with({ year }).withCalendar("iso8601");
   }
 
   /**
@@ -1557,7 +1432,7 @@ export class JewishDate {
    *             if the day of month is &lt; 1 or &gt; 30 is passed in
    */
   public setJewishDayOfMonth(dayOfMonth: number): void {
-    this.setJewishDate(this.jewishYear, this.jewishMonth, dayOfMonth);
+    this.date = this.date.withCalendar("hebrew").with({ day: dayOfMonth }).withCalendar("iso8601");
   }
 
   /**
@@ -1566,7 +1441,7 @@ export class JewishDate {
    * @see Object#clone()
    */
   public clone(): JewishDate {
-    const clone: JewishDate = new JewishDate(this.jewishYear, this.jewishMonth, this.jewishDay);
+    const clone: JewishDate = new JewishDate(this.date);
     clone.setMoladHours(this.moladHours);
     clone.setMoladMinutes(this.moladMinutes);
     clone.setMoladChalakim(this.moladChalakim);

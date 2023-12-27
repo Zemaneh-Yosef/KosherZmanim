@@ -3233,7 +3233,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see JewishCalendar#getSofZmanKidushLevanaBetweenMoldos()
    */
   public getSofZmanKidushLevanaBetweenMoldos(alos: Temporal.ZonedDateTime, tzais: Temporal.ZonedDateTime) : Temporal.ZonedDateTime | null {
-    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate().toPlainDate());
+    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate());
     // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in French
     // Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush Levana
     // will be on the 12th of the Teves. In the case of Anadyr, Russia on Jan, 2071, sof zman Kiddush Levana between the
@@ -3306,7 +3306,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see JewishCalendar#getSofZmanKidushLevana15Days()
    */
   public getSofZmanKidushLevana15Days(alos: Temporal.ZonedDateTime | null = null, tzais: Temporal.ZonedDateTime | null = null): Temporal.ZonedDateTime | null {
-    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate().toPlainDate());
+    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate());
 
     // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in
     // French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush
@@ -3404,7 +3404,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    */
   private getMidnightLastNight(): Temporal.ZonedDateTime {
     // reset hour, minutes, seconds and millis
-    return this.getDate().with({
+    return this.getDate().toZonedDateTime(this.getGeoLocation().getTimeZone()).with({
       hour: 0,
       minute: 0,
       second: 0,
@@ -3418,7 +3418,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @return following midnight
    */
   private getMidnightTonight(): Temporal.ZonedDateTime {
-    return this.getDate()
+    return this.getDate().toZonedDateTime(this.getGeoLocation().getTimeZone())
       .add({ days: 1 })
       .with({
         hour: 0,
@@ -3450,7 +3450,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see JewishCalendar#getTchilasZmanKidushLevana7Days()
    */
   public getTchilasZmanKidushLevana7Days(alos: Temporal.ZonedDateTime | null = null, tzais: Temporal.ZonedDateTime | null = null): Temporal.ZonedDateTime | null {
-    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate().toPlainDate());
+    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate());
 
     // Optimize to not calculate for impossible dates, but account for extreme cases. Tchilas zman kiddush Levana 7 days for
     // the extreme case of Rapa Iti in French Polynesia on Jan 2028 (when kiddush Levana 3 days can be said on the evening

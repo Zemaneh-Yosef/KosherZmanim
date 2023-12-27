@@ -116,20 +116,18 @@ export class YerushalmiYomiCalculator {
       yomKippur.setJewishYear(i);
       tishaBeav.setJewishYear(i);
 
-      const range = [start, end].map(plainDate => plainDate.toZonedDateTime('UTC').epochMilliseconds)
-      const ykCompare = yomKippur.getDate().toZonedDateTime('UTC').epochMilliseconds;
-      const tbCompare = tishaBeav.getDate().toZonedDateTime('UTC').epochMilliseconds;
-
-      if (compare(range[0], ykCompare, range[1])) specialDays++;
-      if (compare(range[0], tbCompare, range[1])) specialDays++;
+      if (rangeDates(start, yomKippur.getDate(), end)) specialDays++;
+      if (rangeDates(start, tishaBeav.getDate(), end)) specialDays++;
     }
 
     return specialDays;
   }
 }
 
-function compare(a: number, middle:number, end: number, inclusive=true) {
-  var min = Math.min.apply(Math, [a, end]),
-    max = Math.max.apply(Math, [a, end]);
-  return inclusive ? middle >= min && middle <= max : middle > min && middle < max;
+function rangeDates(start: Temporal.PlainDate, middle:Temporal.PlainDate, end: Temporal.PlainDate, inclusive=true) {
+  const acceptedValues = [1];
+  if (inclusive)
+    acceptedValues.push(0);
+
+  return acceptedValues.includes(Temporal.PlainDate.compare(middle, start)) && acceptedValues.includes(Temporal.PlainDate.compare(end, middle))
 };

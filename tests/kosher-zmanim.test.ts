@@ -13,7 +13,7 @@ describe('Test kosher-zmanim', function () {
     const latitude: number = 40.0821;
     const longitude: number = -74.2097;
     const timeZoneId: string = 'America/New_York';
-    const date = Temporal.Now.zonedDateTimeISO(timeZoneId);
+    const date = Temporal.Now.plainDateISO();
 
     const options: KosherZmanim.Options = {
       date,
@@ -27,7 +27,7 @@ describe('Test kosher-zmanim', function () {
 
     const expected = {
       algorithm: 'US National Oceanic and Atmospheric Administration Algorithm',
-      date: date.toPlainDate().toString(),
+      date: date.toString(),
       elevation: '10.0',
       latitude: latitude.toString(),
       location: locationName,
@@ -45,7 +45,7 @@ describe('Test kosher-zmanim', function () {
     const latitude: number = 40.0821;
     const longitude: number = -74.2097;
     const timeZoneId: string = 'America/New_York';
-    const date = Temporal.Now.zonedDateTimeISO(timeZoneId);
+    const date = Temporal.Now.plainDateISO();
 
     const options: KosherZmanim.Options = {
       date,
@@ -59,7 +59,7 @@ describe('Test kosher-zmanim', function () {
 
     const expected = {
       algorithm: 'US National Oceanic and Atmospheric Administration Algorithm',
-      date: date.toPlainDate().toString(),
+      date: date.toString(),
       elevation: '10.0',
       latitude: latitude.toString(),
       location: null,

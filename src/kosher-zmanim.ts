@@ -14,7 +14,7 @@ export function getZmanimJson(options: Options): JsonOutput {
     ? new ComplexZmanimCalendar(geoLocation)
     : new ZmanimCalendar(geoLocation);
 
-  zmanimCalendar.setDate(options.date || Temporal.Now.zonedDateTimeISO());
+  zmanimCalendar.setDate(options.date || Temporal.Now.plainDateISO());
   return ZmanimFormatter.toJSON(zmanimCalendar);
 }
 
@@ -22,7 +22,7 @@ export interface Options {
   /**
    * @default Current date and time
    */
-  date?: Date | string | number | Temporal.ZonedDateTime;
+  date?: Date | string | number | Temporal.PlainDate;
   /**
    * IANA timezone ID
    */

@@ -1419,6 +1419,6 @@ export class JewishCalendar extends JewishDate {
    * @see Object#equals(Object)
    */
   public equals(jewishCalendar: JewishCalendar): boolean {
-    return this.getAbsDate() === jewishCalendar.getAbsDate() && this.getInIsrael() === jewishCalendar.getInIsrael();
+    return Temporal.PlainDate.compare(this.getDate(), jewishCalendar.getDate()) === 0 && this.getInIsrael() === jewishCalendar.getInIsrael();
   }
 }
