@@ -1,7 +1,6 @@
 import { Big } from 'big.js';
 import { Temporal } from 'temporal-polyfill'
 
-import { Long_MIN_VALUE } from './polyfills/Utils';
 import { GeoLocation } from './util/GeoLocation';
 import { AstronomicalCalculator } from './util/AstronomicalCalculator';
 import { NOAACalculator } from './util/NOAACalculator';
@@ -249,26 +248,6 @@ export class AstronomicalCalendar {
   }
 
   /**
-   * A utility method that returns a date offset by the offset time passed in. Please note that the level of light
-   * during twilight is not affected by elevation, so if this is being used to calculate an offset before sunrise or
-   * after sunset with the intent of getting a rough "level of light" calculation, the sunrise or sunset time passed
-   * to this method should be sea level sunrise and sunset.
-   *
-   * @param time
-   *            the start time
-   * @param offset
-   *            the offset in milliseconds to add to the time.
-   * @return the {@link java.util.Date} with the offset in milliseconds added to it
-   */
-  public static getTimeOffset(time: Temporal.ZonedDateTime | null, offset: number): Temporal.ZonedDateTime | null {
-    if (time === null || offset === Long_MIN_VALUE || Number.isNaN(offset)) {
-      return null;
-    }
-
-    return time.add({ milliseconds: offset });
-  }
-
-  /**
    * A utility method that returns the time of an offset by degrees below or above the horizon of
    * {@link #getSunrise() sunrise}. Note that the degree offset is from the vertical, so for a calculation of 14&deg;
    * before sunrise, an offset of 14 + {@link #GEOMETRIC_ZENITH} = 104 would have to be passed as a parameter.
@@ -443,11 +422,12 @@ export class AstronomicalCalendar {
    *
    * @see #getTemporalHour()
    */
-  public getTemporalHour(startOfday: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()): number {
+  public getTemporalHour(startOfday: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()) {
     if (startOfday === null || endOfDay === null) {
-      return Long_MIN_VALUE;
+      return;
     }
-    return startOfday.until(endOfDay).total({ unit: 'milliseconds' }) / 12;
+    const intValue = startOfday.until(endOfDay).total({ unit: 'nanoseconds' }) / 12;
+    return Temporal.Duration.from({ nanoseconds: Math.trunc(intValue) })
   }
 
     /**
@@ -464,7 +444,7 @@ export class AstronomicalCalendar {
       const clonedCal = this.clone();
       clonedCal.setDate(this.getDate().add({ days: 1 }));
       return this.getSunTransit()!
-        .add({microseconds: (this.getSunTransit()?.until(clonedCal.getSunTransit()!).total({ unit: "milliseconds"})! / 2) * 1000});
+        .add({nanoseconds: Math.trunc(this.getSunTransit()?.until(clonedCal.getSunTransit()!).total({ unit: "nanoseconds" })! / 2)});
     }
 
   /**
@@ -490,8 +470,13 @@ export class AstronomicalCalendar {
       if (!endOfDay)
         throw new IllegalArgumentException('No argument for the end of day provided');
 
-      const temporalHour: number = this.getTemporalHour(startOfDay, endOfDay);
-      return AstronomicalCalendar.getTimeOffset(startOfDay, temporalHour * 6);
+      const temporalHour = this.getTemporalHour(startOfDay, endOfDay)!;
+      let offsetTime = startOfDay;
+      for (let index = 0; index < 6; index++) {
+        offsetTime = offsetTime.add(temporalHour);
+      }
+
+      return offsetTime;
     }
 
     const noon = this.getAstronomicalCalculator().getUTCNoon(this.getAdjustedDate(), this.getGeoLocation());
@@ -522,6 +507,11 @@ export class AstronomicalCalendar {
     calculatedTime -= minutes;
     const seconds: number = Math.trunc(calculatedTime *= 60); // retain only the seconds
     calculatedTime -= seconds; // remaining milliseconds
+    const milliseconds = Math.trunc(calculatedTime *= 1000)
+    calculatedTime -= milliseconds;
+    const microseconds = Math.trunc(calculatedTime *= 1000)
+    calculatedTime -= microseconds; // remaining nanoseconds
+
 
     // Check if a date transition has occurred, or is about to occur - this indicates the date of the event is
     // actually not the target date, but the day prior or after
@@ -536,7 +526,9 @@ export class AstronomicalCalendar {
       hour: hours,
       minute: minutes,
       second: seconds,
-      millisecond: Math.trunc(calculatedTime * 1000),
+      millisecond: milliseconds,
+      microsecond: microseconds,
+      nanosecond: Math.trunc(calculatedTime * 1000)
     }).withTimeZone(this.geoLocation.getTimeZone());
   }
 
@@ -555,7 +547,7 @@ export class AstronomicalCalendar {
     if (Number.isNaN(minutes)) return null;
 
     let offsetByDegrees: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise();
-    const offsetByTime: Temporal.ZonedDateTime | null = AstronomicalCalendar.getTimeOffset(this.getSeaLevelSunrise(), -(minutes * AstronomicalCalendar.MINUTE_MILLIS));
+    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise()?.subtract({ minutes })!;
 
     let degrees: Big = new Big(0);
     const incrementor: Big = new Big('0.0001');
@@ -590,7 +582,7 @@ export class AstronomicalCalendar {
     if (Number.isNaN(minutes)) return null;
 
     let offsetByDegrees: Temporal.ZonedDateTime | null = this.getSeaLevelSunset();
-    const offsetByTime: Temporal.ZonedDateTime | null = AstronomicalCalendar.getTimeOffset(this.getSeaLevelSunset(), minutes * AstronomicalCalendar.MINUTE_MILLIS);
+    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()?.add({ minutes })!
 
     let degrees: Big = new Big(0);
     const incrementor: Big = new Big('0.001');
@@ -662,8 +654,7 @@ export class AstronomicalCalendar {
     
     const geoLocation: GeoLocation = this.getGeoLocation();
     const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / AstronomicalCalendar.HOUR_MILLIS;
-    return AstronomicalCalendar.getTimeOffset(this.getDateFromTime(hours - rawOffsetHours, true),
-      -geoLocation.getLocalMeanTimeOffset());
+    return this.getDateFromTime(hours - rawOffsetHours, true)?.subtract({ milliseconds: geoLocation.getLocalMeanTimeOffset() })!;
 	}
 
   /**

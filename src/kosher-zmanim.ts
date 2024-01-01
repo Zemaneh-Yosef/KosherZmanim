@@ -59,9 +59,9 @@ export * from './hebrewcalendar/JewishCalendar';
 export * from './hebrewcalendar/Daf';
 export * from './hebrewcalendar/YomiCalculator';
 export * from './hebrewcalendar/YerushalmiYomiCalculator';
-//export * from './hebrewcalendar/TefilaRules.ts'
+export * from './hebrewcalendar/TefilaRules'
 
-//export * from './hebrewcalendar/HebrewDateFormatter';
+export * from './hebrewcalendar/HebrewDateFormatter';
 export * from './util/ZmanimFormatter';
 
 export { _Big, Temporal};

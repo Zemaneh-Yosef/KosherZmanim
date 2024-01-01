@@ -61,11 +61,11 @@ export class GeoLocation {
    */
   private static readonly FINAL_BEARING: number = 2;
 
-  /** constant for milliseconds in a minute (60,000) */
-  private static readonly MINUTE_MILLIS: number = 60 * 1000;
+  /** constant for nanoseconds in a minute (60 * 1000 * 1000 * 1000) */
+  private static readonly MINUTE_NANOS: number = 60 * 1000 * 1000 * 1000;
 
   /** constant for milliseconds in an hour (3,600,000) */
-  private static readonly HOUR_MILLIS: number = GeoLocation.MINUTE_MILLIS * 60;
+  private static readonly HOUR_NANOS: number = GeoLocation.MINUTE_NANOS * 60;
 
   /**
    * Method to get the elevation in Meters.
@@ -333,7 +333,7 @@ export class GeoLocation {
   }
 
   /**
-   * A method that will return the location's local mean time offset in milliseconds from local <a
+   * A method that will return the location's local mean time offset in nanoseconds from local <a
    * href="https://en.wikipedia.org/wiki/Standard_time">standard time</a>. The globe is split into 360&deg;, with
    * 15&deg; per hour of the day. For a local that is at a longitude that is evenly divisible by 15 (longitude % 15 ==
    * 0), at solar {@link AstronomicalCalendar#getSunTransit() noon} (with adjustment for the <a
@@ -345,12 +345,12 @@ export class GeoLocation {
    * href="https://en.wikipedia.org/wiki/Daylight_saving_time">Daylight saving time</a> offset since this class is
    * unaware of dates.
    *
-   * @return the offset in milliseconds not accounting for Daylight saving time. A positive value will be returned
+   * @return the offset in nanoseconds not accounting for Daylight saving time. A positive value will be returned
    *         East of the 15&deg; timezone line, and a negative value West of it.
    * @since 1.1
    */
   public getLocalMeanTimeOffset(): number {
-    return this.getLongitude() * 4 * GeoLocation.MINUTE_MILLIS - TimeZone.getRawOffset(this.getTimeZone());
+    return this.getLongitude() * 4 * GeoLocation.MINUTE_NANOS - TimeZone.getRawOffset(this.getTimeZone());
   }
 
   /**
@@ -371,7 +371,7 @@ export class GeoLocation {
    * @return the number of days to adjust the date This will typically be 0 unless the date crosses the antimeridian
    */
   public getAntimeridianAdjustment(): -1 | 1 | 0 {
-    const localHoursOffset: number = this.getLocalMeanTimeOffset() / GeoLocation.HOUR_MILLIS;
+    const localHoursOffset: number = this.getLocalMeanTimeOffset() / GeoLocation.HOUR_NANOS;
 
     // if the offset is 20 hours or more in the future (never expected anywhere other
     // than a location using a timezone across the anti meridian to the east such as Samoa)
@@ -611,8 +611,8 @@ export class GeoLocation {
       .concat(`\nElevation:\t\t\t${this.getElevation().toString()} Meters`)
       .concat(`\nTimezone ID:\t\t\t${this.getTimeZone()}`)
       .concat(`\nTimezone Display Name:\t\t${TimeZone.getDisplayName(this.getTimeZone())}`)
-      .concat(`\nTimezone GMT Offset:\t\t${(TimeZone.getRawOffset(this.getTimeZone()) / GeoLocation.HOUR_MILLIS).toString()}`)
-      .concat(`\nTimezone DST Offset:\t\t${(TimeZone.getDSTSavings(this.getTimeZone()) / GeoLocation.HOUR_MILLIS).toString()}`);
+      .concat(`\nTimezone GMT Offset:\t\t${(TimeZone.getRawOffset(this.getTimeZone()) / GeoLocation.HOUR_NANOS).toString()}`)
+      .concat(`\nTimezone DST Offset:\t\t${(TimeZone.getDSTSavings(this.getTimeZone()) / GeoLocation.HOUR_NANOS).toString()}`);
   }
 
   /**

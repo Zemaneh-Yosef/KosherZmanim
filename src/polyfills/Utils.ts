@@ -21,14 +21,14 @@ export namespace Utils {
 
 export namespace TimeZone {
   /**
-   * Returns the amount of time in milliseconds to add to UTC to get
+   * Returns the amount of time in nanoseconds to add to UTC to get
    * standard time in this time zone. Because this value is not
    * affected by daylight saving time, it is called <I>raw
    * offset</I>.
    *
    * Since JS doesn't have a native function for this, use the lesser offset of January and July.
    *
-   * @return the amount of raw offset time in milliseconds to add to UTC.
+   * @return the amount of raw offset time in nanoseconds to add to UTC.
    */
   export function getRawOffset(timeZoneId: string): number {
     const timeZone = Temporal.TimeZone.from(timeZoneId);
@@ -38,7 +38,6 @@ export namespace TimeZone {
     ]
     .map(monthDay => Temporal.ZonedDateTime.from(monthDay).toInstant())
     .map(instant => timeZone.getOffsetNanosecondsFor(instant))
-    .map(nanoSeconds => nanoSeconds / 1000000)
 
     return Math.min(...msCount);
   }
@@ -54,7 +53,7 @@ export namespace TimeZone {
 
   /**
    * Returns the amount of time to be added to local standard time to get local wall clock time.
-   * The default implementation returns 3600000 milliseconds (i.e., one hour) if a call to useDaylightTime() returns true.
+   * The default implementation returns 3600000000000 nanoseconds (i.e., one hour) if a call to useDaylightTime() returns true.
    * Otherwise, 0 (zero) is returned.
    * @param {string} timeZoneId
    * @return {number}
@@ -68,7 +67,6 @@ export namespace TimeZone {
     .map(monthDay => Temporal.PlainDate.from(monthDay))
     .map(plainMonthDay => timeZone.getInstantFor!(plainMonthDay))
     .map(instant => timeZone.getOffsetNanosecondsFor(instant))
-    .map(nanoSeconds => nanoSeconds / 1e6)
 
     return Math.abs(msCount[0] - msCount[1]);
   }
@@ -84,7 +82,7 @@ export namespace TimeZone {
    */
   export function getOffset(timeZoneId: string, millisSinceEpoch: number): number {
     const timeZone = Temporal.TimeZone.from(timeZoneId);
-    return timeZone.getOffsetNanosecondsFor(Temporal.Instant.fromEpochMilliseconds(millisSinceEpoch)) / 1e6;
+    return timeZone.getOffsetNanosecondsFor(Temporal.Instant.fromEpochMilliseconds(millisSinceEpoch));
   }
 }
 

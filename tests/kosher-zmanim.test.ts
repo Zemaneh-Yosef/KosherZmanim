@@ -38,7 +38,7 @@ describe('Test kosher-zmanim', function () {
 
     assert.deepStrictEqual(omit(zmanimJson.metadata, ['timeZoneName', 'timeZoneOffset']), expected);
     assert.oneOf(zmanimJson.metadata.timeZoneName, ['Eastern Daylight Time', 'Eastern Standard Time']);
-    assert.oneOf(zmanimJson.metadata.timeZoneOffset, ['-4.0', '-5.0']);
+    assert.oneOf(zmanimJson.metadata.timeZoneOffset, ['-4000000.0', '-5000000.0']);
   });
 
   it('It returns the correct metadata for Complex Zmanim', function () {
@@ -70,7 +70,7 @@ describe('Test kosher-zmanim', function () {
 
     assert.deepStrictEqual(omit(zmanimJson.metadata, ['timeZoneName', 'timeZoneOffset']), expected);
     assert.oneOf(zmanimJson.metadata.timeZoneName, ['Eastern Daylight Time', 'Eastern Standard Time']);
-    assert.oneOf(zmanimJson.metadata.timeZoneOffset, ['-4.0', '-5.0']);
+    assert.oneOf(zmanimJson.metadata.timeZoneOffset, ['-4000000.0', '-5000000.0']);
   });
 
   it('Update year when JewishDate.setGregorianDayOfMonth() is called', function () {

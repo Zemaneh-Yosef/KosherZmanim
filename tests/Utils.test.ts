@@ -74,19 +74,19 @@ describe('Test Utils', function () {
 describe('Test TimeZone', function () {
   it('Gets the raw offset for Australia/Eucla', function () {
     const result = TimeZone.getRawOffset('Australia/Eucla');
-    const expected = 8.75 * 60 * 60 * 1000;
+    const expected = 8.75 * 60 * 60 * 1000 * 1000000;
     assert.strictEqual(result, expected);
   });
 
   it('Gets the raw offset for Australia/Eucla on 2019/01/01 00:00:00Z', function () {
     const result = TimeZone.getOffset('Australia/Eucla', janDateTime.epochMilliseconds);
-    const expected = 8.75 * 60 * 60 * 1000;
+    const expected = 8.75 * 60 * 60 * 1000 * 1000000;
     assert.strictEqual(result, expected);
   });
 
   it('Gets the raw offset for Australia/Eucla on 2019/07/01 00:00:00Z', function () {
     const result = TimeZone.getOffset('Australia/Eucla', julyDateTime.epochMilliseconds);
-    const expected = 8.75 * 60 * 60 * 1000;
+    const expected = 8.75 * 60 * 60 * 1000 * 1000000;
     assert.strictEqual(result, expected);
   });
 });

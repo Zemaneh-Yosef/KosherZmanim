@@ -324,8 +324,9 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         a null will be returned. See detailed explanation on top of the {@link AstronomicalCalendar}
 	 *         documentation.
 	 */
-  public getAlos72(): Temporal.ZonedDateTime | null {
-    return ZmanimCalendar.getTimeOffset(this.getElevationAdjustedSunrise(), -72 * ZmanimCalendar.MINUTE_MILLIS);
+  public getAlos72() {
+    return this.getElevationAdjustedSunrise()
+		?.subtract({ minutes: 72 });
   }
 
   /**
@@ -410,7 +411,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see ComplexZmanimCalendar#getSofZmanShmaMGA72Minutes() that 
 	 */
   public getSofZmanShmaMGA(): Temporal.ZonedDateTime | null {
-    return this.getSofZmanShma(this.getAlos72(), this.getTzais72());
+    return this.getSofZmanShma(this.getAlos72()!, this.getTzais72()!);
   }
 
   /**
@@ -428,8 +429,8 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         and one where it does not set, a null will be returned See detailed explanation on top of the
 	 *         {@link AstronomicalCalendar} documentation.
 	 */
-  public getTzais72(): Temporal.ZonedDateTime | null {
-    return ZmanimCalendar.getTimeOffset(this.getElevationAdjustedSunset(), 72 * ZmanimCalendar.MINUTE_MILLIS);
+  public getTzais72() {
+    return this.getElevationAdjustedSunset()?.add({ minutes: 72 })
   }
 
   /**
@@ -447,8 +448,8 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see #getCandleLightingOffset()
 	 * @see #setCandleLightingOffset(double)
 	 */
-  public getCandleLighting(): Temporal.ZonedDateTime | null {
-    return ZmanimCalendar.getTimeOffset(this.getSeaLevelSunset(), -this.getCandleLightingOffset() * ZmanimCalendar.MINUTE_MILLIS);
+  public getCandleLighting() {
+    return this.getSeaLevelSunset()?.subtract({ minutes: this.getCandleLightingOffset() });
   }
 
   /**
@@ -515,7 +516,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * @see #getAlos72()
 	 */
   public getSofZmanTfilaMGA(): Temporal.ZonedDateTime | null {
-    return this.getSofZmanTfila(this.getAlos72(), this.getTzais72());
+    return this.getSofZmanTfila(this.getAlos72()!, this.getTzais72()!);
   }
 
   /**
@@ -665,7 +666,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    * @see #getSeaLevelSunset()
    * @see ComplexZmanimCalendar#getShaahZmanisBaalHatanya()
    */
-  public getShaahZmanisGra(): number {
+  public getShaahZmanisGra() {
     return this.getTemporalHour(this.getElevationAdjustedSunrise(), this.getElevationAdjustedSunset());
   }
 
@@ -684,7 +685,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    *         where it does not set, {@link Long#MIN_VALUE} will be returned. See detailed explanation on top of the
    *         {@link AstronomicalCalendar} documentation.
    */
-  public getShaahZmanisMGA(): number {
+  public getShaahZmanisMGA() {
     return this.getTemporalHour(this.getAlos72(), this.getTzais72());
   }
 
@@ -804,8 +805,13 @@ export class ZmanimCalendar extends AstronomicalCalendar {
     *         AstronomicalCalendar} documentation.
    */
   public getShaahZmanisBasedZman(startOfDay: Temporal.ZonedDateTime | null, endOfDay: Temporal.ZonedDateTime | null, hours: number): Temporal.ZonedDateTime | null {
-    const shaahZmanis: number = this.getTemporalHour(startOfDay, endOfDay);
-    return ZmanimCalendar.getTimeOffset(startOfDay, shaahZmanis * hours);
+    const shaahZmanis = this.getTemporalHour(startOfDay, endOfDay)!;
+
+	let builtTime = startOfDay!;
+	for (let index = 0; index < hours; index++) {
+		builtTime = builtTime.add(shaahZmanis)
+	}
+    return builtTime
   }
 
   /**
@@ -816,7 +822,7 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 * for those who want to use the <a href="https://en.wikipedia.org/wiki/Abraham_Cohen_Pimentel">Minchas Cohen</a> in Ma'amar 2:4
 	 * and the <a href="https://en.wikipedia.org/wiki/Hezekiah_da_Silva">Pri Chadash</a> who calculate <em>tzais</em> as a percentage
 	 * of the day after sunset. While the Minchas Cohen only applies this to 72 minutes or a 1/10 of the day around the world (based
-	 * on the equinox / equilux in Israel, this method allows calculations for any degrees level for any location.
+	 * on the equinox / equilux in Israel), this method allows calculations for any degrees level for any location.
 	 * 
 	 * @param degrees
 	 *            the number of degrees below the horizon after sunset.
