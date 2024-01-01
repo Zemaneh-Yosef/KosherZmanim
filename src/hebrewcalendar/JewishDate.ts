@@ -284,12 +284,6 @@ export class JewishDate {
     return this.date.with({ month }).daysInMonth;
   }
 
-  /** Returns the absolute date (days since January 1, 0001 on the Gregorian calendar).
-   * @see #getAbsDate()
-   * @see #absDateToJewishDate()
-   */
-  private gregorianAbsDate!: number;
-
   /**
    * Returns the number of days in a given month in a given month and year.
    *
@@ -333,15 +327,6 @@ export class JewishDate {
 
     const dayOfMonth: number = absDate - JewishDate.gregorianDateToAbsDate(year, month, 1) + 1;
     this.setInternalGregorianDate(year, month, dayOfMonth);
-  }
-
-  /**
-   * Returns the absolute date (days since January 1, 0001 on the Gregorian calendar).
-   *
-   * @return the number of days since January 1, 1
-   */
-  public getAbsDate(): number {
-    return this.gregorianAbsDate;
   }
 
   /**
