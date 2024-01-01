@@ -1,6 +1,6 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { IntegerUtils, StringUtils } from '../polyfills/Utils.ts';
+import { IntegerUtils, StringUtils } from '../polyfills/Utils';
 
 /**
  * A wrapper class for a astronomical times / <em>zmanim</em> that is mostly intended to allow sorting collections of astronomical times.
@@ -99,10 +99,8 @@ export class Zman {
    * Please note that this class will handle cases where either the {@code Zman} is a null or {@link #getZman()} returns a null.
    */
   static compareDateOrder(zman1: Zman, zman2: Zman): number {
-    const firstMillis = zman1.zman?.valueOf() || 0;
-    const secondMillis = zman2.zman?.valueOf() || 0;
-
-    return IntegerUtils.compare(firstMillis, secondMillis);
+    const times = [zman1, zman2].map(zman => zman.zman) as [Temporal.ZonedDateTime, Temporal.ZonedDateTime];
+    return Temporal.ZonedDateTime.compare(...times)
   }
 
   /**

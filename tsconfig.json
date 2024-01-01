@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "declaration": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types",
+    "module": "ESNEXT",
     "target": "es6",
     "sourceMap": true,
-    "outDir": "../dist/lib-cjs/",
     "lib": ["ESNext"],
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "strict": true
-  }
+  },
+  "include": ["./src/**/*"]
 }

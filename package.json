@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "clean": "rimraf dist/* -g",
-    "build": "npm run clean && rollup -c",
+    "build": "npm run clean && rollup -c && dts-bundle-generator -o dist/kosher-zmanim.esm.d.ts dist/types/kosher-zmanim.d.ts && rm dist/kosher-zmanim.ignore.d.ts && rm -rf dist/types",
     "lint": "eslint --ext .ts src tests",
     "test": "ts-mocha -p tests/tsconfig.json tests/**/*.test.ts",
     "prepublishOnly": "npm run build"
@@ -28,11 +28,12 @@
     "dist/*"
   ],
   "dependencies": {
-    "@js-temporal/polyfill": "^0.4.4",
-    "big.js": "^6.2.1"
+    "big.js": "^6.2.1",
+    "temporal-polyfill": "^0.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/big.js": "^6.2.2",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
@@ -41,6 +42,7 @@
     "@typescript-eslint/parser": "^6.13.2",
     "chai": "^4.3.10",
     "esbuild": "^0.19.8",
+    "esbuild-plugin-d.ts": "^1.2.2",
     "eslint": "^8.55.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -52,6 +54,7 @@
     "ts-loader": "^9.5.1",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.2"
   }
 }

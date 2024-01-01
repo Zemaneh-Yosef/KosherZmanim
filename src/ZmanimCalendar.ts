@@ -1,9 +1,9 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { AstronomicalCalendar } from './AstronomicalCalendar.ts';
-import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
-import { NullPointerException } from './polyfills/errors.ts';
-import { Long_MIN_VALUE } from './polyfills/Utils.ts';
+import { AstronomicalCalendar } from './AstronomicalCalendar';
+import { JewishCalendar } from './hebrewcalendar/JewishCalendar';
+import { NullPointerException } from './polyfills/errors';
+import { Long_MIN_VALUE } from './polyfills/Utils';
 
 /**
  * The ZmanimCalendar is a specialized calendar that can calculate sunrise, sunset and Jewish <em>zmanim</em>

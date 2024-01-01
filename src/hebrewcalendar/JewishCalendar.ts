@@ -1,10 +1,10 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { GeoLocation } from '../util/GeoLocation.ts';
-import { Daf } from './Daf.ts';
-import { JewishDate } from './JewishDate.ts';
-import { Calendar } from '../polyfills/Utils.ts';
-import { UnsupportedError } from '../polyfills/errors.ts';
+import { GeoLocation } from '../util/GeoLocation';
+import { Daf } from './Daf';
+import { JewishDate } from './JewishDate';
+import { Calendar } from '../polyfills/Utils';
+import { UnsupportedError } from '../polyfills/errors';
 
 const { MONDAY, TUESDAY, THURSDAY, FRIDAY, SATURDAY } = Calendar;
 

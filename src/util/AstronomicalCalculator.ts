@@ -1,7 +1,7 @@
-import { GeoLocation } from './GeoLocation.ts';
-import { MathUtils } from '../polyfills/Utils.ts';
-import { UnsupportedError } from '../polyfills/errors.ts';
-import { Temporal } from '@js-temporal/polyfill';
+import { GeoLocation } from './GeoLocation';
+import { MathUtils } from '../polyfills/Utils';
+import { UnsupportedError } from '../polyfills/errors';
+import { Temporal } from 'temporal-polyfill'
 
 /**
  * An abstract class that all sun time calculating classes extend. This allows the algorithm used to be changed at

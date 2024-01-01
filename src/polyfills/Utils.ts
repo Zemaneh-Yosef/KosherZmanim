@@ -1,4 +1,4 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
 export namespace Utils {
   // https://stackoverflow.com/a/40577337/8037425

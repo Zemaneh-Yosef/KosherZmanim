@@ -1,7 +1,7 @@
-import { GeoLocation } from './GeoLocation.ts';
-import { AstronomicalCalculator } from './AstronomicalCalculator.ts';
-import { MathUtils } from '../polyfills/Utils.ts';
-import { Temporal } from '@js-temporal/polyfill';
+import { GeoLocation } from './GeoLocation';
+import { AstronomicalCalculator } from './AstronomicalCalculator';
+import { MathUtils } from '../polyfills/Utils';
+import { Temporal } from 'temporal-polyfill'
 
 /**
  * Implementation of sunrise and sunset methods to calculate astronomical times based on the <a

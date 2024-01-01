@@ -1,12 +1,12 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { TimeZone, Utils, padZeros } from '../polyfills/Utils.ts';
-import { Time } from './Time.ts';
-import { AstronomicalCalendar } from '../AstronomicalCalendar.ts';
-import { ZmanimCalendar } from '../ZmanimCalendar.ts';
-import { ComplexZmanimCalendar } from '../ComplexZmanimCalendar.ts';
-import { Zman, ZmanWithDuration, ZmanWithZmanDate } from './Zman.ts';
-import { UnsupportedError } from '../polyfills/errors.ts';
+import { TimeZone, Utils, padZeros } from '../polyfills/Utils';
+import { Time } from './Time';
+import { AstronomicalCalendar } from '../AstronomicalCalendar';
+import { ZmanimCalendar } from '../ZmanimCalendar';
+import { ComplexZmanimCalendar } from '../ComplexZmanimCalendar';
+import { Zman, ZmanWithDuration, ZmanWithZmanDate } from './Zman';
+import { UnsupportedError } from '../polyfills/errors';
 
 const methodBlacklist = <const>[
   'getAdjustedDate',
@@ -309,6 +309,7 @@ export class ZmanimFormatter {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const _dateTime = dateTime.with({ timeZone: this.getTimeZone() });
 
+    // @ts-ignore
     return _dateTime.toLocaleString(...this.dateFormat);
   }
 

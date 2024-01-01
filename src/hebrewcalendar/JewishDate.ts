@@ -1,7 +1,7 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { Calendar, IntegerUtils } from '../polyfills/Utils.ts';
-import { IllegalArgumentException } from '../polyfills/errors.ts';
+import { Calendar } from '../polyfills/Utils';
+import { IllegalArgumentException } from '../polyfills/errors';
 
 /**
  * The JewishDate is the base calendar class, that supports maintenance of a {@link java.util.GregorianCalendar}
@@ -780,26 +780,6 @@ export class JewishDate {
   }
 
   /**
-   * Returns the absolute date of Jewish date. ND+ER
-   *
-   * @param year
-   *            the Jewish year. The year can't be negative
-   * @param month
-   *            the Jewish month starting with Nisan. Nisan expects a value of 1 etc till Adar with a value of 12. For
-   *            a leap year, 13 will be the expected value for Adar II. Use the constants {@link JewishDate#NISSAN}
-   *            etc.
-   * @param dayOfMonth
-   *            the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that only
-   *            has 29 days, the day will be set as 29.
-   * @return the absolute date of the Jewish date.
-   */
-  private static jewishDateToAbsDate(year: number, month: number, dayOfMonth: number): number {
-    const elapsed: number = JewishDate.getDaysSinceStartOfJewishYear(year, month, dayOfMonth);
-    // add elapsed days this year + Days in prior years + Days elapsed before absolute year 1
-    return elapsed + JewishDate.getJewishCalendarElapsedDays(year) + JewishDate.JEWISH_EPOCH;
-  }
-
-  /**
    * Returns the molad for a given year and month. Returns a JewishDate {@link Object} set to the date of the molad
    * with the {@link #getMoladHours() hours}, {@link #getMoladMinutes() minutes} and {@link #getMoladChalakim()
      * chalakim} set. In the current implementation, it sets the molad time based on a midnight date rollover. This
@@ -868,37 +848,8 @@ export class JewishDate {
    * @return the number of days
    */
   public getDaysSinceStartOfJewishYear(): number {
-    return JewishDate.getDaysSinceStartOfJewishYear(this.getJewishYear(), this.getJewishMonth(), this.getJewishDayOfMonth());
-  }
-
-  /**
-   * returns the number of days from Rosh Hashana of the date passed in, to the full date passed in.
-   *
-   * @param year
-   *            the Jewish year
-   * @param month
-   *            the Jewish month
-   * @param dayOfMonth
-   *            the day in the Jewish month
-   * @return the number of days
-   */
-  private static getDaysSinceStartOfJewishYear(year: number, month: number, dayOfMonth: number): number {
-    let elapsedDays: number = dayOfMonth;
-    // Before Tishrei (from Nissan to Tishrei), add days in prior months
-    if (month < JewishDate.TISHREI) {
-      // this year before and after Nisan.
-      for (let m: number = JewishDate.TISHREI; m <= JewishDate.getLastMonthOfJewishYear(year); m++) {
-        elapsedDays += JewishDate.getDaysInJewishMonth(m, year);
-      }
-      for (let m: number = JewishDate.NISSAN; m < month; m++) {
-        elapsedDays += JewishDate.getDaysInJewishMonth(m, year);
-      }
-    } else { // Add days in prior months this year
-      for (let m: number = JewishDate.TISHREI; m < month; m++) {
-        elapsedDays += JewishDate.getDaysInJewishMonth(m, year);
-      }
-    }
-    return elapsedDays;
+    const roshHashanah = this.date.withCalendar("hebrew").with({ month: 1, day: 1 })
+    return roshHashanah.until(this.date.withCalendar("hebrew")).total("days")
   }
 
   constructor(jewishYear: number, jewishMonth: number, jewishDayOfMonth: number);

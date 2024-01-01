@@ -1,9 +1,9 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { Calendar, Long_MIN_VALUE, TimeZone } from './polyfills/Utils.ts';
-import { GeoLocation } from './util/GeoLocation.ts';
-import { ZmanimCalendar } from './ZmanimCalendar.ts';
-import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
+import { Calendar, Long_MIN_VALUE, TimeZone } from './polyfills/Utils';
+import { GeoLocation } from './util/GeoLocation';
+import { ZmanimCalendar } from './ZmanimCalendar';
+import { JewishCalendar } from './hebrewcalendar/JewishCalendar';
 
 /**
  * <p>This class extends ZmanimCalendar and provides many more <em>zmanim</em> than available in the ZmanimCalendar. The basis

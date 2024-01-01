@@ -2,7 +2,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
 import { MathUtils, StringUtils, TimeZone, Utils, padZeros } from '../src/polyfills/Utils';
 

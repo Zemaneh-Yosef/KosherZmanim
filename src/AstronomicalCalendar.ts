@@ -1,12 +1,12 @@
 import { Big } from 'big.js';
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 
-import { Long_MIN_VALUE } from './polyfills/Utils.ts';
-import { GeoLocation } from './util/GeoLocation.ts';
-import { AstronomicalCalculator } from './util/AstronomicalCalculator.ts';
-import { NOAACalculator } from './util/NOAACalculator.ts';
-import { IllegalArgumentException, UnsupportedError } from './polyfills/errors.ts';
-import { TimeZone } from './polyfills/Utils.ts';
+import { Long_MIN_VALUE } from './polyfills/Utils';
+import { GeoLocation } from './util/GeoLocation';
+import { AstronomicalCalculator } from './util/AstronomicalCalculator';
+import { NOAACalculator } from './util/NOAACalculator';
+import { IllegalArgumentException, UnsupportedError } from './polyfills/errors';
+import { TimeZone } from './polyfills/Utils';
 
 /**
  * A Java calendar that calculates astronomical times such as {@link #getSunrise() sunrise} and {@link #getSunset()

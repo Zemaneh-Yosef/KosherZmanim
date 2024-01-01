@@ -1,10 +1,10 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill'
 import _Big from 'big.js';
 
-import { GeoLocation } from './util/GeoLocation.ts';
-import { ZmanimCalendar } from './ZmanimCalendar.ts';
-import { ComplexZmanimCalendar } from './ComplexZmanimCalendar.ts';
-import { JsonOutput, ZmanimFormatter } from './util/ZmanimFormatter.ts';
+import { GeoLocation } from './util/GeoLocation';
+import { ZmanimCalendar } from './ZmanimCalendar';
+import { ComplexZmanimCalendar } from './ComplexZmanimCalendar';
+import { JsonOutput, ZmanimFormatter } from './util/ZmanimFormatter';
 
 export function getZmanimJson(options: Options): JsonOutput {
   const geoLocation: GeoLocation = new GeoLocation(options.locationName || null, options.latitude, options.longitude,
@@ -41,27 +41,27 @@ export interface Options {
   complexZmanim?: boolean;
 }
 
-export * from './util/Time.ts';
-export * from './util/GeoLocation.ts';
-export * from './util/GeoLocationUtils.ts';
-export * from './util/Zman.ts';
-export * from './polyfills/Utils.ts';
+export * from './util/Time';
+export * from './util/GeoLocation';
+export * from './util/GeoLocationUtils';
+export * from './util/Zman';
+export * from './polyfills/Utils';
 
-export * from './util/NOAACalculator.ts';
-export * from './util/SunTimesCalculator.ts';
+export * from './util/NOAACalculator';
+export * from './util/SunTimesCalculator';
 
-export * from './AstronomicalCalendar.ts';
-export * from './ZmanimCalendar.ts';
-export * from './ComplexZmanimCalendar.ts';
+export * from './AstronomicalCalendar';
+export * from './ZmanimCalendar';
+export * from './ComplexZmanimCalendar';
 
-export * from './hebrewcalendar/JewishDate.ts';
-export * from './hebrewcalendar/JewishCalendar.ts';
-export * from './hebrewcalendar/Daf.ts';
-export * from './hebrewcalendar/YomiCalculator.ts';
-export * from './hebrewcalendar/YerushalmiYomiCalculator.ts';
+export * from './hebrewcalendar/JewishDate';
+export * from './hebrewcalendar/JewishCalendar';
+export * from './hebrewcalendar/Daf';
+export * from './hebrewcalendar/YomiCalculator';
+export * from './hebrewcalendar/YerushalmiYomiCalculator';
 //export * from './hebrewcalendar/TefilaRules.ts'
 
-//export * from './hebrewcalendar/HebrewDateFormatter.ts';
-export * from './util/ZmanimFormatter.ts';
+//export * from './hebrewcalendar/HebrewDateFormatter';
+export * from './util/ZmanimFormatter';
 
 export { _Big, Temporal};

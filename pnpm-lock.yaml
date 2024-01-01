@@ -5,17 +5,20 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@js-temporal/polyfill':
-    specifier: ^0.4.4
-    version: 0.4.4
   big.js:
     specifier: ^6.2.1
     version: 6.2.1
+  temporal-polyfill:
+    specifier: ^0.1.1
+    version: 0.1.1
 
 devDependencies:
   '@rollup/plugin-node-resolve':
     specifier: ^15.2.3
     version: 15.2.3(rollup@4.5.1)
+  '@rollup/plugin-typescript':
+    specifier: ^11.1.5
+    version: 11.1.5(rollup@4.5.1)(tslib@2.6.2)(typescript@5.3.2)
   '@types/big.js':
     specifier: ^6.2.2
     version: 6.2.2
@@ -40,6 +43,9 @@ devDependencies:
   esbuild:
     specifier: ^0.19.8
     version: 0.19.8
+  esbuild-plugin-d.ts:
+    specifier: ^1.2.2
+    version: 1.2.2(typescript@5.3.2)
   eslint:
     specifier: ^8.55.0
     version: 8.55.0
@@ -73,6 +79,9 @@ devDependencies:
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.10.3)(typescript@5.3.2)
+  tslib:
+    specifier: ^2.6.2
+    version: 2.6.2
   typescript:
     specifier: ^5.3.2
     version: 5.3.2
@@ -437,14 +446,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@js-temporal/polyfill@0.4.4:
-    resolution: {integrity: sha512-2X6bvghJ/JAoZO52lbgyAPFj8uCflhTo2g7nkFzEQdXd/D8rEeD4HtmTEpmtGCva260fcd66YNXBOYdnmHqSOg==}
-    engines: {node: '>=12'}
-    dependencies:
-      jsbi: 4.3.0
-      tslib: 2.6.1
-    dev: false
-
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -489,6 +490,26 @@ packages:
       is-module: 1.0.0
       resolve: 1.22.2
       rollup: 4.5.1
+    dev: true
+
+  /@rollup/plugin-typescript@11.1.5(rollup@4.5.1)(tslib@2.6.2)(typescript@5.3.2):
+    resolution: {integrity: sha512-rnMHrGBB0IUEv69Q8/JGRD/n4/n6b3nfpufUu26axhUcboUzv/twfZU8fIBbTOphRAe0v8EyxzeDpKXqGHfyDA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.14.0||^3.0.0||^4.0.0
+      tslib: '*'
+      typescript: '>=3.7.0'
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      tslib:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.5(rollup@4.5.1)
+      resolve: 1.22.8
+      rollup: 4.5.1
+      tslib: 2.6.2
+      typescript: 5.3.2
     dev: true
 
   /@rollup/pluginutils@5.0.4(rollup@4.5.1):
@@ -1621,6 +1642,17 @@ packages:
       is-symbol: 1.0.4
     dev: true
 
+  /esbuild-plugin-d.ts@1.2.2(typescript@5.3.2):
+    resolution: {integrity: sha512-ZmJTjICZYDx5GbTsMHWKdR7CVllc0zMTM7SX7u2o8n8y6R1iez5r6Ei4ybZXSAqrXN/chD0s4B0mqQxUhiYo4g==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      chalk: 4.1.2
+      lodash.merge: 4.6.2
+      typescript: 5.3.2
+    dev: true
+
   /esbuild@0.19.8:
     resolution: {integrity: sha512-l7iffQpT2OrZfH2rXIp7/FkmaeZM0vxbxN9KfiCwGYuZqzMg/JdvX26R31Zxn/Pxvsrg3Y9N6XTcnknqDyyv4w==}
     engines: {node: '>=12'}
@@ -2563,10 +2595,6 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsbi@4.3.0:
-    resolution: {integrity: sha512-SnZNcinB4RIcnEyZqFPdGPVgrg2AcnykiBy0sHVJQKHYeaLUvi3Exj+iaPpLnFVkDPZIV4U0yvgC9/R4uEAZ9g==}
-    dev: false
-
   /json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
     dev: true
@@ -3398,6 +3426,16 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /temporal-polyfill@0.1.1:
+    resolution: {integrity: sha512-/5e4EVRA0wBI/bEhWLirSjwUg1lELhQyTXxw9zNbVhqjKvI9BLczs+3wtsoD9sn3HN2ImAMW5XJQwAiXgWT+GA==}
+    dependencies:
+      temporal-spec: 0.1.0
+    dev: false
+
+  /temporal-spec@0.1.0:
+    resolution: {integrity: sha512-sMNggMeS6trCgMQuudgFHhX1gtBK3e+AT1zGrMsFYG1wlqtRT5E9rcvm3I1iNlvHpJX/3DO6L4qtWAuEl/T04Q==}
+    dev: false
+
   /terser-webpack-plugin@5.3.9(esbuild@0.19.8)(webpack@5.89.0):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
     engines: {node: '>= 10.13.0'}
@@ -3538,9 +3576,9 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tslib@2.6.1:
-    resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
-    dev: false
+  /tslib@2.6.2:
+    resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
+    dev: true
 
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
