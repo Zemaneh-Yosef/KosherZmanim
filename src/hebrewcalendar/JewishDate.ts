@@ -529,8 +529,8 @@ export class JewishDate {
    * @return the Jewish month of the year starting with Tishrei
    */
   private static getJewishMonthOfYear(year: number, month: number): number {
-    const isLeapYear: boolean = JewishDate.isJewishLeapYear(year);
-    return ((month + (isLeapYear ? 6 : 5)) % (isLeapYear ? 13 : 12)) + 1;
+    const jDate = new JewishDate(year, month, 1)
+    return jDate.date.withCalendar("hebrew").month;
   }
 
   /**
@@ -662,7 +662,7 @@ export class JewishDate {
    * @see #isKislevShort()
    */
   public static getDaysInJewishYear(year: number): number {
-    return JewishDate.getJewishCalendarElapsedDays(year + 1) - JewishDate.getJewishCalendarElapsedDays(year);
+    return Temporal.Now.plainDateISO().withCalendar("hebrew").with({ year }).daysInYear;
   }
 
   /**
@@ -755,19 +755,7 @@ export class JewishDate {
    * @return the number of days for a given Jewish month
    */
   private static getDaysInJewishMonth(month: number, year: number): number {
-    const shortMonths = [
-      JewishDate.IYAR,
-      JewishDate.TAMMUZ,
-      JewishDate.ELUL,
-      JewishDate.ADAR_II,
-    ];
-    if (shortMonths.includes(month)
-      || ((month === JewishDate.CHESHVAN) && !(JewishDate.isCheshvanLong(year)))
-      || ((month === JewishDate.KISLEV) && JewishDate.isKislevShort(year)) || (month === JewishDate.TEVES)
-      || ((month === JewishDate.ADAR) && !(JewishDate.isJewishLeapYear(year)))) {
-      return 29;
-    }
-    return 30;
+    return Temporal.Now.plainDateISO().withCalendar("hebrew").with({ month, year }).daysInMonth;
   }
 
   /**
@@ -848,7 +836,7 @@ export class JewishDate {
    * @return the number of days
    */
   public getDaysSinceStartOfJewishYear(): number {
-    const roshHashanah = this.date.withCalendar("hebrew").with({ month: 1, day: 1 })
+    const roshHashanah = this.date.withCalendar("hebrew").with({ month: 1, day: 1 }).subtract({ days: 1 })
     return roshHashanah.until(this.date.withCalendar("hebrew")).total("days")
   }
 

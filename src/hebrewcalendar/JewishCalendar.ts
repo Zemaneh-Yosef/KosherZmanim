@@ -6,7 +6,7 @@ import { JewishDate } from './JewishDate';
 import { Calendar } from '../polyfills/Utils';
 import { UnsupportedError } from '../polyfills/errors';
 
-const { MONDAY, TUESDAY, THURSDAY, FRIDAY, SATURDAY } = Calendar;
+const { FRIDAY, SATURDAY } = Calendar;
 
 /**
  * List of <em>parshiyos</em> or special <em>Shabasos</em>. {@link #NONE} indicates a week without a <em>parsha</em>, while the enum for
@@ -422,7 +422,7 @@ export class JewishCalendar extends JewishDate {
     // elapsed days since molad ToHu
     let elapsedDays: number = JewishCalendar.getJewishCalendarElapsedDays(this.getJewishYear());
     // elapsed days to the current calendar date
-    elapsedDays += this.getDaysSinceStartOfJewishYear();
+    elapsedDays += Math.trunc(this.getDaysSinceStartOfJewishYear());
 
     /* Molad Nissan year 1 was 177 days after molad tohu of Tishrei. We multiply 29.5 days * 6 months from Tishrei
 		 * to Nissan = 177. Subtract 7 days since tekufas Nissan was 7 days and 9 hours before the molad as stated in the Rambam
@@ -441,16 +441,10 @@ export class JewishCalendar extends JewishDate {
    * @todo Use constants in this class.
    */
   private getParshaYearType(): number {
-    // plus one to the original Rosh Hashana of year 1 to get a week starting on Sunday
-    let roshHashanaDayOfWeek: number = (JewishCalendar.getJewishCalendarElapsedDays(this.getJewishYear()) + 1) % 7;
-    if (roshHashanaDayOfWeek === 0) {
-      // convert 0 to 7 for Shabbos for readability
-      roshHashanaDayOfWeek = SATURDAY;
-    }
-
-    if (this.isJewishLeapYear()) {
-      switch (roshHashanaDayOfWeek) {
-        case MONDAY:
+    const roshHashanah = this.getDate().withCalendar("hebrew").with({ day: 1, month: 1 });
+    if (roshHashanah.monthsInYear == 13) {
+      switch (roshHashanah.dayOfWeek) {
+        case 1: // MONDAY
           // BaCh
           if (this.isKislevShort()) {
             if (this.getInIsrael()) {
@@ -468,12 +462,12 @@ export class JewishCalendar extends JewishDate {
           }
           break;
         // GaK
-        case TUESDAY:
+        case 2: // Tuesday
           if (this.getInIsrael()) {
             return 15;
           }
           return 7;
-        case THURSDAY:
+        case 4: // Thursday
           // HaCh
           if (this.isKislevShort()) {
             return 8;
@@ -485,7 +479,7 @@ export class JewishCalendar extends JewishDate {
           }
 
           break;
-        case SATURDAY:
+        case 6: // Saturday
           // ZaCh
           if (this.isKislevShort()) {
             return 10;
@@ -503,8 +497,8 @@ export class JewishCalendar extends JewishDate {
       }
     } else {
       // not a leap year
-      switch (roshHashanaDayOfWeek) {
-        case MONDAY:
+      switch (roshHashanah.dayOfWeek) {
+        case 1: // MONDAY
           // BaCh
           if (this.isKislevShort()) {
             return 0;
@@ -519,13 +513,13 @@ export class JewishCalendar extends JewishDate {
           }
 
           break;
-        case TUESDAY:
+        case 2: // TUESDAY
           // GaK
           if (this.getInIsrael()) {
             return 12;
           }
           return 1;
-        case THURSDAY:
+        case 4: // THURSDAY
           // HaSh
           if (this.isCheshvanLong()) {
             return 3;
@@ -540,7 +534,7 @@ export class JewishCalendar extends JewishDate {
           }
 
           break;
-        case SATURDAY:
+        case 6: // SATURDAY
           // ZaCh
           if (this.isKislevShort()) {
             return 4;
@@ -555,7 +549,6 @@ export class JewishCalendar extends JewishDate {
       }
     }
 
-    // keep the compiler happy
     return -1;
   }
 
@@ -571,7 +564,7 @@ export class JewishCalendar extends JewishDate {
 
     const yearType: number = this.getParshaYearType();
     const roshHashanaDayOfWeek: number = JewishCalendar.getJewishCalendarElapsedDays(this.getJewishYear()) % 7;
-    const day: number = roshHashanaDayOfWeek + this.getDaysSinceStartOfJewishYear();
+    const day: number = roshHashanaDayOfWeek + Math.trunc(this.getDaysSinceStartOfJewishYear());
 
     // negative year should be impossible, but lets cover all bases
     if (yearType >= 0) {
