@@ -1,0 +1,2143 @@
+[
+    {
+        "days": [
+            {
+                "day": 1,
+                "monthCode": "M01"
+            },
+            {
+                "day": 1,
+                "monthCode": "M05"
+            },
+            {
+                "day": 1,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "ברוך ד׳-שכינתו בתוכנו"
+    },
+    {
+        "days": [
+            {
+                "day": 2,
+                "monthCode": "M01"
+            },
+            {
+                "day": 2,
+                "monthCode": "M05"
+            },
+            {
+                "day": 2,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "וכאשר נחפשה-מגדל העון"
+    },
+    {
+        "days": [
+            {
+                "day": 3,
+                "monthCode": "M01"
+            },
+            {
+                "day": 3,
+                "monthCode": "M05"
+            },
+            {
+                "day": 3,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "ונראה פשוט-לאין שעור"
+    },
+    {
+        "days": [
+            {
+                "day": 4,
+                "monthCode": "M01"
+            },
+            {
+                "day": 4,
+                "monthCode": "M05"
+            },
+            {
+                "day": 4,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "ואחשבה-בפנים הספר"
+    },
+    {
+        "days": [
+            {
+                "day": 5,
+                "monthCode": "M01"
+            },
+            {
+                "day": 5,
+                "monthCode": "M05"
+            },
+            {
+                "day": 5,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "על כן-צד הדי"
+    },
+    {
+        "days": [
+            {
+                "day": 6,
+                "monthCode": "M01"
+            },
+            {
+                "day": 6,
+                "monthCode": "M05"
+            },
+            {
+                "day": 6,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "ואחלה להקורא-במהרה בימינו אמן"
+    },
+    {
+        "days": [
+            {
+                "day": 7,
+                "monthCode": "M01"
+            },
+            {
+                "day": 6,
+                "monthCode": "M05"
+            },
+            {
+                "day": 6,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הקדמה",
+        "section": "ואל יפלא-לעון כלל"
+    },
+    {
+        "days": [
+            {
+                "day": 8,
+                "monthCode": "M01"
+            },
+            {
+                "day": 7,
+                "monthCode": "M05"
+            },
+            {
+                "day": 7,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "פתיחה",
+        "section": "1-4"
+    },
+    {
+        "days": [
+            {
+                "day": 9,
+                "monthCode": "M01"
+            },
+            {
+                "day": 8,
+                "monthCode": "M05"
+            },
+            {
+                "day": 8,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "פתיחה",
+        "section": "5-11"
+    },
+    {
+        "days": [
+            {
+                "day": 10,
+                "monthCode": "M01"
+            },
+            {
+                "day": 9,
+                "monthCode": "M05"
+            },
+            {
+                "day": 9,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "1-2"
+    },
+    {
+        "days": [
+            {
+                "day": 11,
+                "monthCode": "M01"
+            },
+            {
+                "day": 10,
+                "monthCode": "M05"
+            },
+            {
+                "day": 10,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "3-4"
+    },
+    {
+        "days": [
+            {
+                "day": 12,
+                "monthCode": "M01"
+            },
+            {
+                "day": 11,
+                "monthCode": "M05"
+            },
+            {
+                "day": 11,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "5-6"
+    },
+    {
+        "days": [
+            {
+                "day": 13,
+                "monthCode": "M01"
+            },
+            {
+                "day": 12,
+                "monthCode": "M05"
+            },
+            {
+                "day": 12,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "7-9"
+    },
+    {
+        "days": [
+            {
+                "day": 14,
+                "monthCode": "M01"
+            },
+            {
+                "day": 13,
+                "monthCode": "M05"
+            },
+            {
+                "day": 13,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "10-11"
+    },
+    {
+        "days": [
+            {
+                "day": 15,
+                "monthCode": "M01"
+            },
+            {
+                "day": 14,
+                "monthCode": "M05"
+            },
+            {
+                "day": 14,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "12-13"
+    },
+    {
+        "days": [
+            {
+                "day": 16,
+                "monthCode": "M01"
+            },
+            {
+                "day": 15,
+                "monthCode": "M05"
+            },
+            {
+                "day": 15,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "14-15"
+    },
+    {
+        "days": [
+            {
+                "day": 17,
+                "monthCode": "M01"
+            },
+            {
+                "day": 16,
+                "monthCode": "M05"
+            },
+            {
+                "day": 16,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "לווין",
+        "section": "16-17"
+    },
+    {
+        "days": [
+            {
+                "day": 18,
+                "monthCode": "M01"
+            },
+            {
+                "day": 17,
+                "monthCode": "M05"
+            },
+            {
+                "day": 17,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "1-2"
+    },
+    {
+        "days": [
+            {
+                "day": 19,
+                "monthCode": "M01"
+            },
+            {
+                "day": 18,
+                "monthCode": "M05"
+            },
+            {
+                "day": 18,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "3-4"
+    },
+    {
+        "days": [
+            {
+                "day": 20,
+                "monthCode": "M01"
+            },
+            {
+                "day": 19,
+                "monthCode": "M05"
+            },
+            {
+                "day": 19,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "5-6"
+    },
+    {
+        "days": [
+            {
+                "day": 21,
+                "monthCode": "M01"
+            },
+            {
+                "day": 20,
+                "monthCode": "M05"
+            },
+            {
+                "day": 20,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "7-8"
+    },
+    {
+        "days": [
+            {
+                "day": 22,
+                "monthCode": "M01"
+            },
+            {
+                "day": 21,
+                "monthCode": "M05"
+            },
+            {
+                "day": 21,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "9-10"
+    },
+    {
+        "days": [
+            {
+                "day": 23,
+                "monthCode": "M01"
+            },
+            {
+                "day": 22,
+                "monthCode": "M05"
+            },
+            {
+                "day": 22,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "11-12"
+    },
+    {
+        "days": [
+            {
+                "day": 24,
+                "monthCode": "M01"
+            },
+            {
+                "day": 23,
+                "monthCode": "M05"
+            },
+            {
+                "day": 23,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "עשין",
+        "section": "13-14"
+    },
+    {
+        "days": [
+            {
+                "day": 25,
+                "monthCode": "M01"
+            },
+            {
+                "day": 24,
+                "monthCode": "M05"
+            },
+            {
+                "day": 24,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "ערורין"
+    },
+    {
+        "days": [
+            {
+                "day": 26,
+                "monthCode": "M01"
+            },
+            {
+                "day": 25,
+                "monthCode": "M05"
+            },
+            {
+                "day": 25,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "1.1-1.2"
+    },
+    {
+        "days": [
+            {
+                "day": 27,
+                "monthCode": "M01"
+            },
+            {
+                "day": 26,
+                "monthCode": "M05"
+            },
+            {
+                "day": 26,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "1.3-1.4"
+    },
+    {
+        "days": [
+            {
+                "day": 28,
+                "monthCode": "M01"
+            },
+            {
+                "day": 27,
+                "monthCode": "M05"
+            },
+            {
+                "day": 27,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "1.5-1.6"
+    },
+    {
+        "days": [
+            {
+                "day": 29,
+                "monthCode": "M01"
+            },
+            {
+                "day": 28,
+                "monthCode": "M05"
+            },
+            {
+                "day": 28,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "1.7-1.9"
+    },
+    {
+        "days": [
+            {
+                "day": 30,
+                "monthCode": "M01"
+            },
+            {
+                "day": 29,
+                "monthCode": "M05"
+            },
+            {
+                "day": 29,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.1-2.2"
+    },
+    {
+        "days": [
+            {
+                "day": 1,
+                "monthCode": "M02"
+            },
+            {
+                "day": 30,
+                "monthCode": "M05"
+            },
+            {
+                "day": 30,
+                "monthCode": "M09"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.3-2.4"
+    },
+    {
+        "days": [
+            {
+                "day": 2,
+                "monthCode": "M02"
+            },
+            {
+                "day": 1,
+                "monthCode": "M06"
+            },
+            {
+                "day": 1,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.5-2.6"
+    },
+    {
+        "days": [
+            {
+                "day": 3,
+                "monthCode": "M02"
+            },
+            {
+                "day": 2,
+                "monthCode": "M06"
+            },
+            {
+                "day": 2,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.7-2.8"
+    },
+    {
+        "days": [
+            {
+                "day": 4,
+                "monthCode": "M02"
+            },
+            {
+                "day": 3,
+                "monthCode": "M06"
+            },
+            {
+                "day": 3,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.9-2.10"
+    },
+    {
+        "days": [
+            {
+                "day": 5,
+                "monthCode": "M02"
+            },
+            {
+                "day": 4,
+                "monthCode": "M06"
+            },
+            {
+                "day": 4,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.11"
+    },
+    {
+        "days": [
+            {
+                "day": 6,
+                "monthCode": "M02"
+            },
+            {
+                "day": 5,
+                "monthCode": "M06"
+            },
+            {
+                "day": 5,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "2.12-2.13"
+    },
+    {
+        "days": [
+            {
+                "day": 7,
+                "monthCode": "M02"
+            },
+            {
+                "day": 6,
+                "monthCode": "M06"
+            },
+            {
+                "day": 6,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "3.1-3.2"
+    },
+    {
+        "days": [
+            {
+                "day": 8,
+                "monthCode": "M02"
+            },
+            {
+                "day": 7,
+                "monthCode": "M06"
+            },
+            {
+                "day": 7,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "3.3-3.4"
+    },
+    {
+        "days": [
+            {
+                "day": 9,
+                "monthCode": "M02"
+            },
+            {
+                "day": 8,
+                "monthCode": "M06"
+            },
+            {
+                "day": 8,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "3.5-3.6"
+    },
+    {
+        "days": [
+            {
+                "day": 10,
+                "monthCode": "M02"
+            },
+            {
+                "day": 9,
+                "monthCode": "M06"
+            },
+            {
+                "day": 9,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "3.7-3.8"
+    },
+    {
+        "days": [
+            {
+                "day": 11,
+                "monthCode": "M02"
+            },
+            {
+                "day": 10,
+                "monthCode": "M06"
+            },
+            {
+                "day": 10,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.1-4.2"
+    },
+    {
+        "days": [
+            {
+                "day": 12,
+                "monthCode": "M02"
+            },
+            {
+                "day": 11,
+                "monthCode": "M06"
+            },
+            {
+                "day": 11,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.3-4.4"
+    },
+    {
+        "days": [
+            {
+                "day": 13,
+                "monthCode": "M02"
+            },
+            {
+                "day": 12,
+                "monthCode": "M06"
+            },
+            {
+                "day": 12,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.5-4.6"
+    },
+    {
+        "days": [
+            {
+                "day": 14,
+                "monthCode": "M02"
+            },
+            {
+                "day": 13,
+                "monthCode": "M06"
+            },
+            {
+                "day": 13,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.7-4.8"
+    },
+    {
+        "days": [
+            {
+                "day": 15,
+                "monthCode": "M02"
+            },
+            {
+                "day": 14,
+                "monthCode": "M06"
+            },
+            {
+                "day": 14,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.9-4.10"
+    },
+    {
+        "days": [
+            {
+                "day": 16,
+                "monthCode": "M02"
+            },
+            {
+                "day": 15,
+                "monthCode": "M06"
+            },
+            {
+                "day": 15,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.11"
+    },
+    {
+        "days": [
+            {
+                "day": 17,
+                "monthCode": "M02"
+            },
+            {
+                "day": 16,
+                "monthCode": "M06"
+            },
+            {
+                "day": 16,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "4.12-5.1"
+    },
+    {
+        "days": [
+            {
+                "day": 18,
+                "monthCode": "M02"
+            },
+            {
+                "day": 17,
+                "monthCode": "M06"
+            },
+            {
+                "day": 17,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "5.2-5.4"
+    },
+    {
+        "days": [
+            {
+                "day": 19,
+                "monthCode": "M02"
+            },
+            {
+                "day": 18,
+                "monthCode": "M06"
+            },
+            {
+                "day": 18,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "5.5-5.6"
+    },
+    {
+        "days": [
+            {
+                "day": 20,
+                "monthCode": "M02"
+            },
+            {
+                "day": 19,
+                "monthCode": "M06"
+            },
+            {
+                "day": 19,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "5.7-5.8"
+    },
+    {
+        "days": [
+            {
+                "day": 21,
+                "monthCode": "M02"
+            },
+            {
+                "day": 20,
+                "monthCode": "M06"
+            },
+            {
+                "day": 20,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.1-6.2"
+    },
+    {
+        "days": [
+            {
+                "day": 22,
+                "monthCode": "M02"
+            },
+            {
+                "day": 21,
+                "monthCode": "M06"
+            },
+            {
+                "day": 21,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.3-6.4"
+    },
+    {
+        "days": [
+            {
+                "day": 23,
+                "monthCode": "M02"
+            },
+            {
+                "day": 22,
+                "monthCode": "M06"
+            },
+            {
+                "day": 22,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.5-6.6"
+    },
+    {
+        "days": [
+            {
+                "day": 24,
+                "monthCode": "M02"
+            },
+            {
+                "day": 23,
+                "monthCode": "M06"
+            },
+            {
+                "day": 23,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.7-6.8"
+    },
+    {
+        "days": [
+            {
+                "day": 25,
+                "monthCode": "M02"
+            },
+            {
+                "day": 24,
+                "monthCode": "M06"
+            },
+            {
+                "day": 24,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.9-6.10"
+    },
+    {
+        "days": [
+            {
+                "day": 26,
+                "monthCode": "M02"
+            },
+            {
+                "day": 25,
+                "monthCode": "M06"
+            },
+            {
+                "day": 25,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "6.11-6.12"
+    },
+    {
+        "days": [
+            {
+                "day": 27,
+                "monthCode": "M02"
+            },
+            {
+                "day": 26,
+                "monthCode": "M06"
+            },
+            {
+                "day": 26,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.1-7.2"
+    },
+    {
+        "days": [
+            {
+                "day": 28,
+                "monthCode": "M02"
+            },
+            {
+                "day": 27,
+                "monthCode": "M06"
+            },
+            {
+                "day": 27,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.3-7.4"
+    },
+    {
+        "days": [
+            {
+                "day": 29,
+                "monthCode": "M02"
+            },
+            {
+                "day": 28,
+                "monthCode": "M06"
+            },
+            {
+                "day": 28,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.5-7.6"
+    },
+    {
+        "days": [
+            {
+                "day": 30,
+                "monthCode": "M02"
+            },
+            {
+                "day": 29,
+                "monthCode": "M06"
+            },
+            {
+                "day": 29,
+                "monthCode": "M10"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.7-7.8"
+    },
+    {
+        "days": [
+            {
+                "day": 1,
+                "monthCode": "M03"
+            },
+            {
+                "day": 1,
+                "monthCode": "M07"
+            },
+            {
+                "day": 1,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.9"
+    },
+    {
+        "days": [
+            {
+                "day": 2,
+                "monthCode": "M03"
+            },
+            {
+                "day": 2,
+                "monthCode": "M07"
+            },
+            {
+                "day": 2,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.10-7.12"
+    },
+    {
+        "days": [
+            {
+                "day": 3,
+                "monthCode": "M03"
+            },
+            {
+                "day": 3,
+                "monthCode": "M07"
+            },
+            {
+                "day": 3,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "7.13-7.14"
+    },
+    {
+        "days": [
+            {
+                "day": 4,
+                "monthCode": "M03"
+            },
+            {
+                "day": 4,
+                "monthCode": "M07"
+            },
+            {
+                "day": 4,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.1-8.2"
+    },
+    {
+        "days": [
+            {
+                "day": 5,
+                "monthCode": "M03"
+            },
+            {
+                "day": 5,
+                "monthCode": "M07"
+            },
+            {
+                "day": 5,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.3-8.4"
+    },
+    {
+        "days": [
+            {
+                "day": 6,
+                "monthCode": "M03"
+            },
+            {
+                "day": 6,
+                "monthCode": "M07"
+            },
+            {
+                "day": 6,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.5-8.7"
+    },
+    {
+        "days": [
+            {
+                "day": 7,
+                "monthCode": "M03"
+            },
+            {
+                "day": 7,
+                "monthCode": "M07"
+            },
+            {
+                "day": 7,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.8-8.9"
+    },
+    {
+        "days": [
+            {
+                "day": 8,
+                "monthCode": "M03"
+            },
+            {
+                "day": 8,
+                "monthCode": "M07"
+            },
+            {
+                "day": 8,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.10-8.11"
+    },
+    {
+        "days": [
+            {
+                "day": 9,
+                "monthCode": "M03"
+            },
+            {
+                "day": 9,
+                "monthCode": "M07"
+            },
+            {
+                "day": 9,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.12"
+    },
+    {
+        "days": [
+            {
+                "day": 10,
+                "monthCode": "M03"
+            },
+            {
+                "day": 10,
+                "monthCode": "M07"
+            },
+            {
+                "day": 10,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "8.13-8.14"
+    },
+    {
+        "days": [
+            {
+                "day": 11,
+                "monthCode": "M03"
+            },
+            {
+                "day": 11,
+                "monthCode": "M07"
+            },
+            {
+                "day": 11,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "9.1-9.2"
+    },
+    {
+        "days": [
+            {
+                "day": 12,
+                "monthCode": "M03"
+            },
+            {
+                "day": 12,
+                "monthCode": "M07"
+            },
+            {
+                "day": 12,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "9.3-9.4"
+    },
+    {
+        "days": [
+            {
+                "day": 13,
+                "monthCode": "M03"
+            },
+            {
+                "day": 13,
+                "monthCode": "M07"
+            },
+            {
+                "day": 13,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "9.5-9.6"
+    },
+    {
+        "days": [
+            {
+                "day": 14,
+                "monthCode": "M03"
+            },
+            {
+                "day": 14,
+                "monthCode": "M07"
+            },
+            {
+                "day": 14,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.1-10.2"
+    },
+    {
+        "days": [
+            {
+                "day": 15,
+                "monthCode": "M03"
+            },
+            {
+                "day": 15,
+                "monthCode": "M07"
+            },
+            {
+                "day": 15,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.3-10.4"
+    },
+    {
+        "days": [
+            {
+                "day": 16,
+                "monthCode": "M03"
+            },
+            {
+                "day": 16,
+                "monthCode": "M07"
+            },
+            {
+                "day": 16,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.5-10.6"
+    },
+    {
+        "days": [
+            {
+                "day": 17,
+                "monthCode": "M03"
+            },
+            {
+                "day": 17,
+                "monthCode": "M07"
+            },
+            {
+                "day": 17,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.7-10.8"
+    },
+    {
+        "days": [
+            {
+                "day": 18,
+                "monthCode": "M03"
+            },
+            {
+                "day": 18,
+                "monthCode": "M07"
+            },
+            {
+                "day": 18,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.9-10.10"
+    },
+    {
+        "days": [
+            {
+                "day": 19,
+                "monthCode": "M03"
+            },
+            {
+                "day": 19,
+                "monthCode": "M07"
+            },
+            {
+                "day": 19,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.11-10.12"
+    },
+    {
+        "days": [
+            {
+                "day": 20,
+                "monthCode": "M03"
+            },
+            {
+                "day": 20,
+                "monthCode": "M07"
+            },
+            {
+                "day": 20,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.13-10.14"
+    },
+    {
+        "days": [
+            {
+                "day": 21,
+                "monthCode": "M03"
+            },
+            {
+                "day": 21,
+                "monthCode": "M07"
+            },
+            {
+                "day": 21,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.15-10.16"
+    },
+    {
+        "days": [
+            {
+                "day": 22,
+                "monthCode": "M03"
+            },
+            {
+                "day": 22,
+                "monthCode": "M07"
+            },
+            {
+                "day": 22,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות ל\"ה",
+        "section": "10.17"
+    },
+    {
+        "days": [
+            {
+                "day": 23,
+                "monthCode": "M03"
+            },
+            {
+                "day": 23,
+                "monthCode": "M07"
+            },
+            {
+                "day": 23,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "1.1-1.3"
+    },
+    {
+        "days": [
+            {
+                "day": 24,
+                "monthCode": "M03"
+            },
+            {
+                "day": 24,
+                "monthCode": "M07"
+            },
+            {
+                "day": 24,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "1.4-1.5"
+    },
+    {
+        "days": [
+            {
+                "day": 25,
+                "monthCode": "M03"
+            },
+            {
+                "day": 25,
+                "monthCode": "M07"
+            },
+            {
+                "day": 25,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "1.6-1.7"
+    },
+    {
+        "days": [
+            {
+                "day": 26,
+                "monthCode": "M03"
+            },
+            {
+                "day": 26,
+                "monthCode": "M07"
+            },
+            {
+                "day": 26,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "1.8-1.9"
+    },
+    {
+        "days": [
+            {
+                "day": 27,
+                "monthCode": "M03"
+            },
+            {
+                "day": 27,
+                "monthCode": "M07"
+            },
+            {
+                "day": 27,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "1.10-1.11"
+    },
+    {
+        "days": [
+            {
+                "day": 28,
+                "monthCode": "M03"
+            },
+            {
+                "day": 28,
+                "monthCode": "M07"
+            },
+            {
+                "day": 28,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "2.1-2.2"
+    },
+    {
+        "days": [
+            {
+                "day": 29,
+                "monthCode": "M03"
+            },
+            {
+                "day": 29,
+                "monthCode": "M07"
+            },
+            {
+                "day": 29,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "2.3-2.4"
+    },
+    {
+        "days": [
+            {
+                "day": 30,
+                "monthCode": "M03"
+            },
+            {
+                "day": 30,
+                "monthCode": "M07"
+            },
+            {
+                "day": 30,
+                "monthCode": "M11"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "3.1"
+    },
+    {
+        "days": [
+            {
+                "day": 1,
+                "monthCode": "M04"
+            },
+            {
+                "day": 1,
+                "monthCode": "M08"
+            },
+            {
+                "day": 1,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "3.2-3.4"
+    },
+    {
+        "days": [
+            {
+                "day": 2,
+                "monthCode": "M04"
+            },
+            {
+                "day": 2,
+                "monthCode": "M08"
+            },
+            {
+                "day": 2,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "4.1-4.3"
+    },
+    {
+        "days": [
+            {
+                "day": 3,
+                "monthCode": "M04"
+            },
+            {
+                "day": 3,
+                "monthCode": "M08"
+            },
+            {
+                "day": 3,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "5.1-5.2"
+    },
+    {
+        "days": [
+            {
+                "day": 4,
+                "monthCode": "M04"
+            },
+            {
+                "day": 4,
+                "monthCode": "M08"
+            },
+            {
+                "day": 4,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "5.3-5.4"
+    },
+    {
+        "days": [
+            {
+                "day": 5,
+                "monthCode": "M04"
+            },
+            {
+                "day": 5,
+                "monthCode": "M08"
+            },
+            {
+                "day": 5,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "5.5"
+    },
+    {
+        "days": [
+            {
+                "day": 6,
+                "monthCode": "M04"
+            },
+            {
+                "day": 6,
+                "monthCode": "M08"
+            },
+            {
+                "day": 6,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "5.6-5.7"
+    },
+    {
+        "days": [
+            {
+                "day": 7,
+                "monthCode": "M04"
+            },
+            {
+                "day": 7,
+                "monthCode": "M08"
+            },
+            {
+                "day": 7,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "6.1-6.2"
+    },
+    {
+        "days": [
+            {
+                "day": 8,
+                "monthCode": "M04"
+            },
+            {
+                "day": 8,
+                "monthCode": "M08"
+            },
+            {
+                "day": 8,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "6.3-6.4"
+    },
+    {
+        "days": [
+            {
+                "day": 9,
+                "monthCode": "M04"
+            },
+            {
+                "day": 9,
+                "monthCode": "M08"
+            },
+            {
+                "day": 9,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "6.5-6.7"
+    },
+    {
+        "days": [
+            {
+                "day": 10,
+                "monthCode": "M04"
+            },
+            {
+                "day": 10,
+                "monthCode": "M08"
+            },
+            {
+                "day": 10,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "6.8-6.10"
+    },
+    {
+        "days": [
+            {
+                "day": 11,
+                "monthCode": "M04"
+            },
+            {
+                "day": 11,
+                "monthCode": "M08"
+            },
+            {
+                "day": 11,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "7.1"
+    },
+    {
+        "days": [
+            {
+                "day": 12,
+                "monthCode": "M04"
+            },
+            {
+                "day": 12,
+                "monthCode": "M08"
+            },
+            {
+                "day": 12,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "7.2"
+    },
+    {
+        "days": [
+            {
+                "day": 13,
+                "monthCode": "M04"
+            },
+            {
+                "day": 13,
+                "monthCode": "M08"
+            },
+            {
+                "day": 13,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "7.3-7.4"
+    },
+    {
+        "days": [
+            {
+                "day": 14,
+                "monthCode": "M04"
+            },
+            {
+                "day": 14,
+                "monthCode": "M08"
+            },
+            {
+                "day": 14,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "7.5"
+    },
+    {
+        "days": [
+            {
+                "day": 15,
+                "monthCode": "M04"
+            },
+            {
+                "day": 15,
+                "monthCode": "M08"
+            },
+            {
+                "day": 15,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "8.1-8.3"
+    },
+    {
+        "days": [
+            {
+                "day": 16,
+                "monthCode": "M04"
+            },
+            {
+                "day": 16,
+                "monthCode": "M08"
+            },
+            {
+                "day": 16,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "8.4-8.5"
+    },
+    {
+        "days": [
+            {
+                "day": 17,
+                "monthCode": "M04"
+            },
+            {
+                "day": 17,
+                "monthCode": "M08"
+            },
+            {
+                "day": 17,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.1-9.2"
+    },
+    {
+        "days": [
+            {
+                "day": 18,
+                "monthCode": "M04"
+            },
+            {
+                "day": 18,
+                "monthCode": "M08"
+            },
+            {
+                "day": 18,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.3-9.4"
+    },
+    {
+        "days": [
+            {
+                "day": 19,
+                "monthCode": "M04"
+            },
+            {
+                "day": 19,
+                "monthCode": "M08"
+            },
+            {
+                "day": 19,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.5-9.6"
+    },
+    {
+        "days": [
+            {
+                "day": 20,
+                "monthCode": "M04"
+            },
+            {
+                "day": 20,
+                "monthCode": "M08"
+            },
+            {
+                "day": 20,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.7-9.9"
+    },
+    {
+        "days": [
+            {
+                "day": 21,
+                "monthCode": "M04"
+            },
+            {
+                "day": 21,
+                "monthCode": "M08"
+            },
+            {
+                "day": 21,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.10"
+    },
+    {
+        "days": [
+            {
+                "day": 22,
+                "monthCode": "M04"
+            },
+            {
+                "day": 22,
+                "monthCode": "M08"
+            },
+            {
+                "day": 22,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.11-9.12"
+    },
+    {
+        "days": [
+            {
+                "day": 23,
+                "monthCode": "M04"
+            },
+            {
+                "day": 23,
+                "monthCode": "M08"
+            },
+            {
+                "day": 23,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.13"
+    },
+    {
+        "days": [
+            {
+                "day": 24,
+                "monthCode": "M04"
+            },
+            {
+                "day": 24,
+                "monthCode": "M08"
+            },
+            {
+                "day": 24,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "הלכות רכילות",
+        "section": "9.14-9.15"
+    },
+    {
+        "days": [
+            {
+                "day": 25,
+                "monthCode": "M04"
+            },
+            {
+                "day": 25,
+                "monthCode": "M08"
+            },
+            {
+                "day": 25,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "צייורים",
+        "section": "1-3"
+    },
+    {
+        "days": [
+            {
+                "day": 26,
+                "monthCode": "M04"
+            },
+            {
+                "day": 26,
+                "monthCode": "M08"
+            },
+            {
+                "day": 26,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "צייורים",
+        "section": "4-5"
+    },
+    {
+        "days": [
+            {
+                "day": 27,
+                "monthCode": "M04"
+            },
+            {
+                "day": 27,
+                "monthCode": "M08"
+            },
+            {
+                "day": 27,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "צייורים",
+        "section": "6-7"
+    },
+    {
+        "days": [
+            {
+                "day": 28,
+                "monthCode": "M04"
+            },
+            {
+                "day": 28,
+                "monthCode": "M08"
+            },
+            {
+                "day": 28,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "צייורים",
+        "section": "8-9"
+    },
+    {
+        "days": [
+            {
+                "day": 29,
+                "monthCode": "M04"
+            },
+            {
+                "day": 29,
+                "monthCode": "M08"
+            },
+            {
+                "day": 29,
+                "monthCode": "M12"
+            }
+        ],
+        "title": "צייורים",
+        "section": "10-11"
+    }
+]

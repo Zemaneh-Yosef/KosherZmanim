@@ -1,9 +1,9 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { Calendar } from '../polyfills/Utils';
-import { Daf } from './Daf';
-import { JewishCalendar } from './JewishCalendar';
-import { IllegalArgumentException } from '../polyfills/errors';
+import { Calendar } from '../../polyfills/Utils';
+import { Daf } from '../Daf';
+import { IllegalArgumentException } from '../../polyfills/errors';
+import { JewishDate } from '../JewishDate';
 
 /**
  * This class calculates the <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud">Talmud Yerusalmi</a> <a href=
@@ -43,16 +43,21 @@ export class YerushalmiYomiCalculator {
    * @throws IllegalArgumentException
    *             if the date is prior to the February 2, 1980, the start date of the first Daf Yomi Yerushalmi cycle
    */
-  public static getDafYomiYerushalmi(jewishCalendar: JewishCalendar) {
+  public static getDafYomiYerushalmi(jewishCalendar: JewishDate) {
     let nextCycle: Temporal.PlainDate = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
     let prevCycle: Temporal.PlainDate = YerushalmiYomiCalculator.DAF_YOMI_START_DAY;
     const requested: Temporal.PlainDate = jewishCalendar.getDate();
     let masechta: number = 0;
     let dafYomi: Daf;
 
-    // There is no Daf Yomi on Yom Kippur or Tisha B'Av.
-    if (jewishCalendar.getYomTovIndex() === JewishCalendar.YOM_KIPPUR || jewishCalendar.getYomTovIndex() === JewishCalendar.TISHA_BEAV) {
+    const hebrewDate = jewishCalendar.getDate().withCalendar("hebrew");
+    if (hebrewDate.month == 1 && hebrewDate.day == 10) {
       return null;
+    }
+
+    if (jewishCalendar.getJewishMonth() == JewishDate.AV) {
+      if ((hebrewDate.day == 9 && hebrewDate.dayOfWeek !== 6) || (hebrewDate.day == 10 && hebrewDate.dayOfWeek == 7))
+        return null;
     }
 
     if (Temporal.PlainDate.compare(requested, YerushalmiYomiCalculator.DAF_YOMI_START_DAY) == -1) {
@@ -101,15 +106,15 @@ export class YerushalmiYomiCalculator {
    */
   private static getNumOfSpecialDays(start: Temporal.PlainDate, end: Temporal.PlainDate): number {
     // Find the start and end Jewish years
-    const jewishStartYear: number = new JewishCalendar(start).getJewishYear();
-    const jewishEndYear: number = new JewishCalendar(end).getJewishYear();
+    const jewishStartYear: number = new JewishDate(start).getJewishYear();
+    const jewishEndYear: number = new JewishDate(end).getJewishYear();
 
     // Value to return
     let specialDays: number = 0;
 
     // Instant of special dates
-    const yomKippur: JewishCalendar = new JewishCalendar(jewishStartYear, 7, 10);
-    const tishaBeav: JewishCalendar = new JewishCalendar(jewishStartYear, 5, 9);
+    const yomKippur: JewishDate = new JewishDate(jewishStartYear, 7, 10);
+    const tishaBeav: JewishDate = new JewishDate(jewishStartYear, 5, 9);
 
     // Go over the years and find special dates
     for (let i: number = jewishStartYear; i <= jewishEndYear; i++) {

@@ -1,9 +1,10 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { Calendar } from '../polyfills/Utils';
-import { Daf } from './Daf';
-import { JewishCalendar } from './JewishCalendar';
-import { IllegalArgumentException } from '../polyfills/errors';
+import { Calendar } from '../../polyfills/Utils';
+import { Daf } from '../Daf';
+import { JewishCalendar } from '../JewishCalendar';
+import { IllegalArgumentException } from '../../polyfills/errors';
+import { JewishDate } from '../JewishDate';
 
 /**
  * This class calculates the Daf Yomi Bavli page (daf) for a given date. To calculate Daf Yomi Yerushalmi
@@ -60,7 +61,7 @@ export class YomiCalculator {
    * @throws IllegalArgumentException
    *             if the date is prior to the September 11, 1923 start date of the first Daf Yomi cycle
    */
-  public static getDafYomiBavli(calendar: JewishCalendar): Daf {
+  public static getDafYomiBavli(calendar: JewishDate): Daf {
     /*
      * The number of daf per masechta. Since the number of blatt in Shekalim changed on the 8th Daf Yomi cycle
      * beginning on June 24, 1975 from 13 to 22, the actual calculation for blattPerMasechta[4] will later be

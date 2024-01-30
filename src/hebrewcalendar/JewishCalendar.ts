@@ -4,7 +4,9 @@ import { GeoLocation } from '../util/GeoLocation';
 import { Daf } from './Daf';
 import { JewishDate } from './JewishDate';
 import { Calendar } from '../polyfills/Utils';
-import { UnsupportedError } from '../polyfills/errors';
+import { YomiCalculator } from './limud/YomiCalculator';
+import { YerushalmiYomiCalculator } from './limud/YerushalmiYomiCalculator';
+import { ChafetzChayimYomiCalculator } from './limud/ChafetzChayimYomiCalculator';
 
 const { FRIDAY, SATURDAY } = Calendar;
 
@@ -1344,13 +1346,10 @@ export class JewishCalendar extends JewishDate {
    * {@link HebrewDateFormatter#formatDafYomiBavli(Daf)} for the ability to format the daf in Hebrew or transliterated
    * masechta names.
    *
-   * @deprecated This depends on a circular dependency. Use <pre>YomiCalculator.getDafYomiBavli(jewishCalendar)</pre> instead.
    * @return the daf as a {@link Daf}
    */
-  // eslint-disable-next-line class-methods-use-this
   public getDafYomiBavli(): Daf {
-    // return YomiCalculator.getDafYomiBavli(this);
-    throw new UnsupportedError('This method is not supported, due to a circular dependency. Use `YomiCalculator.getDafYomiBavli(jewishCalendar)` instead');
+    return YomiCalculator.getDafYomiBavli(this);
   }
 
   /**
@@ -1358,13 +1357,17 @@ export class JewishCalendar extends JewishDate {
    * {@link HebrewDateFormatter#formatDafYomiYerushalmi(Daf)} for the ability to format the daf in Hebrew or transliterated
    * masechta names.
    *
-   * @deprecated This depends on a circular dependency. Use <pre>YerushalmiYomiCalculator.getDafYomiYerushalmi(jewishCalendar)</pre> instead.
    * @return the daf as a {@link Daf}
    */
-  // eslint-disable-next-line class-methods-use-this
-  public getDafYomiYerushalmi(): Daf {
-    // return YerushalmiYomiCalculator.getDafYomiYerushalmi(this);
-    throw new UnsupportedError('This method is not supported, due to a circular dependency. Use `YerushalmiYomiCalculator.getDafYomiYerushalmi(jewishCalendar)` instead');
+  public getDafYomiYerushalmi() {
+    return YerushalmiYomiCalculator.getDafYomiYerushalmi(this);
+  }
+
+  /**
+   * Returns the equivalent Chafetz Chayim Yomi page for the date that this is set to
+   */
+  public getChafetzChayimYomi() {
+    return ChafetzChayimYomiCalculator.getChafetzChayimYomi(this);
   }
 
   /**

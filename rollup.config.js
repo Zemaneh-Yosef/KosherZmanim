@@ -1,11 +1,12 @@
 import typescript from '@rollup/plugin-typescript';
 import esbuild from 'rollup-plugin-esbuild'
+import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [
   {
     input: `src/kosher-zmanim.ts`,
-    plugins: [nodeResolve({ browser: true }), esbuild({
+    plugins: [json(), nodeResolve({ browser: true }), esbuild({
       minify: true
     })],
     output: [
@@ -18,7 +19,7 @@ export default [
   },
   {
     input: `src/kosher-zmanim.ts`,
-    plugins: [nodeResolve(), typescript()],
+    plugins: [json(), nodeResolve(), typescript()],
     output: {
       file: `dist/kosher-zmanim.ignore.d.ts`,
     },

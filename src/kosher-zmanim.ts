@@ -57,8 +57,9 @@ export * from './ComplexZmanimCalendar';
 export * from './hebrewcalendar/JewishDate';
 export * from './hebrewcalendar/JewishCalendar';
 export * from './hebrewcalendar/Daf';
-export * from './hebrewcalendar/YomiCalculator';
-export * from './hebrewcalendar/YerushalmiYomiCalculator';
+export * from './hebrewcalendar/limud/YomiCalculator';
+export * from './hebrewcalendar/limud/YerushalmiYomiCalculator';
+export * from './hebrewcalendar/limud/ChafetzChayimYomiCalculator';
 export * from './hebrewcalendar/TefilaRules'
 
 export * from './hebrewcalendar/HebrewDateFormatter';
