@@ -1,7 +1,8 @@
-import { Daf } from './Daf';
-import { JewishDate } from './JewishDate';
-import { JewishCalendar, Parsha } from './JewishCalendar';
-import { IllegalArgumentException } from '../polyfills/errors';
+import { Daf } from './limud/Daf.ts';
+import { JewishDate } from './JewishDate.ts';
+import { JewishCalendar, Parsha } from './JewishCalendar.ts';
+import { IllegalArgumentException } from '../polyfills/errors.ts';
+import { DafYomiYerushalmi } from './limud/YerushalmiYomiCalculator.ts';
 
 /**
  * The HebrewDateFormatter class formats a {@link JewishDate}.
@@ -856,20 +857,6 @@ export class HebrewDateFormatter {
   }
 
   /**
-   * Formats the <a href="https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a> Bavli in the format of
-   * "&#x05E2;&#x05D9;&#x05E8;&#x05D5;&#x05D1;&#x05D9;&#x05DF; &#x05E0;&#x05F4;&#x05D1;" in {@link #isHebrewFormat() Hebrew},
-   * or the transliterated format of "Eruvin 52".
-   * @param daf the Daf to be formatted.
-   * @return the formatted daf.
-   */
-  public formatDafYomiBavli(daf: Daf): string {
-    if (this.hebrewFormat) {
-      return `${daf.getMasechta()} ${this.formatHebrewNumber(daf.getDaf())}`;
-    }
-    return `${daf.getMasechtaTransliterated()} ${daf.getDaf()}`;
-  }
-
-  /**
    * Formats the <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud#Daf_Yomi_Yerushalmi">Daf Yomi Yerushalmi</a> in the format
    * of "&#x05E2;&#x05D9;&#x05E8;&#x05D5;&#x05D1;&#x05D9;&#x05DF; &#x05E0;&#x05F4;&#x05D1;" in {@link #isHebrewFormat() Hebrew}, or
    * the transliterated format of "Eruvin 52".
@@ -877,20 +864,20 @@ export class HebrewDateFormatter {
    * @param daf the Daf to be formatted.
    * @return the formatted daf.
    */
-  public formatDafYomiYerushalmi(daf: Daf): string {
+  public formatDafYomi(daf: Daf): string {
     if (daf == null) {
       if (this.hebrewFormat) {
-        return Daf.getYerushalmiMasechtos()[39];
+        return DafYomiYerushalmi.getMasechtos()[39];
       }
 
-      return Daf.getYerushalmiMasechtosTransliterated()[39];
+      return DafYomiYerushalmi.getMasechtosTransliterated()[39];
     }
 
     if (this.hebrewFormat) {
-      return daf.getYerushalmiMasechta() + ' ' + this.formatHebrewNumber(daf.getDaf());
+      return daf.getMasechta() + ' ' + this.formatHebrewNumber(daf.getDaf());
     }
 
-    return daf.getYerushalmiMasechtaTransliterated() + ' ' + daf.getDaf();
+    return daf.getMasechtaTransliterated() + ' ' + daf.getDaf();
   }
 
   /**

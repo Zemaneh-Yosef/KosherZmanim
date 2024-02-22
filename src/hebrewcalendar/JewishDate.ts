@@ -1,7 +1,7 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { Calendar } from '../polyfills/Utils';
-import { IllegalArgumentException } from '../polyfills/errors';
+import { Calendar } from '../polyfills/Utils.ts';
+import { IllegalArgumentException } from '../polyfills/errors.ts';
 
 /**
  * The JewishDate is the base calendar class, that supports maintenance of a {@link java.util.GregorianCalendar}
@@ -500,7 +500,7 @@ export class JewishDate {
    */
   public getChalakimSinceMoladTohu(): number {
     const hebrewCalendar = this.date.withCalendar("hebrew")
-    return JewishDate.getChalakimSinceMoladTohu(hebrewCalendar.year, hebrewCalendar.month);
+    return JewishDate.getChalakimSinceMoladTohu(hebrewCalendar.year, this.getJewishMonth());
   }
 
   /**
@@ -765,7 +765,7 @@ export class JewishDate {
   public getMolad(): JewishDate {
     const moladDate: JewishDate = new JewishDate(this.getChalakimSinceMoladTohu());
     if (moladDate.getMoladHours() >= 6) {
-      moladDate.forward(Calendar.DATE, 1);
+      moladDate.setDate(moladDate.getDate().add({ days: 1 }));
     }
     moladDate.setMoladHours((moladDate.getMoladHours() + 18) % 24);
     return moladDate;

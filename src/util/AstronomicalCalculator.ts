@@ -1,6 +1,6 @@
-import { GeoLocation } from './GeoLocation';
-import { MathUtils } from '../polyfills/Utils';
-import { UnsupportedError } from '../polyfills/errors';
+import { GeoLocation } from './GeoLocation.ts';
+import { MathUtils } from '../polyfills/Utils.ts';
+import { UnsupportedError } from '../polyfills/errors.ts';
 import { Temporal } from 'temporal-polyfill'
 
 /**

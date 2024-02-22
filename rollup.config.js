@@ -7,7 +7,8 @@ export default [
   {
     input: `src/kosher-zmanim.ts`,
     plugins: [json(), nodeResolve({ browser: true }), esbuild({
-      minify: true
+      minify: true,
+      target: ['chrome67', 'firefox68', 'safari14', 'edge19']
     })],
     output: [
       {

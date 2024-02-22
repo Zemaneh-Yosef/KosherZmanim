@@ -1,6 +1,3 @@
-// Import this to handle dates to push into DateFormatter
-import { DateTime } from "luxon"
-
 // Import KosherZmanim as the methodListAcquirer & DateFormatter using the miliseconds
 import * as KZ from "../../src/kosher-zmanim.ts"
 import { getAllMethods, langInterf, locationError, locationLogger, pyStr } from "./lib.ts";
@@ -40,7 +37,6 @@ const allTestedMethods = [...new Set([...Object.values(methodsWithToMillis).flat
 const allUntestedMethods = methodNames.filter(str => !allTestedMethods.includes(str))
 
 const locationNames = Object.values(langInterf['ts'].listAll()).map(czc => czc.getGeoLocation().getLocationName()!).sort((a, b) => b.length - a.length);
-const zmanFormatDefaultParams = [KZ.ZmanimFormatter.SEXAGESIMAL_MILLIS_FORMAT, "yyyy-MM-dd h:mm:ss.SSS a z"] as const;
 
 for (const [ZmanName, attachedMethods] of Object.entries(methodsWithToMillis)) {
     locationLogger(`Testing ${ZmanName} Methods:`)
@@ -60,7 +56,7 @@ for (const [ZmanName, attachedMethods] of Object.entries(methodsWithToMillis)) {
                     allUntestedMethods.push(testMethod)
                     break;
                 } else
-                    throw new Error(e)
+                    throw e
             }
 
             if (pyStr(javaTime) == "None") {
@@ -69,24 +65,24 @@ for (const [ZmanName, attachedMethods] of Object.entries(methodsWithToMillis)) {
                 continue;
             }
 
-            const zmanFrmt = new KZ.ZmanimFormatter(...zmanFormatDefaultParams, langInterf.ts.getLocation(stackInJV).getGeoLocation().getTimeZone());
-
             try {
                 const times = [
                     // @ts-ignore: Too Typed
-                    parseInt(langInterf.ts.getLocation(stackInJV)[testMethod]().toMillis()),
+                    langInterf.ts.getLocation(stackInJV)[testMethod]().epochMilliseconds,
                     parseInt(javaTime.getTime())
-                ]
-                const formattedTimes = times.map(mili => zmanFrmt.formatDateTime(DateTime.fromMillis(mili)))
+                ] as number[]
+                const formattedTimes = times.map(mili => KZ.Temporal.Instant.fromEpochMilliseconds(mili))
                 if (Math.abs(times[1] - times[0]) >= logConfig.rangeOfAcceptible)
-                    tempLogs.push([langInterf.ts.getLocation(stackInJV).getGeoLocation().getLocationName()!, formattedTimes[0], '(TS) -', formattedTimes[1], `(JV)`,
+                    tempLogs.push([langInterf.ts.getLocation(stackInJV).getGeoLocation().getLocationName()!, formattedTimes[0].toLocaleString(), '(TS) -', formattedTimes[1].toLocaleString(), `(JV)`,
                         `[${new Boolean(times[0] == times[1]).toString() + (times[0] !== times[1] ? ` (${times[1] - times[0]})` : '')}]`])
             } catch (err) {
                 if (err.message.includes('max requires all arguments be DateTimes')) {
                     if (logConfig.noValidFunction)
                         locationError(err)
-                } else
-                    throw new Error(err)
+                } else {
+                    console.log(javaTime.getTime())
+                    throw err;
+                }
             }
         }
 

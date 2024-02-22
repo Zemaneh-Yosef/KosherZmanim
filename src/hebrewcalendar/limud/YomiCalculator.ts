@@ -1,10 +1,9 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { Calendar } from '../../polyfills/Utils';
-import { Daf } from '../Daf';
-import { JewishCalendar } from '../JewishCalendar';
-import { IllegalArgumentException } from '../../polyfills/errors';
-import { JewishDate } from '../JewishDate';
+import { Calendar } from '../../polyfills/Utils.ts';
+import { Daf } from './Daf.ts';
+import { IllegalArgumentException } from '../../polyfills/errors.ts';
+import { JewishDate } from '../JewishDate.ts';
 
 /**
  * This class calculates the Daf Yomi Bavli page (daf) for a given date. To calculate Daf Yomi Yerushalmi
@@ -40,7 +39,7 @@ export class YomiCalculator {
 
   /**
    * Returns the <a href="https://en.wikipedia.org/wiki/Daf_yomi">Daf Yomi</a> <a
-   * href="https://en.wikipedia.org/wiki/Talmud">Bavli</a> {@link Daf} for a given date. The first Daf Yomi cycle
+   * href="https://en.wikipedia.org/wiki/Talmud">Bavli</a> {@link DafBavliYomi} for a given date. The first Daf Yomi cycle
    * started on Rosh Hashana 5684 (September 11, 1923) and calculations prior to this date will result in an
    * IllegalArgumentException thrown. For historical calculations (supported by this method), it is important to note
    * that a change in length of the cycle was instituted starting in the eighth Daf Yomi cycle beginning on June 24,
@@ -56,12 +55,12 @@ export class YomiCalculator {
    *
    * @param calendar
    *            the calendar date for calculation
-   * @return the {@link Daf}.
+   * @return the {@link DafBavliYomi}.
    *
    * @throws IllegalArgumentException
    *             if the date is prior to the September 11, 1923 start date of the first Daf Yomi cycle
    */
-  public static getDafYomiBavli(calendar: JewishDate): Daf {
+  public static getDafYomiBavli(calendar: JewishDate): DafBavliYomi {
     /*
      * The number of daf per masechta. Since the number of blatt in Shekalim changed on the 8th Daf Yomi cycle
      * beginning on June 24, 1975 from 13 to 22, the actual calculation for blattPerMasechta[4] will later be
@@ -72,7 +71,7 @@ export class YomiCalculator {
 
     const date: Temporal.PlainDate = calendar.getDate();
 
-    let dafYomi: Daf;
+    let dafYomi: DafBavliYomi;
     const julianDay: number = this.getJulianDay(date);
     let cycleNo: number = 0;
     let dafNo: number = 0;
@@ -113,7 +112,7 @@ export class YomiCalculator {
         } else if (masechta === 38) {
           blatt += 32;
         }
-        dafYomi = new Daf(masechta, blatt);
+        dafYomi = new DafBavliYomi(masechta, blatt);
         break;
       }
     }
@@ -140,5 +139,93 @@ export class YomiCalculator {
     const a: number = Math.trunc(year / 100);
     const b: number = 2 - a + Math.trunc(a / 4);
     return Math.trunc(Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5);
+  }
+}
+
+/**
+ * An Object representing a <em>daf</em> (page) in the <a href="https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a> cycle.
+ *
+ * @author &copy; Eliyahu Hershfeld 2011 - 2019
+ */
+export class DafBavliYomi extends Daf {
+  /**
+   * See {@link #getMasechtaTransliterated()} and {@link #setMasechtaTransliterated(String[])}.
+   */
+  private static masechtosBavliTransliterated: string[] = ['Berachos', 'Shabbos', 'Eruvin', 'Pesachim', 'Shekalim',
+    'Yoma', 'Sukkah', 'Beitzah', 'Rosh Hashana', 'Taanis', 'Megillah', 'Moed Katan', 'Chagigah', 'Yevamos',
+    'Kesubos', 'Nedarim', 'Nazir', 'Sotah', 'Gitin', 'Kiddushin', 'Bava Kamma', 'Bava Metzia', 'Bava Basra',
+    'Sanhedrin', 'Makkos', 'Shevuos', 'Avodah Zarah', 'Horiyos', 'Zevachim', 'Menachos', 'Chullin', 'Bechoros',
+    'Arachin', 'Temurah', 'Kerisos', 'Meilah', 'Kinnim', 'Tamid', 'Midos', 'Niddah'];
+
+  /**
+   * See {@link #getMasechta()}.
+   */
+  private static readonly masechtosBavli: string[] = ['\u05D1\u05E8\u05DB\u05D5\u05EA', '\u05E9\u05D1\u05EA',
+    '\u05E2\u05D9\u05E8\u05D5\u05D1\u05D9\u05DF', '\u05E4\u05E1\u05D7\u05D9\u05DD',
+    '\u05E9\u05E7\u05DC\u05D9\u05DD', '\u05D9\u05D5\u05DE\u05D0', '\u05E1\u05D5\u05DB\u05D4',
+    '\u05D1\u05D9\u05E6\u05D4', '\u05E8\u05D0\u05E9 \u05D4\u05E9\u05E0\u05D4',
+    '\u05EA\u05E2\u05E0\u05D9\u05EA', '\u05DE\u05D2\u05D9\u05DC\u05D4',
+    '\u05DE\u05D5\u05E2\u05D3 \u05E7\u05D8\u05DF', '\u05D7\u05D2\u05D9\u05D2\u05D4',
+    '\u05D9\u05D1\u05DE\u05D5\u05EA', '\u05DB\u05EA\u05D5\u05D1\u05D5\u05EA', '\u05E0\u05D3\u05E8\u05D9\u05DD',
+    '\u05E0\u05D6\u05D9\u05E8', '\u05E1\u05D5\u05D8\u05D4', '\u05D2\u05D9\u05D8\u05D9\u05DF',
+    '\u05E7\u05D9\u05D3\u05D5\u05E9\u05D9\u05DF', '\u05D1\u05D1\u05D0 \u05E7\u05DE\u05D0',
+    '\u05D1\u05D1\u05D0 \u05DE\u05E6\u05D9\u05E2\u05D0', '\u05D1\u05D1\u05D0 \u05D1\u05EA\u05E8\u05D0',
+    '\u05E1\u05E0\u05D4\u05D3\u05E8\u05D9\u05DF', '\u05DE\u05DB\u05D5\u05EA',
+    '\u05E9\u05D1\u05D5\u05E2\u05D5\u05EA', '\u05E2\u05D1\u05D5\u05D3\u05D4 \u05D6\u05E8\u05D4',
+    '\u05D4\u05D5\u05E8\u05D9\u05D5\u05EA', '\u05D6\u05D1\u05D7\u05D9\u05DD', '\u05DE\u05E0\u05D7\u05D5\u05EA',
+    '\u05D7\u05D5\u05DC\u05D9\u05DF', '\u05D1\u05DB\u05D5\u05E8\u05D5\u05EA', '\u05E2\u05E8\u05DB\u05D9\u05DF',
+    '\u05EA\u05DE\u05D5\u05E8\u05D4', '\u05DB\u05E8\u05D9\u05EA\u05D5\u05EA', '\u05DE\u05E2\u05D9\u05DC\u05D4',
+    '\u05E7\u05D9\u05E0\u05D9\u05DD', '\u05EA\u05DE\u05D9\u05D3', '\u05DE\u05D9\u05D3\u05D5\u05EA',
+    '\u05E0\u05D3\u05D4'];
+
+  /**
+   * Returns the transliterated name of the <em>masechta</em> (tractate) of the Daf Yomi. The list of <em>mashechtos</em>
+	 * is: Berachos, Shabbos, Eruvin, Pesachim, Shekalim, Yoma, Sukkah, Beitzah, Rosh Hashana, Taanis, Megillah, Moed Katan,
+	 * Chagigah, Yevamos, Kesubos, Nedarim, Nazir, Sotah, Gitin, Kiddushin, Bava Kamma, Bava Metzia, Bava Basra, Sanhedrin,
+	 * Makkos, Shevuos, Avodah Zarah, Horiyos, Zevachim, Menachos, Chullin, Bechoros, Arachin, Temurah, Kerisos, Meilah,
+	 * Kinnim, Tamid, Midos and Niddah.
+	 * 
+	 * @return the transliterated name of the <em>masechta</em> (tractate) of the Daf Yomi such as Berachos.
+   * @see #setMasechtaTransliterated(String[])
+   */
+  public getMasechtaTransliterated(): string {
+    return DafBavliYomi.masechtosBavliTransliterated[this.getMasechtaNumber()];
+  }
+
+  /**
+   * Setter method to allow overriding of the default list of <em>masechtos</em> transliterated into into Latin chars.
+	 * The default values use Ashkenazi American English transliteration.
+	 * 
+	 * @param masechtosBavliTransliterated the list of transliterated Bavli <em>masechtos</em> to set.
+   * @see #getMasechtaTransliterated()
+   */
+  public static setMasechtaTransliterated(masechtosBavliTransliterated: string[]): void {
+    DafBavliYomi.masechtosBavliTransliterated = masechtosBavliTransliterated;
+  }
+
+  /**
+   * Returns the <em>masechta</em> (tractate) of the Daf Yomi in Hebrew. The list is in the following format<br>
+   * <code>["&#x05D1;&#x05E8;&#x05DB;&#x05D5;&#x05EA;",
+   * "&#x05E9;&#x05D1;&#x05EA;", "&#x05E2;&#x05D9;&#x05E8;&#x05D5;&#x05D1;&#x05D9;&#x05DF;",
+   * "&#x05E4;&#x05E1;&#x05D7;&#x05D9;&#x05DD;", "&#x05E9;&#x05E7;&#x05DC;&#x05D9;&#x05DD;", "&#x05D9;&#x05D5;&#x05DE;&#x05D0;",
+   * "&#x05E1;&#x05D5;&#x05DB;&#x05D4;", "&#x05D1;&#x05D9;&#x05E6;&#x05D4;", "&#x05E8;&#x05D0;&#x05E9; &#x05D4;&#x05E9;&#x05E0;&#x05D4;",
+   * "&#x05EA;&#x05E2;&#x05E0;&#x05D9;&#x05EA;", "&#x05DE;&#x05D2;&#x05D9;&#x05DC;&#x05D4;", "&#x05DE;&#x05D5;&#x05E2;&#x05D3;
+   * &#x05E7;&#x05D8;&#x05DF;", "&#x05D7;&#x05D2;&#x05D9;&#x05D2;&#x05D4;", "&#x05D9;&#x05D1;&#x05DE;&#x05D5;&#x05EA;",
+   * "&#x05DB;&#x05EA;&#x05D5;&#x05D1;&#x05D5;&#x05EA;", "&#x05E0;&#x05D3;&#x05E8;&#x05D9;&#x05DD;","&#x05E0;&#x05D6;&#x05D9;&#x05E8;",
+   * "&#x05E1;&#x05D5;&#x05D8;&#x05D4;", "&#x05D2;&#x05D9;&#x05D8;&#x05D9;&#x05DF;", "&#x05E7;&#x05D9;&#x05D3;&#x05D5;&#x05E9;&#x05D9;&#x05DF;",
+   * "&#x05D1;&#x05D1;&#x05D0; &#x05E7;&#x05DE;&#x05D0;", "&#x05D1;&#x05D1;&#x05D0; &#x05DE;&#x05E6;&#x05D9;&#x05E2;&#x05D0;",
+   * "&#x05D1;&#x05D1;&#x05D0; &#x05D1;&#x05EA;&#x05E8;&#x05D0;", "&#x05E1;&#x05E0;&#x05D4;&#x05D3;&#x05E8;&#x05D9;&#x05DF;",
+   * "&#x05DE;&#x05DB;&#x05D5;&#x05EA;", "&#x05E9;&#x05D1;&#x05D5;&#x05E2;&#x05D5;&#x05EA;", "&#x05E2;&#x05D1;&#x05D5;&#x05D3;&#x05D4;
+   * &#x05D6;&#x05E8;&#x05D4;", "&#x05D4;&#x05D5;&#x05E8;&#x05D9;&#x05D5;&#x05EA;", "&#x05D6;&#x05D1;&#x05D7;&#x05D9;&#x05DD;",
+   * "&#x05DE;&#x05E0;&#x05D7;&#x05D5;&#x05EA;", "&#x05D7;&#x05D5;&#x05DC;&#x05D9;&#x05DF;", "&#x05D1;&#x05DB;&#x05D5;&#x05E8;&#x05D5;&#x05EA;",
+   * "&#x05E2;&#x05E8;&#x05DB;&#x05D9;&#x05DF;", "&#x05EA;&#x05DE;&#x05D5;&#x05E8;&#x05D4;", "&#x05DB;&#x05E8;&#x05D9;&#x05EA;&#x05D5;&#x05EA;",
+   * "&#x05DE;&#x05E2;&#x05D9;&#x05DC;&#x05D4;", "&#x05E7;&#x05D9;&#x05E0;&#x05D9;&#x05DD;", "&#x05EA;&#x05DE;&#x05D9;&#x05D3;",
+   * "&#x05DE;&#x05D9;&#x05D3;&#x05D5;&#x05EA;", "&#x05E0;&#x05D3;&#x05D4;"]</code>.
+   *
+   * @return the <em>masechta</em> (tractate) of the Daf Yomi in Hebrew. As an example, it will return
+	 *         &#x05D1;&#x05E8;&#x05DB;&#x05D5;&#x05EA; for Berachos.
+   */
+  public getMasechta(): string {
+    return DafBavliYomi.masechtosBavli[this.getMasechtaNumber()];
   }
 }

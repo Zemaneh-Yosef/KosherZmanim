@@ -1,6 +1,6 @@
-import { JewishDate } from "../JewishDate";
-import ccyNl from "./dataSets/ccy-nonleap.json" 
-import ccyL from "./dataSets/ccy-leap.json"
+import { JewishDate } from "../JewishDate.ts";
+import ccyNl from "./dataSets/ccy-nonleap.json" with { type: "json" }
+import ccyL from "./dataSets/ccy-leap.json" with { type: "json" }
 import { Temporal } from "temporal-polyfill";
 
 export class ChafetzChayimYomiCalculator {

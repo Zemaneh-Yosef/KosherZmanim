@@ -9,7 +9,7 @@
     "lib": ["ESNext"],
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": true,
     "strict": true,
     "resolveJsonModule": true
   },

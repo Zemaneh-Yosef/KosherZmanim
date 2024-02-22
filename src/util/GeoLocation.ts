@@ -1,5 +1,6 @@
-import { MathUtils, TimeZone } from '../polyfills/Utils';
-import { IllegalArgumentException, UnsupportedError } from '../polyfills/errors';
+import { MathUtils, TimeZone } from '../polyfills/Utils.ts';
+import { IllegalArgumentException, UnsupportedError } from '../polyfills/errors.ts';
+import { Temporal } from 'temporal-polyfill'
 
 /**
  * A class that contains location information such as latitude and longitude required for astronomical calculations. The
@@ -62,10 +63,10 @@ export class GeoLocation {
   private static readonly FINAL_BEARING: number = 2;
 
   /** constant for nanoseconds in a minute (60 * 1000 * 1000 * 1000) */
-  private static readonly MINUTE_NANOS: number = 60 * 1000 * 1000 * 1000;
+  private static readonly MINUTE_NANOS = Temporal.Duration.from({ minutes: 1 }).total('nanoseconds');
 
-  /** constant for milliseconds in an hour (3,600,000) */
-  private static readonly HOUR_NANOS: number = GeoLocation.MINUTE_NANOS * 60;
+  /** constant for nanoseconds in an hour (3,600,000) */
+  private static readonly HOUR_NANOS: number = Temporal.Duration.from({ hours: 1 }).total('nanoseconds');
 
   /**
    * Method to get the elevation in Meters.

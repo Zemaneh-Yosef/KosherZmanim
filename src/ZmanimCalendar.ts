@@ -1,9 +1,9 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { AstronomicalCalendar } from './AstronomicalCalendar';
-import { JewishCalendar } from './hebrewcalendar/JewishCalendar';
-import { NullPointerException } from './polyfills/errors';
-import { Long_MIN_VALUE } from './polyfills/Utils';
+import { AstronomicalCalendar } from './AstronomicalCalendar.ts';
+import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
+import { NullPointerException } from './polyfills/errors.ts';
+import { Long_MIN_VALUE } from './polyfills/Utils.ts';
 
 /**
  * The ZmanimCalendar is a specialized calendar that can calculate sunrise, sunset and Jewish <em>zmanim</em>
@@ -844,12 +844,12 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 		if (seaLevelSunrise == null || seaLevelSunset == null || twilight == null) {
 			return Long_MIN_VALUE;
 		}
-		const shaahZmanis = seaLevelSunset.until(seaLevelSunrise).total({ unit: 'milliseconds' }) / 12.0;
+		const shaahZmanis = seaLevelSunrise.until(seaLevelSunset).total('nanoseconds') / 12;
 		let riseSetToTwilight;
 		if (sunset) {
-			riseSetToTwilight = twilight.until(seaLevelSunset).total({ unit: 'milliseconds' });
+			riseSetToTwilight = seaLevelSunset.until(twilight).total('nanoseconds');
 		} else {
-			riseSetToTwilight = seaLevelSunrise.until(twilight).total({ unit: 'milliseconds' });
+			riseSetToTwilight = twilight.until(seaLevelSunrise).total('nanoseconds');
 		}
 		return riseSetToTwilight / shaahZmanis;
 	}

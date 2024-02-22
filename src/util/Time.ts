@@ -1,4 +1,4 @@
-import { UnsupportedError } from '../polyfills/errors';
+import { UnsupportedError } from '../polyfills/errors.ts';
 
 /**
  * A class that represents a numeric time. Times that represent a time of day are stored as {@link java.util.Date}s in

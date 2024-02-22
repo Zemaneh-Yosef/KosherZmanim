@@ -1,6 +1,6 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { IntegerUtils, StringUtils } from '../polyfills/Utils';
+import { IntegerUtils, StringUtils } from '../polyfills/Utils.ts';
 
 /**
  * A wrapper class for a astronomical times / <em>zmanim</em> that is mostly intended to allow sorting collections of astronomical times.

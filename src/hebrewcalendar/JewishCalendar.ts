@@ -1,12 +1,11 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { GeoLocation } from '../util/GeoLocation';
-import { Daf } from './Daf';
-import { JewishDate } from './JewishDate';
-import { Calendar } from '../polyfills/Utils';
-import { YomiCalculator } from './limud/YomiCalculator';
-import { YerushalmiYomiCalculator } from './limud/YerushalmiYomiCalculator';
-import { ChafetzChayimYomiCalculator } from './limud/ChafetzChayimYomiCalculator';
+import { GeoLocation } from '../util/GeoLocation.ts';
+import { JewishDate } from './JewishDate.ts';
+import { Calendar } from '../polyfills/Utils.ts';
+import { DafBavliYomi, YomiCalculator } from './limud/YomiCalculator.ts';
+import { DafYomiYerushalmi, YerushalmiYomiCalculator } from './limud/YerushalmiYomiCalculator.ts';
+import { ChafetzChayimYomiCalculator } from './limud/ChafetzChayimYomiCalculator.ts';
 
 const { FRIDAY, SATURDAY } = Calendar;
 
@@ -1239,7 +1238,7 @@ export class JewishCalendar extends JewishDate {
     // The raw molad Date (point in time) must be generated using standard time. Using "Asia/Jerusalem" timezone will result in the time
     // being incorrectly off by an hour in the summer due to DST. Proper adjustment for the actual time in DST will be done by the date
     // formatter class used to display the Date.
-    const yerushalayimStandardTZ: string = 'Etc/GMT+2';
+    const yerushalayimStandardTZ: string = '+02:00';
     const geo: GeoLocation = new GeoLocation(locationName, latitude, longitude, yerushalayimStandardTZ);
 
     const moladSeconds: number = (molad.getMoladChalakim() * 10) / 3;
@@ -1256,7 +1255,7 @@ export class JewishCalendar extends JewishDate {
       second: Math.trunc(moladSeconds),
       millisecond: milliseconds,
     })
-      .subtract({ milliseconds: Math.trunc(geo.getLocalMeanTimeOffset()) });
+      .subtract({ nanoseconds: Math.trunc(geo.getLocalMeanTimeOffset()) });
   }
 
   /**
@@ -1346,9 +1345,9 @@ export class JewishCalendar extends JewishDate {
    * {@link HebrewDateFormatter#formatDafYomiBavli(Daf)} for the ability to format the daf in Hebrew or transliterated
    * masechta names.
    *
-   * @return the daf as a {@link Daf}
+   * @return the daf as a {@link DafBavliYomi}
    */
-  public getDafYomiBavli(): Daf {
+  public getDafYomiBavli(): DafBavliYomi {
     return YomiCalculator.getDafYomiBavli(this);
   }
 
@@ -1357,9 +1356,9 @@ export class JewishCalendar extends JewishDate {
    * {@link HebrewDateFormatter#formatDafYomiYerushalmi(Daf)} for the ability to format the daf in Hebrew or transliterated
    * masechta names.
    *
-   * @return the daf as a {@link Daf}
+   * @return the daf as a {@link DafYomiYerushalmi}
    */
-  public getDafYomiYerushalmi() {
+  public getDafYomiYerushalmi(): DafYomiYerushalmi | null {
     return YerushalmiYomiCalculator.getDafYomiYerushalmi(this);
   }
 

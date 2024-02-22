@@ -1,10 +1,11 @@
 {
   "tasks": {
-    "dev": "deno run main.ts"
+    "timezone": "deno run --unstable-ffi --allow-ffi --allow-env timezoneTest.ts",
+    "location": "deno run --unstable-ffi --allow-ffi --allow-env testLocation.ts",
+    "molad": "deno run --unstable-ffi --allow-ffi --allow-env molad.ts"
   },
   "imports": {
-    "luxon": "npm:luxon",
-    "big.js": "npm:big.js",
-    "@js-temporal/polyfill": "npm:@js-temporal/polyfill"
+    "temporal-polyfill": "npm:temporal-polyfill",
+    "big.js": "npm:big.js"
   }
 }

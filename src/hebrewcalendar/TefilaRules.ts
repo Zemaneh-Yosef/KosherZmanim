@@ -15,9 +15,9 @@
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
 
-import { Calendar } from '../polyfills/Utils';
-import { JewishCalendar } from './JewishCalendar';
-import { JewishDate } from './JewishDate';
+import { Calendar } from '../polyfills/Utils.ts';
+import { JewishCalendar } from './JewishCalendar.ts';
+import { JewishDate } from './JewishDate.ts';
 const { SUNDAY, FRIDAY, SATURDAY } = Calendar;
 
 /**

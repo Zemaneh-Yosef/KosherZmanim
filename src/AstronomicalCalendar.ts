@@ -1,11 +1,11 @@
 import { Big } from 'big.js';
 import { Temporal } from 'temporal-polyfill'
 
-import { GeoLocation } from './util/GeoLocation';
-import { AstronomicalCalculator } from './util/AstronomicalCalculator';
-import { NOAACalculator } from './util/NOAACalculator';
-import { IllegalArgumentException, UnsupportedError } from './polyfills/errors';
-import { TimeZone } from './polyfills/Utils';
+import { GeoLocation } from './util/GeoLocation.ts';
+import { AstronomicalCalculator } from './util/AstronomicalCalculator.ts';
+import { NOAACalculator } from './util/NOAACalculator.ts';
+import { IllegalArgumentException, UnsupportedError } from './polyfills/errors.ts';
+import { TimeZone } from './polyfills/Utils.ts';
 
 /**
  * A Java calendar that calculates astronomical times such as {@link #getSunrise() sunrise} and {@link #getSunset()
@@ -68,11 +68,8 @@ export class AstronomicalCalendar {
   /** Sun's zenith at astronomical twilight (108&deg;). */
   public static readonly ASTRONOMICAL_ZENITH: number = 108;
 
-  /** constant for milliseconds in a minute (60,000) */
-  public static readonly MINUTE_MILLIS: number = 60 * 1000;
-
-  /** constant for milliseconds in an hour (3,600,000) */
-  public static readonly HOUR_MILLIS: number = AstronomicalCalendar.MINUTE_MILLIS * 60;
+  /** constant for nanoseconds in an hour (3,600,000) */
+  public static readonly HOUR_NANOS: number = Temporal.Duration.from({ hours: 1 }).total('nanosecond');
 
   /**
    * The Java Calendar encapsulated by this class to track the current date used by the class
@@ -612,7 +609,7 @@ export class AstronomicalCalendar {
   /*
     public getRiseSetSolarDipFromOffset(minutes: number, riseSet: DateTime): number {
       let offsetByDegrees: DateTime | null = riseSet;
-      const offsetByTime: DateTime | null = AstronomicalCalendar.getTimeOffset(riseSet, minutes * AstronomicalCalendar.MINUTE_MILLIS);
+      const offsetByTime: DateTime | null = AstronomicalCalendar.getTimeOffset(riseSet, minutes * AstronomicalCalendar.MIUTE_MILLIS);
 
       let degrees: Big = new Big(0);
       const incrementor: Big = new Big('0.001');
@@ -653,8 +650,8 @@ export class AstronomicalCalendar {
 		}
     
     const geoLocation: GeoLocation = this.getGeoLocation();
-    const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / AstronomicalCalendar.HOUR_MILLIS;
-    return this.getDateFromTime(hours - rawOffsetHours, true)?.subtract({ milliseconds: geoLocation.getLocalMeanTimeOffset() })!;
+    const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / AstronomicalCalendar.HOUR_NANOS;
+    return this.getDateFromTime(hours - rawOffsetHours, true)?.subtract({ nanoseconds: geoLocation.getLocalMeanTimeOffset() })!;
 	}
 
   /**

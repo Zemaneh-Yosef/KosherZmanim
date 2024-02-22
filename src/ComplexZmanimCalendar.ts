@@ -1,9 +1,9 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { Calendar, Long_MIN_VALUE, TimeZone } from './polyfills/Utils';
-import { GeoLocation } from './util/GeoLocation';
-import { ZmanimCalendar } from './ZmanimCalendar';
-import { JewishCalendar } from './hebrewcalendar/JewishCalendar';
+import { Calendar, TimeZone } from './polyfills/Utils.ts';
+import { GeoLocation } from './util/GeoLocation.ts';
+import { ZmanimCalendar } from './ZmanimCalendar.ts';
+import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
 
 /**
  * <p>This class extends ZmanimCalendar and provides many more <em>zmanim</em> than available in the ZmanimCalendar. The basis
@@ -1500,7 +1500,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
     if (chatzos === null || this.getSunrise() === null) {
       return null;
     }
-    let diff = Temporal.Duration.from({ nanoseconds: this.getElevationAdjustedSunrise()?.until(chatzos).total("nanoseconds")! / 2 });
+    let diff = Temporal.Duration.from({ nanoseconds: Math.trunc(this.getElevationAdjustedSunrise()?.until(chatzos).total("nanoseconds")! / 2) });
     return chatzos.subtract(diff)
   }
 
@@ -1811,7 +1811,8 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see #getMinchaGedolaGreaterThan30()
    */
   public getMinchaGedolaAhavatShalom(): Temporal.ZonedDateTime | null {
-    if (!this.getMinchaGedola30Minutes() || !this.getMinchaGedola()) {
+    if (!this.getMinchaGedola30Minutes() || !this.getMinchaGedola() || !this.getShaahZmanisAlos16Point1ToTzais3Point7()) {
+      console.log(this.getShaahZmanisAlos16Point1ToTzais3Point7(), this.getAlos16Point1Degrees(), this.getTzaisGeonim3Point7Degrees())
       return null;
     }
 
@@ -2902,9 +2903,9 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         documentation.
    * @see #getAlos72Zmanis()
    */
-  // private Date getMesheyakirAteretTorah(double minutes) {
-  // return getTimeOffset(getAlos72Zmanis(), minutes * MINUTE_MILLIS);
-  // }
+  private getMesheyakirAteretTorah(minutes: number) {
+    return this.getAlos72Zmanis()?.add({ minutes })
+  }
 
   /**
    * Method to return <em>tzais</em> (dusk) calculated as 72 minutes zmaniyos, or 1/10th of the day after
@@ -2938,23 +2939,18 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         a null will be returned. A null will also be returned if 0 is passed in, since we can't tell if it is sunrise
    *         or sunset based. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    */
-  private getZmanisBasedOffset(hours: 0): null;
+  private getZmanisBasedOffset(hours: 0): undefined;
   private getZmanisBasedOffset(hours: Exclude<number, 0>): Temporal.ZonedDateTime;
-  private getZmanisBasedOffset(hours: number): Temporal.ZonedDateTime | null {
-    const shaahZmanis = this.getShaahZmanisGra()!;
+  private getZmanisBasedOffset(hours: number): Temporal.ZonedDateTime | undefined {
+    if (hours == 0)
+      return;
+
+    const shaahZmanis = Temporal.Duration.from({ nanoseconds: Math.trunc(this.getShaahZmanisGra()!.total('nanoseconds') * Math.abs(hours)) });
 
     if (hours > 0) {
-      let sunset = this.getElevationAdjustedSunset();
-      for (let index = 0; index < hours; index++) {
-        sunset = sunset?.add(shaahZmanis)!;
-      }
-      return sunset;
+      return this.getElevationAdjustedSunset()?.add(shaahZmanis);
     } else {
-      let sunrise = this.getElevationAdjustedSunrise();
-      for (let index = 0; index < Math.abs(hours); index++) {
-        sunrise = sunrise?.subtract(shaahZmanis)!;
-      }
-      return sunrise;
+      return this.getElevationAdjustedSunrise()?.subtract(shaahZmanis);
     }
   }
 
@@ -3160,8 +3156,8 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    */
   public getFixedLocalChatzos() {
     const geoLocation: GeoLocation = this.getGeoLocation();
-    const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / ComplexZmanimCalendar.HOUR_MILLIS;
-    return this.getDateFromTime(12 - rawOffsetHours, true)?.subtract({ nanoseconds: geoLocation.getLocalMeanTimeOffset() })
+    const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / ComplexZmanimCalendar.HOUR_NANOS;
+    return this.getDateFromTime(12 - rawOffsetHours, true)?.subtract({ nanoseconds: Math.trunc(geoLocation.getLocalMeanTimeOffset()) })
   }
 
   /**
@@ -3388,8 +3384,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see JewishCalendar#getMoladAsDate()
    */
   public getZmanMolad(): Temporal.ZonedDateTime | null {
-    const jewishCalendar: JewishCalendar = new JewishCalendar();
-    jewishCalendar.setGregorianDate(this.getDate().year, this.getDate().month - 1, this.getDate().day);
+    const jewishCalendar: JewishCalendar = new JewishCalendar(this.getDate());
 
     // Optimize to not calculate for impossible dates, but account for extreme cases. The molad in the extreme case of Rapa
     // Iti in French Polynesia on Dec 2027 occurs on the night of the 27th of Kislev. In the case of Anadyr, Russia on
@@ -3402,7 +3397,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
 
     // deal with molad that happens on the end of the previous month
     if (molad === null && jewishCalendar.getJewishDayOfMonth() > 26) {
-      jewishCalendar.forward(Calendar.MONTH, 1);
+      jewishCalendar.setDate(jewishCalendar.getDate().add({ months: 1 }))
       molad = this.getMoladBasedTime(jewishCalendar.getMoladAsDate(), null, null, true);
     }
     return molad;
@@ -3904,8 +3899,8 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
     if (startOfHalfDay == null || endOfHalfDay == null) {
       return null;
     }
-    const shaahZmanis = (endOfHalfDay.valueOf() - startOfHalfDay.valueOf()) / 6;
-    return startOfHalfDay.add({ milliseconds: shaahZmanis * hours });
+    const shaahZmanis = startOfHalfDay.until(endOfHalfDay).total('nanoseconds') / 6;
+    return startOfHalfDay.add({ nanoseconds: Math.trunc(shaahZmanis * hours) });
   }
   
   /**

@@ -2,7 +2,7 @@
 import * as KZ from "../../src/kosher-zmanim.ts"
 
 // Import Python to interface with Java
-import { python as py } from "https://deno.land/x/python@0.2.5/mod.ts";
+import {python as py} from "https://deno.land/x/python@0.4.3/mod.ts";
 
 // Type-Assertion ignore
 // deno-lint-ignore no-explicit-any
@@ -48,6 +48,9 @@ for (let i = 0; i < size; i++) {
     // @ts-ignore: paramValues is any
     const geoLocationTS = new KZ.GeoLocation(...paramValues)
     allLocations[i] = new KZ.ComplexZmanimCalendar(geoLocationTS)
+
+    const javaDate = jv.getStack(i).getCalendar();
+    allLocations[i].setDate(KZ.Temporal.PlainDate.from({ year: javaDate.get(1), month: javaDate.get(2) + 1, day: javaDate.get(5) }))
 }
 
 // deno-lint-ignore no-explicit-any
