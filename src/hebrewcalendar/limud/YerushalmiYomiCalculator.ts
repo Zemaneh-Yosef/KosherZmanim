@@ -3,7 +3,7 @@ import { Temporal } from 'temporal-polyfill'
 import { Calendar } from '../../polyfills/Utils.ts';
 import { Daf } from './Daf.ts';
 import { IllegalArgumentException } from '../../polyfills/errors.ts';
-import { JewishDate } from '../JewishDate.ts';
+import { JewishDate, rangeDates } from '../JewishDate.ts';
 
 /**
  * This class calculates the <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud">Talmud Yerusalmi</a> <a href=
@@ -216,12 +216,3 @@ export class DafYomiYerushalmi extends Daf {
     return DafYomiYerushalmi.masechtosYerushalmi[this.getMasechtaNumber()];
   }
 }
-
-
-function rangeDates(start: Temporal.PlainDate, middle:Temporal.PlainDate, end: Temporal.PlainDate, inclusive=true) {
-  const acceptedValues = [1];
-  if (inclusive)
-    acceptedValues.push(0);
-
-  return acceptedValues.includes(Temporal.PlainDate.compare(middle, start)) && acceptedValues.includes(Temporal.PlainDate.compare(end, middle))
-};

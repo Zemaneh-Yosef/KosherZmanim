@@ -5,6 +5,7 @@ import { GeoLocation } from './util/GeoLocation.ts';
 import { ZmanimCalendar } from './ZmanimCalendar.ts';
 import { ComplexZmanimCalendar } from './ComplexZmanimCalendar.ts';
 import { JsonOutput, ZmanimFormatter } from './util/ZmanimFormatter.ts';
+import { rangeDates } from './hebrewcalendar/JewishDate.ts';
 
 export function getZmanimJson(options: Options): JsonOutput {
   const geoLocation: GeoLocation = new GeoLocation(options.locationName || null, options.latitude, options.longitude,
@@ -41,6 +42,8 @@ export interface Options {
   complexZmanim?: boolean;
 }
 
+const temporalExtended = { rangeDates };
+
 export * from './util/Time.ts';
 export * from './util/GeoLocation.ts';
 export * from './util/GeoLocationUtils.ts';
@@ -54,15 +57,17 @@ export * from './AstronomicalCalendar.ts';
 export * from './ZmanimCalendar.ts';
 export * from './ComplexZmanimCalendar.ts';
 
-export * from './hebrewcalendar/JewishDate.ts';
+export { JewishDate } from './hebrewcalendar/JewishDate.ts';
 export * from './hebrewcalendar/JewishCalendar.ts';
+export * from './hebrewcalendar/TefilaRules.ts';
+
 //export * from './hebrewcalendar/Daf';
 export * from './hebrewcalendar/limud/YomiCalculator.ts';
 export * from './hebrewcalendar/limud/YerushalmiYomiCalculator.ts';
 export * from './hebrewcalendar/limud/ChafetzChayimYomiCalculator.ts';
-export * from './hebrewcalendar/TefilaRules.ts'
+export * from './hebrewcalendar/limud/Hiloulah.ts'
 
 export * from './hebrewcalendar/HebrewDateFormatter.ts';
 export * from './util/ZmanimFormatter.ts';
 
-export { _Big, Temporal};
+export { _Big, Temporal, temporalExtended };

@@ -5,6 +5,11 @@ import { GeoLocation } from './util/GeoLocation.ts';
 import { ZmanimCalendar } from './ZmanimCalendar.ts';
 import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
 
+const rZTDsort: typeof Temporal.ZonedDateTime.compare = (a,b) => {
+	const pSort = Temporal.ZonedDateTime.compare(a, b);
+	return pSort * -1 as Temporal.ComparisonResult;
+}
+
 /**
  * <p>This class extends ZmanimCalendar and provides many more <em>zmanim</em> than available in the ZmanimCalendar. The basis
  * for most <em>zmanim</em> in this class are from the <em>sefer</em> <b><a href="https://hebrewbooks.org/9765">Yisroel
@@ -1819,7 +1824,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
     return [
       this.getMinchaGedola30Minutes()!,
       this.getChatzos()?.add({nanoseconds: Math.trunc(this.getShaahZmanisAlos16Point1ToTzais3Point7()!.total("nanoseconds") / 2)})!
-    ].sort(Temporal.ZonedDateTime.compare).at(-1)!
+    ].sort(rZTDsort)[0]
   }
 
   /**
@@ -1841,7 +1846,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
     return [
       this.getMinchaGedola30Minutes()!,
       this.getMinchaGedola()!
-    ].sort(Temporal.ZonedDateTime.compare).at(-1)!
+    ].sort(rZTDsort)[0]
   }
 
   /**
@@ -3816,7 +3821,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
     return [
       this.getMinchaGedola30Minutes()!,
       this.getMinchaGedolaBaalHatanya()!
-    ].sort(Temporal.ZonedDateTime.compare).at(-1)!;
+    ].sort(rZTDsort)[0];
   }
 
   /**

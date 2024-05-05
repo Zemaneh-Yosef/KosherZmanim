@@ -647,7 +647,7 @@ export class JewishDate {
    * @see #isKislevShort()
    */
   public static getDaysInJewishYear(year: number): number {
-    return Temporal.Now.plainDateISO().withCalendar("hebrew").with({ year }).daysInYear;
+    return Temporal.PlainYearMonth.from({ year, month: 1, calendar: "hebrew" }).daysInYear;
   }
 
   /**
@@ -740,7 +740,7 @@ export class JewishDate {
    * @return the number of days for a given Jewish month
    */
   private static getDaysInJewishMonth(month: number, year: number): number {
-    return Temporal.Now.plainDateISO().withCalendar("hebrew").with({ month, year }).daysInMonth;
+    return Temporal.PlainYearMonth.from({ year, month, calendar: "hebrew" }).daysInMonth;
   }
 
   /**
@@ -1337,3 +1337,11 @@ export class JewishDate {
     return clone;
   }
 }
+
+export function rangeDates(start: Temporal.PlainDate, middle:Temporal.PlainDate, end: Temporal.PlainDate, inclusive=true) {
+  const acceptedValues = [1];
+  if (inclusive)
+    acceptedValues.push(0);
+
+  return acceptedValues.includes(Temporal.PlainDate.compare(middle, start)) && acceptedValues.includes(Temporal.PlainDate.compare(end, middle))
+};

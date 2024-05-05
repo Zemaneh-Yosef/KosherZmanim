@@ -11,4 +11,4 @@ console.log('Molad Date JV', langInterf.jv.main.getJewishCalendar().getMoladAsDa
 const moladTS = moladDate.getMolad();
 const moladJV = langInterf.jv.main.getJewishCalendar().getMolad();
 console.log('Molad Chalakim TS', moladTS.getChalakimSinceMoladTohu())
-console.log('Molad Chalakim TS', moladJV.getChalakimSinceMoladTohu())
+console.log('Molad Chalakim JV', moladJV.getChalakimSinceMoladTohu())

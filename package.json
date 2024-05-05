@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "clean": "rimraf dist/* -g",
-    "build": "npm run clean && rollup -c && dts-bundle-generator -o dist/kosher-zmanim.esm.d.ts dist/types/kosher-zmanim.d.ts && rm dist/kosher-zmanim.ignore.d.ts && rm -rf dist/types",
+    "build": "npm run clean && node esbuild.js && tsc && dts-bundle-generator -o dist/kosher-zmanim.esm.d.ts dist/types/kosher-zmanim.d.ts && rm -rf dist/types",
     "lint": "eslint --ext .ts src tests",
     "test": "ts-mocha -p tests/tsconfig.json tests/**/*.test.ts",
     "prepublishOnly": "npm run build"
@@ -29,26 +29,26 @@
   ],
   "dependencies": {
     "big.js": "^6.2.1",
-    "temporal-polyfill": "^0.2.1"
+    "temporal-polyfill": "^0.2.4"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/big.js": "^6.2.2",
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^4.3.15",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.17",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
+    "@types/node": "^20.12.8",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "chai": "^5.1.0",
-    "esbuild": "^0.20.0",
+    "esbuild": "^0.20.2",
     "esbuild-plugin-d.ts": "^1.2.3",
-    "eslint": "^8.56.0",
+    "eslint": "^9.1.1",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "mocha": "^10.3.0",
+    "mocha": "^10.4.0",
     "rimraf": "^5.0.5",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-esbuild": "^6.1.1",
@@ -56,6 +56,6 @@
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   }
 }
