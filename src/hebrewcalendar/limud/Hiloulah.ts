@@ -1,6 +1,6 @@
 import { JewishDate } from "../JewishDate.ts";
-import hiloulah_en from "./dataSets/hiloulah-en.json";
-import hiloulah_he from "./dataSets/hiloulah-he.json";
+import hiloulah_en from "./dataSets/hiloulah-en.json" assert { type: "json" };
+import hiloulah_he from "./dataSets/hiloulah-he.json" assert { type: "json" };
 
 export class HiloulahYomiCalculator {
     public static getHiloulah(jewishCalendar: JewishDate) {
