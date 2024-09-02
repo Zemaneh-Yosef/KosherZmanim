@@ -637,6 +637,28 @@ export class JewishCalendar extends JewishDate {
   }
 
   /**
+	 * Returns the upcoming {@link Parsha <em>Parsha</em>} regardless of if it is the weekday or <em>Shabbos</em> (where next
+	 * Shabbos's <em>Parsha</em> will be returned. This is unlike {@link #getParshah()} that returns {@link Parsha#NONE} if
+	 * the date is not <em>Shabbos</em>. If the upcoming Shabbos is a <em>Yom Tov</em> and has no <em>Parsha</em>, the
+	 * following week's <em>Parsha</em> will be returned.
+	 * 
+	 * @return the upcoming <em>parsha</em>.
+	 */
+	public getUpcomingParshah(): Parsha {
+		const clone = this.clone() as JewishCalendar;
+		const daysToShabbos = (Calendar.SATURDAY - this.getDayOfWeek()  + 7) % 7;
+		if (this.getDayOfWeek() != Calendar.SATURDAY) {
+			clone.forward(Calendar.DATE, daysToShabbos);
+		} else {
+			clone.forward(Calendar.DATE, 7);
+		}
+		while(clone.getParshah() == Parsha.NONE) { //Yom Kippur / Sukkos or Pesach with 2 potential non-parsha Shabbosim in a row
+			clone.forward(Calendar.DATE, 7);
+		}
+		return clone.getParshah();
+	}
+
+  /**
    * Returns an index of the Jewish holiday or fast day for the current day, or a -1 if there is no holiday for this
    * day. There are constants in this class representing each Yom Tov. Formatting of the Yomim tovim is done in the
    * ZmanimFormatter#
@@ -832,7 +854,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex: number = this.getYomTovIndex();
 
     if ((this.isErevYomTov() && (holidayIndex !== JewishCalendar.HOSHANA_RABBA
-      && (holidayIndex === JewishCalendar.CHOL_HAMOED_PESACH && this.getJewishDayOfMonth() !== 20)))
+      || (holidayIndex === JewishCalendar.CHOL_HAMOED_PESACH && this.getJewishDayOfMonth() !== 20)))
       || (this.isTaanis() && holidayIndex !== JewishCalendar.YOM_KIPPUR)) {
       return false;
     }
@@ -1086,6 +1108,55 @@ export class JewishCalendar extends JewishDate {
   public isErevRoshChodesh(): boolean {
     // Erev Rosh Hashana is not Erev Rosh Chodesh.
     return (this.getJewishDayOfMonth() === 29 && this.getJewishMonth() !== JewishCalendar.ELUL);
+  }
+
+  /**
+	 * Returns true if the current day is <em>Yom Kippur Katan</em>. Returns false for <em>Erev Rosh Hashana</em>,
+	 * <em>Erev Rosh Chodesh Cheshvan</em>, <em>Teves</em> and <em>Iyyar</em>. If <em>Erev Rosh Chodesh</em> occurs
+	 * on a Friday or <em>Shabbos</em>, <em>Yom Kippur Katan</em> is moved back to Thursday.
+	 * 
+	 * @return true if the current day is <em>Erev Rosh Chodesh</em>. Returns false for <em>Erev Rosh Hashana</em>.
+	 * @see #isRoshChodesh()
+	 */
+	public isYomKippurKatan(): boolean {
+		const dayOfWeek = this.getDayOfWeek();
+		const month = this.getJewishMonth();
+		const day = this.getJewishDayOfMonth();
+		if(month == JewishDate.ELUL || month == JewishDate.TISHREI || month == JewishDate.KISLEV || month == JewishDate.NISSAN) {
+			return false;
+		}
+
+		if(day == 29 && dayOfWeek != Calendar.FRIDAY && dayOfWeek != Calendar.SATURDAY) {
+			return true;
+		}
+
+		if((day == 27 || day == 28) && dayOfWeek == Calendar.THURSDAY ) {
+			return true;
+		}
+		return false;
+	}
+
+  /**
+	 * The Monday, Thursday and Monday after the first <em>Shabbos</em> after {@link #isRoshChodesh() <em>Rosh Chodesh</em>}
+	 * {@link JewishDate#CHESHVAN <em>Cheshvan</em>} and {@link JewishDate#IYAR <em>Iyar</em>} are <a href=
+	 * "https://outorah.org/p/41334/"> <em>BeHaB</em></a> days. If the last Monday of Iyar's BeHaB coincides with {@link
+  * #PESACH_SHENI <em>Pesach Sheni</em>}, the method currently considers it both <em>Pesach Sheni</em> and <em>BeHaB</em>.
+  * As seen in an Ohr Sameach  article on the subject <a href="https://ohr.edu/this_week/insights_into_halacha/9340">The
+  * unknown Days: BeHaB Vs. Pesach Sheini?</a> there are some customs that delay the day to various points in the future.
+  * @return true if the day is <em>BeHaB</em>.
+  */
+  public isBeHaB(): boolean {
+    const dayOfWeek = this.getDayOfWeek();
+    const month = this.getJewishMonth();
+    const day = this.getJewishDayOfMonth();
+
+    if (month == JewishDate.CHESHVAN || month == JewishDate.IYAR) {
+      if((dayOfWeek == Calendar.MONDAY && day > 4 && day < 18)
+          || (dayOfWeek == Calendar.THURSDAY && day > 7 && day < 14)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

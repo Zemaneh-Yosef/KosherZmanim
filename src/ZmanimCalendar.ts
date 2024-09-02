@@ -1,8 +1,8 @@
-import { Temporal } from 'temporal-polyfill'
+import { Temporal } from 'temporal-polyfill';
 
 import { AstronomicalCalendar } from './AstronomicalCalendar.ts';
 import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
-import { NullPointerException } from './polyfills/errors.ts';
+import { IllegalArgumentException, NullPointerException } from './polyfills/errors.ts';
 import { Long_MIN_VALUE } from './polyfills/Utils.ts';
 
 /**
@@ -342,8 +342,50 @@ export class ZmanimCalendar extends AstronomicalCalendar {
 	 *         be returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
 	 */
   public getChatzos(): Temporal.ZonedDateTime | null {
-    return this.getSunTransit();
+    if (this.useAstronomicalChatzos) {
+		return this.getSunTransit(); // can be null of the calculator does not support astronomical chatzos
+	} else {
+		const halfDayChatzos = this.getChatzosAsHalfDay();
+		if(halfDayChatzos == null) {
+			return this.getSunTransit(); // can be null if the calculator does not support astronomical chatzos
+		} else {
+			return halfDayChatzos;
+		}
+	}
   }
+
+  	/**
+	 * Returns <em>chatzos</em> calculated as halfway between sunrise and sunset. Many are of the opinion opinion that
+	 * <em>chatzos</em> is calculated as the the midpoint between {@link #getSeaLevelSunrise sea level sunrise} and
+	 * {@link #getSeaLevelSunset sea level sunset}, despite it not being the most accurate way to calculate it. A day
+	 * starting at <em>alos</em> and ending at <em>tzais</em> using the same time or degree offset will also return
+	 * the same time. In reality due to lengthening or shortening of day, this is not necessarily the exact midpoint of
+	 * the day, but it is very close. This method allows you to use the NOAACalculator and still calculate <em>chatzos
+	 * </em> as six <em>shaaos zmaniyos</em> after sunrise. There are currently two {@link
+	  * com.kosherjava.zmanim.util.AstronomicalCalculator calculators} available in the API, the {@link
+	  * com.kosherjava.zmanim.util.NOAACalculator} and the {@link com.kosherjava.zmanim.util.SunTimesCalculator}.
+	  * The SunTimesCalculator calculates <em>chatzos</em> as halfway between sunrise and sunset (and of six <em>shaaos
+	  * zmaniyos</em>), while the NOAACalculator calculates it as astronomical <em>chatzos</em> that is slightly more
+	  * accurate. This method allows you to use the NOAACalculator and still calculate <em>chatzos</em> as six <em>shaaos
+	  * zmaniyos</em> after sunrise. See <a href="https://kosherjava.com/2020/07/02/definition-of-chatzos/">The Definition
+	  * of <em>Chatzos</em></a> for a detailed explanation of the ways to calculate <em>Chatzos</em>.
+	  *
+	  * @see com.kosherjava.zmanim.util.NOAACalculator#getUTCNoon(Calendar, GeoLocation)
+	  * @see com.kosherjava.zmanim.util.SunTimesCalculator#getUTCNoon(Calendar, GeoLocation)
+	  * @see com.kosherjava.zmanim.util.AstronomicalCalculator#getUTCNoon(Calendar, GeoLocation)
+	  * @see AstronomicalCalendar#getSunTransit(Date, Date)
+	  * @see #getChatzos()
+	  * @see #getSunTransit()
+	  * @see #isUseAstronomicalChatzos()
+	  * 
+	  * @return the <code>Date</code> of the latest <em>chatzos</em>. If the calculation can't be computed such
+	  *         as in the Arctic Circle where there is at least one day a year where the sun does not rise, and one where
+	  *         it does not set, a <code>null</code> will be returned. See detailed explanation on top of the
+	  *         {@link AstronomicalCalendar} documentation.
+	  */
+	public getChatzosAsHalfDay(): Temporal.ZonedDateTime {
+		return this.getSunTransit(this.getSeaLevelSunrise()!, this.getSeaLevelSunset()!)!;
+	}
 
   /**
 	 * A generic method for calculating the latest <em>zman krias shema</em> (time to recite shema in the morning)
@@ -541,8 +583,22 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    *         at least one day a year where the sun does not rise, and one where it does not set, a null will be
    *         returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    */
-  public getMinchaGedola(startOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunrise(), endOfDay: Temporal.ZonedDateTime | null = this.getElevationAdjustedSunset()): Temporal.ZonedDateTime | null {
-    return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 6.5);
+  public getMinchaGedola(startOfDay?: Temporal.ZonedDateTime, endOfDay?: Temporal.ZonedDateTime | undefined): Temporal.ZonedDateTime {
+	if (!startOfDay && !endOfDay) {
+		if(this.isUseAstronomicalChatzosForOtherZmanim()) {
+			return this.getHalfDayBasedZman(this.getChatzos()!, this.getSunset()!, 0.5)!;
+		} else {
+			return this.getShaahZmanisBasedZman(this.getElevationAdjustedSunrise(), this.getElevationAdjustedSunset(), 6.5)!;
+		}
+	} else if (startOfDay && endOfDay) {
+		if(this.isUseAstronomicalChatzosForOtherZmanim()) {
+			return this.getHalfDayBasedZman(this.getChatzos()!, endOfDay, 0.5)!;
+		} else {
+			return this.getShaahZmanisBasedZman(startOfDay, endOfDay, 6.5)!;
+		}
+	}
+
+	throw new IllegalArgumentException("Need valid parameters");
   }
 
   /**
@@ -806,13 +862,49 @@ export class ZmanimCalendar extends AstronomicalCalendar {
    */
   public getShaahZmanisBasedZman(startOfDay: Temporal.ZonedDateTime | null, endOfDay: Temporal.ZonedDateTime | null, hours: number): Temporal.ZonedDateTime | null {
     const shaahZmanis = this.getTemporalHour(startOfDay, endOfDay)!;
+	const tweakDuration = Temporal.Duration.from({ nanoseconds: Math.trunc(shaahZmanis.total('nanoseconds') * hours) })
 
-	let builtTime = startOfDay!;
-	for (let index = 0; index < hours; index++) {
-		builtTime = builtTime.add(shaahZmanis)
-	}
-    return builtTime
+    return startOfDay!.add(tweakDuration)
   }
+
+  /**
+	 * A utility method to calculate <em>zmanim</em> based on <a href="https://en.wikipedia.org/wiki/Moshe_Feinstein">Rav Moshe
+	 * Feinstein</a> and others as calculated in <a href="https://en.wikipedia.org/wiki/Mesivtha_Tifereth_Jerusalem">MTJ</a>, <a href=
+	 * "https://en.wikipedia.org/wiki/Mesivtha_Tifereth_Jerusalem">Yeshiva of Staten Island</a>, and Camp Yeshiva
+	 * of Staten Island and other calendars. The day is split in two, from <em>alos</em> / sunrise to <em>chatzos</em>, and the
+	 * second half of the day, from <em>chatzos</em> to sunset / <em>tzais</em>. Morning based times are calculated. based on the first
+	 * 6 hours of the day, and afternoon times based on the second half of the day. As an example, passing 0.5, a start of
+	 * <em>chatzos</em> and an end of day as sunset will return the time of <em>mincha gedola</em> GRA as half an hour <em>zmanis</em>
+	 * based on the second half of the day.
+	 * 
+	 * @param startOfHalfDay
+	 *            The start of the half day. This would be <em>alos</em> or sunrise for morning based times such as <em>sof zman krias
+	 *            shema</em> and <em>chatzos</em> for afternoon based times such as <em>mincha gedola</em>.
+	 * @param endOfHalfDay
+	 *            The end of the half day. This would be <em>chatzos</em> for morning based times  such as <em>sof zman krias shema</em>
+	 *            and sunset or <em>tzais</em> for afternoon based times such as <em>mincha gedola</em>.
+	 * @param hours
+	 *            The number of <em>sha'os zmaniyos</em> (hours) to offset the beginning of the first or second half of the day. For example,
+	 *            3 for <em>sof zman Shma</em>, 0.5 for <em>mincha gedola</em> (half an hour after <em>chatzos</em>) and 4.75 for <em>plag
+	 *            hamincha</em>.
+	 * 
+	 * @return the <code>Date</code> of <em>zman</em> based on calculation of the first or second half of the day. If the
+	 *         calculation can't be computed such as in the Arctic Circle where there is at least one day a year where the
+	 *         sun does not rise, and one where it does not set, a <code>null</code> will be returned. See detailed explanation
+	 *         on top of the {@link AstronomicalCalendar} documentation.
+	 *
+	 * @see ComplexZmanimCalendar#getFixedLocalChatzos()
+	 */
+	public getHalfDayBasedZman(startOfHalfDay: Temporal.ZonedDateTime, endOfHalfDay: Temporal.ZonedDateTime, hours: number): Temporal.ZonedDateTime | null {
+		if (startOfHalfDay == null || endOfHalfDay == null) {
+			return null;
+		}
+
+		const intValue = startOfHalfDay.until(endOfHalfDay).total({ unit: 'nanoseconds' }) / 6;
+		const duration = Temporal.Duration.from({ nanoseconds: Math.trunc(intValue * hours) });
+
+		return startOfHalfDay.add(duration);
+	}
 
   /**
 	 * A utility method that returns the percentage of a <em>shaah zmanis</em> after sunset (or before sunrise) for a given degree

@@ -740,7 +740,12 @@ export class JewishDate {
    * @return the number of days for a given Jewish month
    */
   private static getDaysInJewishMonth(month: number, year: number): number {
-    return Temporal.PlainYearMonth.from({ year, month, calendar: "hebrew" }).daysInMonth;
+    let fixedMonth = month - 6;
+    if (fixedMonth < 1) {
+      fixedMonth += Temporal.PlainDate.from({ year, month, day: 1, calendar: "hebrew" }).monthsInYear;
+    }
+
+    return Temporal.PlainDate.from({ year, month: fixedMonth, day: 15, calendar: "hebrew" }).daysInMonth;
   }
 
   /**
@@ -749,7 +754,7 @@ export class JewishDate {
    * @return the number of days for the Jewish month that the calendar is currently set to.
    */
   public getDaysInJewishMonth(): number {
-    return JewishDate.getDaysInJewishMonth(this.getJewishMonth(), this.getJewishYear());
+    return this.getDate().withCalendar("hebrew").daysInMonth;
   }
 
   /**
@@ -1234,10 +1239,11 @@ export class JewishDate {
    *
    * @return the day of the week as a number between 1-7.
    */
-  public getDayOfWeek(): number {
+  public getDayOfWeek(): 1|2|3|4|5|6|7 {
     let dayOfWeek = this.date.dayOfWeek + 1;
     if (dayOfWeek == 8)
-      dayOfWeek = 1
+      dayOfWeek = 1;
+    // @ts-ignore
     return dayOfWeek;
   }
 

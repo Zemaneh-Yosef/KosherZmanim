@@ -47,7 +47,7 @@ const temporalExtended = { rangeDates };
 export * from './util/Time.ts';
 export * from './util/GeoLocation.ts';
 export * from './util/GeoLocationUtils.ts';
-export * from './util/Zman.ts';
+//export * from './util/Zman.ts';
 export * from './polyfills/Utils.ts';
 
 export * from './util/NOAACalculator.ts';
@@ -55,19 +55,21 @@ export * from './util/SunTimesCalculator.ts';
 
 export * from './AstronomicalCalendar.ts';
 export * from './ZmanimCalendar.ts';
-export * from './ComplexZmanimCalendar.ts';
+//export * from './ComplexZmanimCalendar.ts';
 
 export { JewishDate } from './hebrewcalendar/JewishDate.ts';
 export * from './hebrewcalendar/JewishCalendar.ts';
-export * from './hebrewcalendar/TefilaRules.ts';
+//export * from './hebrewcalendar/TefilaRules.ts';
 
 //export * from './hebrewcalendar/Daf';
 export * from './hebrewcalendar/limud/YomiCalculator.ts';
 export * from './hebrewcalendar/limud/YerushalmiYomiCalculator.ts';
 export * from './hebrewcalendar/limud/ChafetzChayimYomiCalculator.ts';
 export * from './hebrewcalendar/limud/Hiloulah.ts'
+export { default as TehilimYomi } from './hebrewcalendar/limud/TehilimYomi.ts';
+export { default as Haftara } from './hebrewcalendar/limud/HaftarahShvui.ts'
 
-export * from './hebrewcalendar/HebrewDateFormatter.ts';
-export * from './util/ZmanimFormatter.ts';
+//export * from './hebrewcalendar/HebrewDateFormatter.ts';
+//export * from './util/ZmanimFormatter.ts';
 
 export { _Big, Temporal, temporalExtended };

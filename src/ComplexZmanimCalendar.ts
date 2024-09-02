@@ -836,7 +836,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see #getShaahZmanis60Minutes()
    */
   public getAlos60() {
-    return this.getSunrise()?.subtract({ minutes: 60 })
+    return this.getElevationAdjustedSunrise()?.subtract({ minutes: 60 })
   }
 
   /**
@@ -1791,7 +1791,11 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    */
   public getMinchaGedola16Point1Degrees(): Temporal.ZonedDateTime | null {
-    return this.getMinchaGedola(this.getAlos16Point1Degrees(), this.getTzais16Point1Degrees());
+    if(this.isUseAstronomicalChatzosForOtherZmanim()) {
+			return this.getHalfDayBasedZman(this.getChatzos()!, this.getTzais16Point1Degrees()!, 0.5);
+		} else {
+			return this.getMinchaGedola(this.getAlos16Point1Degrees()!, this.getTzais16Point1Degrees()!);
+		}
   }
 
   /**
@@ -2837,7 +2841,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         documentation.
    */
   public getMinchaGedolaAteretTorah(): Temporal.ZonedDateTime | null {
-    return this.getMinchaGedola(this.getAlos72Zmanis(), this.getTzaisAteretTorah());
+    return this.getMinchaGedola(this.getAlos72Zmanis()!, this.getTzaisAteretTorah());
   }
 
   /**
@@ -3160,9 +3164,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see GeoLocation#getLocalMeanTimeOffset()
    */
   public getFixedLocalChatzos() {
-    const geoLocation: GeoLocation = this.getGeoLocation();
-    const rawOffsetHours = TimeZone.getRawOffset(geoLocation.getTimeZone()) / ComplexZmanimCalendar.HOUR_NANOS;
-    return this.getDateFromTime(12 - rawOffsetHours, true)?.subtract({ nanoseconds: Math.trunc(geoLocation.getLocalMeanTimeOffset()) })
+    return this.getLocalMeanTime(12.0);
   }
 
   /**
@@ -3799,7 +3801,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         documentation.
    */
   public getMinchaGedolaBaalHatanya(): Temporal.ZonedDateTime | null {
-    return this.getMinchaGedola(this.getSunriseBaalHatanya(), this.getSunsetBaalHatanya());
+    return this.getMinchaGedola(this.getSunriseBaalHatanya()!, this.getSunsetBaalHatanya()!);
   }
 
   /**

@@ -5,7 +5,7 @@ await esbuild.build({
   bundle: true,
   minify: true,
   sourcemap: true,
-  target: ['chrome67', 'firefox68', 'safari14', 'edge19'],
+  target: ['chrome80', 'firefox76', 'safari14', 'edge80'],
   outfile: 'dist/kosher-zmanim.esm.js',
   format: "esm"
 })

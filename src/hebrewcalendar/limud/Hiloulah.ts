@@ -1,24 +1,41 @@
 import { JewishDate } from "../JewishDate.ts";
-import hiloulah_en from "./dataSets/hiloulah-en.json" assert { type: "json" };
-import hiloulah_he from "./dataSets/hiloulah-he.json" assert { type: "json" };
+type hiloulahObj = { name: string; src: string; }[]
 
 export class HiloulahYomiCalculator {
-    public static getHiloulah(jewishCalendar: JewishDate) {
-        const key = jewishCalendar.getJewishMonth().toString().padStart(2, '0') + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0')
+	folderWithHiloulotJSON = (new URL(import.meta.url)).pathname.substring(0, (new URL(import.meta.url)).pathname.lastIndexOf('/'));
+	initFlag = false;
+	hiloulot_en: Record<string, hiloulahObj> = {};
+	hiloulot_he: Record<string, hiloulahObj> = {};
+	constructor (dir = (new URL(import.meta.url)).pathname.substring(0, (new URL(import.meta.url)).pathname.lastIndexOf('/'))) {
+		this.folderWithHiloulotJSON = dir;
+		this.init()
+			.then(() => this.initFlag = true)
+	}
 
-        // 0101 is hardcoded. Thank you TypeScript for making up a difference between keys
-        let en: typeof hiloulah_en['0101'] = hiloulah_en[key as keyof typeof hiloulah_en];
-        let he: typeof hiloulah_he['0101'] = hiloulah_he[key as keyof typeof hiloulah_he];
+	public async init() {
+		this.hiloulot_en = (await (await fetch(this.folderWithHiloulotJSON + '/hiloulah-en.json')).json()) as Record<string, hiloulahObj>;
+		this.hiloulot_he = (await (await fetch(this.folderWithHiloulotJSON + '/hiloulah-he.json')).json()) as Record<string, hiloulahObj>;
+	}
 
-        if (!jewishCalendar.isJewishLeapYear() && jewishCalendar.getJewishMonth() == JewishDate.ADAR) {
-            en = Array.from(new Set(...(["12", "13"]
-                .map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
-                .map(key => hiloulah_en[key as keyof typeof hiloulah_en]))))
-            he = Array.from(new Set(...(["12", "13"]
-                .map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
-                .map(key => hiloulah_he[key as keyof typeof hiloulah_he]))))
-        }
+	public async getHiloulah(jewishCalendar: JewishDate) {
+		if (!this.initFlag) {
+			await this.init();
+			this.initFlag = true;
+		}
+		const key = jewishCalendar.getJewishMonth().toString().padStart(2, '0') + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0')
 
-        return { en, he }
-    }
+		let en = (key in this.hiloulot_en ? this.hiloulot_en[key] : []);
+		let he = (key in this.hiloulot_he ? this.hiloulot_he[key] : []);
+
+		if (!jewishCalendar.isJewishLeapYear() && jewishCalendar.getJewishMonth() == JewishDate.ADAR) {
+			en = Array.from(new Set(...(["12", "13"]
+				.map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
+				.map(key => (key in this.hiloulot_en ? this.hiloulot_en[key] : [])))))
+			he = Array.from(new Set(...(["12", "13"]
+				.map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
+				.map(key => (key in this.hiloulot_he ? this.hiloulot_he[key] : [])))))
+		}
+
+		return { en, he }
+	}
 }

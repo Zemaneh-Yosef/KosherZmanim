@@ -1024,11 +1024,15 @@ export class HebrewDateFormatter {
    *         chars. The default uses Ashkenazi pronunciation in typical American English spelling, for example
    *         Bereshis or Nitzavim Vayeilech or an empty string if there are none.
    */
-  public formatParsha(jewishCalendar: JewishCalendar): string {
-    const parsha: Parsha = jewishCalendar.getParshah();
-    return this.hebrewFormat
-      ? this.hebrewParshaMap[parsha] || ''
-      : this.transliteratedParshaMap[parsha] || '';
+  public formatParsha(jewishCalendarOrParsha: JewishCalendar|Parsha): string {
+    if (jewishCalendarOrParsha instanceof JewishCalendar) {
+      const parsha: Parsha = jewishCalendarOrParsha.getParshah();
+      return this.formatParsha(parsha)
+    } else {
+      return this.hebrewFormat
+        ? this.hebrewParshaMap[jewishCalendarOrParsha] || ''
+        : this.transliteratedParshaMap[jewishCalendarOrParsha] || '';
+    }
   }
 
   /**

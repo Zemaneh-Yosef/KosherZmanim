@@ -144,7 +144,14 @@ export class TefilaRules {
   private tachanunRecitedMinchaAllYear:boolean = true;
 
   /**
-	 * Returns if <em>tachanun</em> is recited during <em>shacharis</em> on the day in question. See the many
+	 * The default value is <code>false</code>.
+	 * @see #isMizmorLesodaRecited(JewishCalendar)
+	 * @see #setMizmorLesodaRecitedErevYomKippurAndPesach(boolean)
+	 */
+  private mizmorLesodaRecitedErevYomKippurAndPesach: boolean = false;
+
+  /**
+   * Returns if <em>tachanun</em> is recited during <em>shacharis</em> on the day in question. There are the many
 	 * <em>minhag</em> based settings that are available in this class.
 	 * 
 	 * @param jewishCalendar the Jewish calendar day.
@@ -474,7 +481,30 @@ export class TefilaRules {
 	    		|| jewishCalendar.isSuccos() || jewishCalendar.isShminiAtzeres() || jewishCalendar.isSimchasTorah()
 	    		|| jewishCalendar.isRoshChodesh();
   }
-	
+
+  /**
+  * Returns if Is <em>Mizmor Lesoda</em> is recited on the day in question. 
+  * @param jewishCalendar  the Jewish calendar day.
+  * @return if <em>Mizmor Lesoda</em> is recited.
+  * 
+  * @see #isMizmorLesodaRecitedErevYomKippurAndPesach()
+  * 
+  */
+ public isMizmorLesodaRecited(jewishCalendar: JewishCalendar): boolean {
+	 if(jewishCalendar.isAssurBemelacha()) {
+		 return false;
+	 }
+
+	 const holidayIndex: number = jewishCalendar.getYomTovIndex();
+	 if (!this.isMizmorLesodaRecitedErevYomKippurAndPesach()
+			 && (holidayIndex == JewishCalendar.EREV_YOM_KIPPUR
+					 || holidayIndex == JewishCalendar.EREV_PESACH
+					 || jewishCalendar.isCholHamoedPesach())) {
+		 return false;
+	 }
+	 return true;
+ }
+
   /**
 	 * Is <em>tachanun</em> recited during the week of Purim, from the 11th through the 17th of {@link
 	 * JewishDate#ADAR <em>Adar</em>} (on a non-leap year, or {@link JewishDate#ADAR_II <em>Adar II</em>} on a leap year). Some
@@ -773,4 +803,29 @@ export class TefilaRules {
   public setTachanunRecitedMinchaAllYear(tachanunRecitedMinchaAllYear:boolean):void {
     this.tachanunRecitedMinchaAllYear = tachanunRecitedMinchaAllYear;
   }
+
+  /**
+	 * Sets if <em>Mizmor Lesoda</em> should be recited on <em>Erev Yom Kippur</em>, <em>Erev Pesach</em> and <em>Chol
+	 * Hamoed Pesach</em>. Ashkenazi congregations do not recite it on these days, while Sephardi congregations do. The
+	 * default value is <code>false</code>.
+	 * @param mizmorLesodaRecitedErevYomKippurAndPesach Sets if <em>Mizmor Lesoda</em> should be recited on <em>Erev Yom
+	 *          Kippur</em>, <em>Erev Pesach</em> and <em>Chol Hamoed Pesach</em>. If set to true (the default value is
+	 *          <code>false</code>).
+	 * @see #isTachanunRecitedMinchaAllYear()
+	 */
+	public setMizmorLesodaRecitedErevYomKippurAndPesach(mizmorLesodaRecitedErevYomKippurAndPesach: boolean): void {
+		this.mizmorLesodaRecitedErevYomKippurAndPesach = mizmorLesodaRecitedErevYomKippurAndPesach;
+	}
+
+	/**
+	 * Is <em>Mizmor Lesoda</em> set to be recited on <em>Erev Yom Kippur</em>, <em>Erev Pesach</em> and <em>Chol
+	 * Hamoed Pesach</em>. Ashkenazi congregations do not recite it on these days, while Sephardi congregations do.
+	 * The default value is <code>false</code>.
+	 * @return if <em>Mizmor Lesoda</em> is set to be recited on <em>Erev Yom Kippur</em>, <em>Erev Pesach</em> and
+	 *          <em>Chol Hamoed Pesach</em>. If set to true (the default value is <code>false</code>).
+	 * @see #isMizmorLesodaRecited(JewishCalendar)
+	 */
+	public isMizmorLesodaRecitedErevYomKippurAndPesach(): boolean {
+		return this.mizmorLesodaRecitedErevYomKippurAndPesach;
+	}
 }
