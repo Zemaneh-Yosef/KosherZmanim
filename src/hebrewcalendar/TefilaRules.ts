@@ -439,7 +439,7 @@ export class TefilaRules {
     const month:number = jewishCalendar.getJewishMonth();
     const inIsrael:boolean = jewishCalendar.getInIsrael();
     if (this.isHallelRecited(jewishCalendar)) {
-      if ((jewishCalendar.isRoshChodesh() && ! jewishCalendar.isChanukah())
+      if ((jewishCalendar.isRoshChodesh() && !jewishCalendar.isChanukah())
 					|| (month == JewishDate.NISSAN && ((inIsrael && day > 15) || (!inIsrael && day > 16)))) {
         return false;
       } 

@@ -53,6 +53,46 @@ export default class WeeklyHaftarahReading {
 		// Also, it combined Noah & Ki These, but we don't have that luxury because we're saving space on everything else.
 		// (ironic it didn't combine Pekudeh & Wayaqhel-Pekudeh, among others)
 
+		if (jCal.isYomTov()) {
+			switch (jCal.getYomTovIndex()) {
+				case JewishCalendar.ROSH_HASHANA:
+					return { text: "ויהי איש", source: "שמואל א א"}
+					// 2nd day: { text: "כה אמר", source: 'ירמיה ל"א'})
+					// comment because Rosh Hashanah (20A)
+					break;
+				case JewishCalendar.YOM_KIPPUR:
+					return { text: "סלו סלו", source: 'ישעיה נ"ז' };
+					break;
+				case JewishCalendar.SUCCOS:
+					return { text: "הנה יום", source: 'זכריה י"ד' };
+					break;
+					// 2nd day: מלכים א ח
+					// comment because parallel to RH
+				case JewishCalendar.CHOL_HAMOED_SUCCOS:
+					return { text: "ויהי ביום", source: "יחזקאל לח"};
+					break;
+				case JewishCalendar.SHEMINI_ATZERES:
+					return (jCal.getInIsrael() ? { text: "ויהי אחרי", source: 'יהושע א' } : {text: "ויהי ככלות", source: 'מלכים א ח'});
+					break;
+				case JewishCalendar.PESACH:
+					return {
+						15: { text: "בעת ההיא", source: 'יהושע ה' },
+						16: { text: "וישלח המלך", source: 'מלכים ב כ"ג' },
+						21: { text: "וידבר דוד", source: 'שמואל ב כ"ב' },
+						22: { text: "עוד היום", source: 'ישעיהו י' }
+					}[jCal.getJewishDayOfMonth()]!;
+					break;
+				case JewishCalendar.CHOL_HAMOED_PESACH:
+					return { text: "היתה עלי", source: 'יחזקאל ל"ז'}
+					break;
+				case JewishCalendar.SHAVUOS:
+					if (jCal.getJewishDayOfMonth() == 7)
+						return { text: "וה' בהיכל", source: "חבקוק ב"};
+
+					return { text: "ויהי בשלושים", source: "יחזקאל א"};
+			}
+		}
+
 		if (jCal.isChanukah())
 			return ([7, 8].includes(jCal.getDayOfChanukah())
 				? {
@@ -320,7 +360,7 @@ export default class WeeklyHaftarahReading {
 						? { text: "סלו סלו", source: 'ישעיה נ"ז' }
 						: { text: "וידבר דוד", source: 'שמואל ב כ"ב' })
 					: { text: "שובה", source: 'הושע י"ד' }),
-			[Parsha.VZOS_HABERACHA]: { text: "ויהי אחרי", source: 'יהושע א' },
+			// Parsha.VZOS_HABERACHA is unused
 		}[jCal.getParshah()]
 	}
 }

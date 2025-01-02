@@ -9,6 +9,12 @@ import { ChafetzChayimYomiCalculator } from './limud/ChafetzChayimYomiCalculator
 
 const { FRIDAY, SATURDAY } = Calendar;
 
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc['length']]>
+
+type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
 /**
  * List of <em>parshiyos</em> or special <em>Shabasos</em>. {@link #NONE} indicates a week without a <em>parsha</em>, while the enum for
  * the <em>parsha</em> of {@link #VZOS_HABERACHA} exists for consistency, but is not currently used. The special <em>Shabasos</em> of
@@ -1198,14 +1204,16 @@ export class JewishCalendar extends JewishDate {
    * @return the day of <em>Chanukah</em> or -1 if it is not <em>Chanukah</em>.
    * @see #isChanukah()
    */
-  public getDayOfChanukah(): number {
+  public getDayOfChanukah(): Range<1,9> | -1 {
     const day: number = this.getJewishDayOfMonth();
 
     if (this.isChanukah()) {
       if (this.getJewishMonth() === JewishCalendar.KISLEV) {
+        // @ts-ignore
         return day - 24;
       }
       // teves
+      // @ts-ignore
       return this.isKislevShort() ? day + 5 : day + 6;
     }
     return -1;

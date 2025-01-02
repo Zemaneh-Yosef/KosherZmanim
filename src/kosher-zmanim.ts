@@ -59,7 +59,7 @@ export * from './ZmanimCalendar.ts';
 
 export { JewishDate } from './hebrewcalendar/JewishDate.ts';
 export * from './hebrewcalendar/JewishCalendar.ts';
-//export * from './hebrewcalendar/TefilaRules.ts';
+export * from './hebrewcalendar/TefilaRules.ts';
 
 //export * from './hebrewcalendar/Daf';
 export * from './hebrewcalendar/limud/YomiCalculator.ts';
@@ -68,6 +68,7 @@ export * from './hebrewcalendar/limud/ChafetzChayimYomiCalculator.ts';
 export * from './hebrewcalendar/limud/Hiloulah.ts'
 export { default as TehilimYomi } from './hebrewcalendar/limud/TehilimYomi.ts';
 export { default as Haftara } from './hebrewcalendar/limud/HaftarahShvui.ts'
+export { default as Makam } from './hebrewcalendar/limud/MaqamShvui.ts'
 
 //export * from './hebrewcalendar/HebrewDateFormatter.ts';
 //export * from './util/ZmanimFormatter.ts';

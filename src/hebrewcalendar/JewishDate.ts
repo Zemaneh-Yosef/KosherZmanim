@@ -3,6 +3,12 @@ import { Temporal } from 'temporal-polyfill'
 import { Calendar } from '../polyfills/Utils.ts';
 import { IllegalArgumentException } from '../polyfills/errors.ts';
 
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc['length']]>
+
+type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
 /**
  * The JewishDate is the base calendar class, that supports maintenance of a {@link java.util.GregorianCalendar}
  * instance along with the corresponding Jewish date. This class can use the standard Java Date and Calendar
@@ -1239,7 +1245,7 @@ export class JewishDate {
    *
    * @return the day of the week as a number between 1-7.
    */
-  public getDayOfWeek(): 1|2|3|4|5|6|7 {
+  public getDayOfWeek(): Range<1,8> {
     let dayOfWeek = this.date.dayOfWeek + 1;
     if (dayOfWeek == 8)
       dayOfWeek = 1;
