@@ -355,10 +355,8 @@ export default class WeeklyHaftarahReading {
 				source: 'ישעיה ס"א'
 			},
 			[Parsha.HAAZINU]:
-				(jCal.getJewishMonth() == JewishCalendar.TISHREI && jCal.getJewishDayOfMonth() >= 10
-					? (jCal.getJewishDayOfMonth() == 10
-						? { text: "סלו סלו", source: 'ישעיה נ"ז' }
-						: { text: "וידבר דוד", source: 'שמואל ב כ"ב' })
+				(jCal.getJewishMonth() == JewishCalendar.TISHREI && jCal.getJewishDayOfMonth() > 10
+					? { text: "וידבר דוד", source: 'שמואל ב כ"ב' }
 					: { text: "שובה", source: 'הושע י"ד' }),
 			// Parsha.VZOS_HABERACHA is unused
 		}[jCal.getParshah()]
