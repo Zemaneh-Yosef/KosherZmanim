@@ -2140,24 +2140,31 @@ export default class WeeklyMakamReading {
 
 		data[Parsha.VAYAKHEL_PEKUDEI] = {
 			...data[Parsha.VAYAKHEL],
+			"GABRIEL A SHREM 1964 SUHV": ["Bayat"]
 		}
 		data[Parsha.TAZRIA_METZORA] = {
-			...data[Parsha.TAZRIA]
+			...data[Parsha.TAZRIA],
+			"GABRIEL A SHREM 1964 SUHV": ["Saba"]
 		},
 		data[Parsha.ACHREI_MOS_KEDOSHIM] = {
-			...data[Parsha.ACHREI_MOS]
+			...data[Parsha.ACHREI_MOS],
+			"GABRIEL A SHREM 1964 SUHV": ["Bayat", "Hijaz"]
 		}
 		data[Parsha.BEHAR_BECHUKOSAI] = {
-			...data[Parsha.BEHAR]
+			...data[Parsha.BEHAR],
+			"GABRIEL A SHREM 1964 SUHV": ["Saba"]
 		}
 		data[Parsha.CHUKAS_BALAK] = {
-			...data[Parsha.CHUKAS]
+			...data[Parsha.CHUKAS],
+			"GABRIEL A SHREM 1964 SUHV": ["Hoseni"]
 		}
 		data[Parsha.MATOS_MASEI] = {
-			...data[Parsha.MATOS]
+			...data[Parsha.MATOS],
+			"GABRIEL A SHREM 1964 SUHV": ["Saba"]
 		}
 		data[Parsha.NITZAVIM_VAYEILECH] = {
-			...data[Parsha.NITZAVIM]
+			...data[Parsha.NITZAVIM],
+			"GABRIEL A SHREM 1964 SUHV": ["Hoseni"]
 		}
 
 		if (jCal.getJewishMonth() == JewishCalendar.TISHREI && jCal.getJewishDayOfMonth() > 10) {
