@@ -18,7 +18,7 @@ export class YerushalmiYomiCalculator {
    */
   private static readonly DAF_YOMI_START_DAY: Temporal.PlainDate = Temporal.PlainDate.from({
     year: 1980,
-    month: Calendar.FEBRUARY + 1,
+    month: Calendar.FEBRUARY,
     day: 2,
   });
 

@@ -19,7 +19,7 @@ export class YomiCalculator {
    */
   private static readonly dafYomiStartDate: Temporal.PlainDate = Temporal.PlainDate.from({
     year: 1923,
-    month: Calendar.SEPTEMBER + 1,
+    month: Calendar.SEPTEMBER,
     day: 11,
   });
 
@@ -30,7 +30,7 @@ export class YomiCalculator {
    * The date that the pagination for the Daf Yomi <em>Maseches Shekalim</em> changed to use the commonly used Vilna
    * Shas pagination from the no longer commonly available Zhitomir / Slavuta Shas used by Rabbi Meir Shapiro.
    */
-  private static readonly shekalimChangeDate: Temporal.PlainDate = Temporal.PlainDate.from({ year: 1975, month: Calendar.JUNE + 1, day: 24 });
+  private static readonly shekalimChangeDate: Temporal.PlainDate = Temporal.PlainDate.from({ year: 1975, month: Calendar.JUNE, day: 24 });
 
   /** The Julian date that the cycle for Shekalim changed.
    * @see #getDafYomiBavli(JewishCalendar) for details.

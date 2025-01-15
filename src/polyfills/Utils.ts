@@ -90,18 +90,18 @@ export namespace TimeZone {
  * java.util.Calendar
  */
 export namespace Calendar {
-  export const JANUARY: number = 0;
-  export const FEBRUARY: number = 1;
-  export const MARCH: number = 2;
-  export const APRIL: number = 3;
-  export const MAY: number = 4;
-  export const JUNE: number = 5;
-  export const JULY: number = 6;
-  export const AUGUST: number = 7;
-  export const SEPTEMBER: number = 8;
-  export const OCTOBER: number = 9;
-  export const NOVEMBER: number = 10;
-  export const DECEMBER: number = 11;
+  export const JANUARY: number = 1;
+  export const FEBRUARY: number = 2;
+  export const MARCH: number = 3;
+  export const APRIL: number = 4;
+  export const MAY: number = 5;
+  export const JUNE: number = 6;
+  export const JULY: number = 7;
+  export const AUGUST: number = 8;
+  export const SEPTEMBER: number = 9;
+  export const OCTOBER: number = 10;
+  export const NOVEMBER: number = 11;
+  export const DECEMBER: number = 12;
 
   export const SUNDAY: number = 1;
   export const MONDAY: number = 2;

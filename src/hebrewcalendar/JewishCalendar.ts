@@ -1495,4 +1495,16 @@ export class JewishCalendar extends JewishDate {
   public equals(jewishCalendar: JewishCalendar): boolean {
     return Temporal.PlainDate.compare(this.getDate(), jewishCalendar.getDate()) === 0 && this.getInIsrael() === jewishCalendar.getInIsrael();
   }
+
+  public clone() {
+    const clone: JewishCalendar = new JewishCalendar(this.getDate());
+    clone.setMoladHours(this.getMoladHours());
+    clone.setMoladMinutes(this.getMoladMinutes());
+    clone.setMoladChalakim(this.getMoladChalakim());
+    clone.setIsMukafChoma(this.getIsMukafChoma());
+    clone.setInIsrael(this.getInIsrael());
+    clone.setUseModernHolidays(this.isUseModernHolidays())
+
+    return clone;
+  }
 }

@@ -69,6 +69,7 @@ export * from './hebrewcalendar/limud/Hiloulah.ts'
 export { default as TehilimYomi } from './hebrewcalendar/limud/TehilimYomi.ts';
 export { default as Haftara } from './hebrewcalendar/limud/HaftarahShvui.ts'
 export { default as Makam } from './hebrewcalendar/limud/MaqamShvui.ts'
+export { default as MishnaYomi} from "./hebrewcalendar/limud/MishnaYomi.ts"
 
 //export * from './hebrewcalendar/HebrewDateFormatter.ts';
 //export * from './util/ZmanimFormatter.ts';
