@@ -139,10 +139,10 @@ export default class WeeklyMakamReading {
 		const data = WeeklyMakamReading.getMakamData(jCal);
 		for (const entry of this.hierarchy) {
 			if (entry == "MAJORITY")
-				return findDuplicate(Object.values(data).flat());
+				return {title: entry, makam: findDuplicate(Object.values(data).flat())};
 
 			if (entry in data) {
-				return data[entry];
+				return {title: entry, makam: data[entry] };
 			}
 		}
 	}

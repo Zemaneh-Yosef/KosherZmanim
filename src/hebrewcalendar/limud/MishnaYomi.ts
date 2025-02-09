@@ -264,7 +264,7 @@ export default class MishnaYomi {
 		} else {
 			return (useHebrewText ? masechtaNameHeb : masechtaNameEng)[sFirstMasechta]
 				+ " "
-				+ sFirstPerek
+				+ (useHebrewText ? hebrewDateFormatter.formatHebrewNumber(sFirstPerek) : sFirstPerek)
 				+ ":"
 				+ [sFirstMishna, sSecondMishna].map((mishna) =>
 					(useHebrewText ? hebrewDateFormatter.formatHebrewNumber(mishna) : mishna)
