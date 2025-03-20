@@ -1,4 +1,4 @@
-import { Temporal } from 'temporal-polyfill'
+import { Temporal } from "temporal-polyfill";
 
 export namespace Utils {
   // https://stackoverflow.com/a/40577337/8037425
@@ -31,13 +31,11 @@ export namespace TimeZone {
    * @return the amount of raw offset time in nanoseconds to add to UTC.
    */
   export function getRawOffset(timeZoneId: string): number {
-    const timeZone = Temporal.TimeZone.from(timeZoneId);
     const msCount = [
       { month: 7, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId },
       { month: 1, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId }
     ]
-    .map(monthDay => Temporal.ZonedDateTime.from(monthDay).toInstant())
-    .map(instant => timeZone.getOffsetNanosecondsFor(instant))
+    .map(monthDay => Temporal.ZonedDateTime.from(monthDay).offsetNanoseconds)
 
     return Math.min(...msCount);
   }
@@ -59,14 +57,11 @@ export namespace TimeZone {
    * @return {number}
    */
   export function getDSTSavings(timeZoneId: string): number {
-    const timeZone = Temporal.TimeZone.from(timeZoneId);
     const msCount = [
-      { month: 7, day: 1, year: new Date().getFullYear() },
-      { month: 1, day: 1, year: new Date().getFullYear() }
+      { month: 7, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId },
+      { month: 1, day: 1, year: new Date().getFullYear(), timeZone: timeZoneId }
     ]
-    .map(monthDay => Temporal.PlainDate.from(monthDay))
-    .map(plainMonthDay => timeZone.getInstantFor!(plainMonthDay))
-    .map(instant => timeZone.getOffsetNanosecondsFor(instant))
+    .map(monthDay => Temporal.ZonedDateTime.from(monthDay).offsetNanoseconds)
 
     return Math.abs(msCount[0] - msCount[1]);
   }
@@ -81,8 +76,9 @@ export namespace TimeZone {
    * @param {number} millisSinceEpoch
    */
   export function getOffset(timeZoneId: string, millisSinceEpoch: number): number {
-    const timeZone = Temporal.TimeZone.from(timeZoneId);
-    return timeZone.getOffsetNanosecondsFor(Temporal.Instant.fromEpochMilliseconds(millisSinceEpoch));
+    return Temporal.Instant.fromEpochMilliseconds(millisSinceEpoch)
+      .toZonedDateTimeISO(timeZoneId)
+      .offsetNanoseconds;
   }
 }
 

@@ -560,24 +560,19 @@ export class AstronomicalCalendar {
    * @return the degrees below the horizon before sunrise that match the offset in minutes passed it as a parameter.
    * @see #getSunsetSolarDipFromOffset(double)
    */
-  public getSunriseSolarDipFromOffset(minutes: number): number | null {
-    if (Number.isNaN(minutes)) return null;
+  public getSunriseSolarDipFromOffset(durationObj: Temporal.Duration | Temporal.DurationLike): number | null {
+    const duration = (durationObj instanceof Temporal.Duration) ? durationObj : Temporal.Duration.from(durationObj);
 
     let offsetByDegrees: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise();
-    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise()?.subtract({ minutes })!;
+    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunrise()?.subtract(duration)!;
 
     let degrees: Big = new Big(0);
     const incrementor: Big = new Big('0.0001');
 
     // If `minutes` is not `NaN` and `offsetByDegrees` is not null, `offsetByTime` should not be null
-    while (offsetByDegrees === null || ((minutes < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
-      || (minutes > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!)) == 1)) {
-      if (minutes > 0) {
-        degrees = degrees.add(incrementor);
-      } else {
-        degrees = degrees.sub(incrementor);
-      }
-
+    while (offsetByDegrees === null || ((duration.total('minutes') < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
+      || (duration.total('minutes') > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!)) == 1)) {
+      degrees = degrees[duration.total('minutes') > 0 ? 'add' : 'sub'](incrementor);
       offsetByDegrees = this.getSunriseOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + degrees.toNumber());
     }
 
@@ -595,24 +590,19 @@ export class AstronomicalCalendar {
    * @return the degrees below the horizon after sunset that match the offset in minutes passed it as a parameter.
    * @see #getSunriseSolarDipFromOffset(double)
    */
-  public getSunsetSolarDipFromOffset(minutes: number): number | null {
-    if (Number.isNaN(minutes)) return null;
+  public getSunsetSolarDipFromOffset(durationObj: Temporal.Duration | Temporal.DurationLike): number | null {
+    const duration = (durationObj instanceof Temporal.Duration) ? durationObj : Temporal.Duration.from(durationObj);
 
     let offsetByDegrees: Temporal.ZonedDateTime | null = this.getSeaLevelSunset();
-    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()?.add({ minutes })!
+    const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()?.add(duration)!
 
     let degrees: Big = new Big(0);
     const incrementor: Big = new Big('0.001');
 
     // If `minutes` is not `NaN` and `offsetByDegrees` is not null, `offsetByTime` should not be null
-    while (offsetByDegrees == null || ((minutes > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
-      || (minutes < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == 1))) {
-      if (minutes > 0) {
-        degrees = degrees.add(incrementor);
-      } else {
-        degrees = degrees.sub(incrementor);
-      }
-
+    while (offsetByDegrees == null || ((duration.total('minutes') > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
+      || (duration.total('minutes') < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == 1))) {
+      degrees = degrees[duration.total('minutes') > 0 ? 'add' : 'sub'](incrementor);
       offsetByDegrees = this.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + degrees.toNumber());
     }
 
