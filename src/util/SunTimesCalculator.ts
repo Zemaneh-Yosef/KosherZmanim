@@ -238,13 +238,7 @@ export class SunTimesCalculator extends AstronomicalCalculator {
     const localMeanTime: number = SunTimesCalculator.getLocalMeanTime(localHour, sunRightAscensionHours,
       SunTimesCalculator.getApproxTimeDays(dayOfYear, SunTimesCalculator.getHoursFromMeridian(longitude), isSunrise));
     let processedTime: number = localMeanTime - SunTimesCalculator.getHoursFromMeridian(longitude);
-    while (processedTime < 0) {
-      processedTime += 24;
-    }
-    while (processedTime >= 24) {
-      processedTime -= 24;
-    }
-    return processedTime;
+    return processedTime > 0  ? processedTime % 24 : processedTime % 24 + 24; // ensure that the time is >= 0 and < 24
   }
 
   /**
@@ -272,7 +266,29 @@ export class SunTimesCalculator extends AstronomicalCalculator {
 		}
 		if(noon < sunrise) {
 			noon -= 12;
-		} 
+		}
 		return noon;
   }
+
+
+	/**
+	 * Return the <a href="https://en.wikipedia.org/wiki/Universal_Coordinated_Time">Universal Coordinated Time</a> (UTC)
+	 * of midnight for the given day at the given location on earth. This implementation returns solar midnight as 12 hours
+	 * after utc noon that is  halfway between sunrise and sunset.
+	 * {@link NOAACalculator}, the default calculator, returns true solar noon. See <a href=
+	 * "https://kosherjava.com/2020/07/02/definition-of-chatzos/">The Definition of Chatzos</a> for details on solar
+	 * noon calculations.
+	 * @see com.kosherjava.zmanim.util.AstronomicalCalculator#getUTCNoon(Calendar, GeoLocation)
+	 * @see NOAACalculator
+	 *
+	 * @param calendar
+	 *            The Calendar representing the date to calculate solar noon for
+	 * @param geoLocation
+	 *            The location information used for astronomical calculating sun times.
+	 * @return the time in minutes from zero UTC. If an error was encountered in the calculation (expected behavior for
+	 *         some locations such as near the poles, {@link Double#NaN} will be returned.
+	 */
+	public getUTCMidnight(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
+		return (this.getUTCNoon(calendar, geoLocation) + 12);
+	}
 }

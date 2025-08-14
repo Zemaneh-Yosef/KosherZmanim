@@ -140,15 +140,30 @@ export abstract class AstronomicalCalculator {
 	 * given location on earth. The the {@link com.kosherjava.zmanim.util.NOAACalculator} implementation calculates
 	 * true solar noon, while the {@link com.kosherjava.zmanim.util.SunTimesCalculator} approximates it, calculating
 	 * the time as halfway between sunrise and sunset.
-	 * 
+	 *
 	 * @param calendar
 	 *            Used to calculate day of year.
 	 * @param geoLocation
-	 *            The location information used for astronomical calculating sun times.         
-	 * 
+	 *            The location information used for astronomical calculating sun times.
+	 *
 	 * @return the time in minutes from zero UTC
 	 */
   public abstract getUTCNoon(calendar: Temporal.PlainDate, geoLocation: GeoLocation): number;
+
+	/**
+	 * Return <a href="https://en.wikipedia.org/wiki/Midnight">solar midnight</a> (UTC) for the given day at the
+	 * given location on earth. The the {@link com.kosherjava.zmanim.util.NOAACalculator} implementation calculates
+	 * true solar midnight, while the {@link com.kosherjava.zmanim.util.SunTimesCalculator} approximates it, calculating
+	 * the time as 12 hours after halfway between sunrise and sunset.
+	 *
+	 * @param calendar
+	 *            Used to calculate day of year.
+	 * @param geoLocation
+	 *            The location information used for astronomical calculating sun times.
+	 *
+	 * @return the time in minutes from zero UTC
+	 */
+	public abstract getUTCMidnight(calendar: Temporal.PlainDate, geoLocation: GeoLocation): number;
 
   /**
    * Method to return the adjustment to the zenith required to account for the elevation. Since a person at a higher

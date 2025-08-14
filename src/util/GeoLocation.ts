@@ -199,7 +199,7 @@ export class GeoLocation {
     if (!minutes) {
       const latitude: number = degreesOrLatitude;
 
-      if (latitude > 90 || latitude < -90) {
+      if (latitude > 90 || latitude < -90 || Number.isNaN(latitude)) {
         throw new IllegalArgumentException('Latitude must be between -90 and  90');
       }
 
@@ -208,7 +208,7 @@ export class GeoLocation {
       const degrees: number = degreesOrLatitude;
 
       let tempLat: number = degrees + ((minutes + (seconds! / 60)) / 60);
-      if (tempLat > 90 || tempLat < 0) { // FIXME An exception should be thrown if degrees, minutes or seconds are negative
+      if (tempLat > 90 || tempLat < 0 || Number.isNaN(tempLat)) { // FIXME An exception should be thrown if degrees, minutes or seconds are negative
         throw new IllegalArgumentException('Latitude must be between 0 and  90. Use direction of S instead of negative.');
       }
       if (direction === 'S') {
@@ -268,7 +268,7 @@ export class GeoLocation {
     if (!minutes) {
       const longitude: number = degreesOrLongitude;
 
-      if (longitude > 180 || longitude < -180) {
+      if (longitude > 180 || longitude < -180 || Number.isNaN(longitude)) {
         throw new IllegalArgumentException('Longitude must be between -180 and  180');
       }
 
@@ -277,7 +277,7 @@ export class GeoLocation {
       const degrees: number = degreesOrLongitude;
 
       let longTemp: number = degrees + ((minutes + (seconds! / 60)) / 60);
-      if (longTemp > 180 || this.longitude < 0) { // FIXME An exception should be thrown if degrees, minutes or seconds are negative
+      if (longTemp > 180 || this.longitude < 0 || Number.isNaN(longTemp)) { // FIXME An exception should be thrown if degrees, minutes or seconds are negative
         throw new IllegalArgumentException('Longitude must be between 0 and  180.  Use a direction of W instead of negative.');
       }
       if (direction === 'W') {
@@ -401,7 +401,7 @@ export class GeoLocation {
    * @return the initial bearing
    */
   public getGeodesicInitialBearing(location: GeoLocation): number {
-    return this.vincentyFormula(location, GeoLocation.INITIAL_BEARING);
+    return this.vincentyInverseFormula(location, GeoLocation.INITIAL_BEARING);
   }
 
   /**
@@ -416,7 +416,7 @@ export class GeoLocation {
    * @return the final bearing
    */
   public getGeodesicFinalBearing(location: GeoLocation): number {
-    return this.vincentyFormula(location, GeoLocation.FINAL_BEARING);
+    return this.vincentyInverseFormula(location, GeoLocation.FINAL_BEARING);
   }
 
   /**
@@ -432,7 +432,7 @@ export class GeoLocation {
    * @return the geodesic distance in Meters
    */
   public getGeodesicDistance(location: GeoLocation): number {
-    return this.vincentyFormula(location, GeoLocation.DISTANCE);
+    return this.vincentyInverseFormula(location, GeoLocation.DISTANCE);
   }
 
   /**
@@ -449,9 +449,9 @@ export class GeoLocation {
    *            {@link #FINAL_BEARING}) and distance ({@link #DISTANCE}).
    * @return geodesic distance in Meters
    */
-  private vincentyFormula(location: GeoLocation, formula: number): number {
-    const a: number = 6378137;
-    const b: number = 6356752.3142;
+  private vincentyInverseFormula(location: GeoLocation, formula: number): number {
+    const majorSemiAxis: number = 6378137;
+    const minorSemiAxis: number = 6356752.3142;
     const f: number = 1 / 298.257223563; // WGS-84 ellipsiod
     const L: number = MathUtils.degreesToRadians(location.getLongitude() - this.getLongitude());
     const U1: number = Math.atan((1 - f) * Math.tan(MathUtils.degreesToRadians(this.getLatitude())));
@@ -493,14 +493,14 @@ export class GeoLocation {
     }
     if (iterLimit === 0) return Number.NaN; // formula failed to converge
 
-    const uSq: number = cosSqAlpha * (a * a - b * b) / (b * b);
+    const uSq: number = cosSqAlpha * (majorSemiAxis * majorSemiAxis - minorSemiAxis * minorSemiAxis) / (minorSemiAxis * minorSemiAxis);
     const A: number = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
     const B: number = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
     const deltaSigma: number = B * sinSigma
       * (cos2SigmaM + B / 4
         * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM
           * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
-    const distance: number = b * A * (sigma - deltaSigma);
+    const distance: number = minorSemiAxis * A * (sigma - deltaSigma);
 
     // initial bearing
     const fwdAz: number = MathUtils.radiansToDegrees(Math.atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));

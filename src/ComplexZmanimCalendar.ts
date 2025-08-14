@@ -266,24 +266,6 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
   protected static readonly ZENITH_4_POINT_8: number = ComplexZmanimCalendar.GEOMETRIC_ZENITH + 4.8;
 
   /**
-   * The zenith of 3.65&deg; below {@link #GEOMETRIC_ZENITH geometric zenith} (90&deg;). This calculation is used for
-   * calculating <em>tzais</em> (nightfall) according to some opinions. This calculation is based on the position of
-   * the sun {@link #getTzaisGeonim3Point65Degrees() 13.5 minutes} after sunset (3/4 of an 18-minute <em>Mil</em>)
-   * in Jerusalem <a href=
-   * "https://kosherjava.com/2022/01/12/equinox-vs-equilux-zmanim-calculations/">around the equinox / equilux</a> which
-   * calculates to 3.65&deg; below {@link #GEOMETRIC_ZENITH geometric zenith}.
-   * 
-   * @see #getTzaisGeonim3Point65Degrees()
-   */
-  protected static readonly ZENITH_3_POINT_65: number = ComplexZmanimCalendar.GEOMETRIC_ZENITH + 3.65;
-
-  /**
-   * The zenith of 3.676&deg; below {@link #GEOMETRIC_ZENITH geometric zenith} (90&deg;).
-   * @todo Add more documentation.
-   */
-  protected static readonly ZENITH_3_POINT_676: number = ComplexZmanimCalendar.GEOMETRIC_ZENITH + 3.676;
-
-  /**
    * The zenith of 5.88&deg; below {@link #GEOMETRIC_ZENITH geometric zenith} (90&deg;).
    * @todo Add more documentation.
    */
@@ -1772,7 +1754,11 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         documentation.
    */
   public getMinchaGedola72Minutes(): Temporal.ZonedDateTime | null {
-    return this.getMinchaGedola(this.getAlos72(), this.getTzais72());
+    if (this.isUseAstronomicalChatzosForOtherZmanim()) {
+      return this.getHalfDayBasedZman(this.getChatzos()!, this.getTzais72()!, 0.5);
+    } else {
+      return this.getMinchaGedola(this.getAlos72(), this.getTzais72());
+    }
   }
 
   /**
@@ -2470,40 +2456,6 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    */
   public getTzaisGeonim5Point95Degrees(): Temporal.ZonedDateTime | null {
     return this.getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_5_POINT_95);
-  }
-
-  /**
-   * This method returns the <em>tzais</em> (nightfall) based on the opinion of the <em>Geonim</em> calculated as 3/4
-   * of a <a href= "https://en.wikipedia.org/wiki/Biblical_and_Talmudic_units_of_measurement" >Mil</a> based on an 18
-   * minute Mil, or 13.5 minutes. It is the sun's position at {@link #ZENITH_3_POINT_65 3.65&deg;} below the western
-   * horizon. This is a very early <em>zman</em> and should not be relied on without Rabbinical guidance.
-   * 
-   * @return the <code>Date</code> representing the time when the sun is 3.65&deg; below sea level. If the calculation
-   *         can't be computed such as northern and southern locations even south of the Arctic Circle and north of
-   *         the Antarctic Circle where the sun may not reach low enough below the horizon for this calculation, a
-   *         null will be returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
-   * @see #ZENITH_3_POINT_65
-   */
-  public getTzaisGeonim3Point65Degrees(): Temporal.ZonedDateTime | null {
-    return this.getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_3_POINT_65);
-  }
-
-  /**
-   * This method returns the <em>tzais</em> (nightfall) based on the opinion of the <em>Geonim</em> calculated as 3/4
-   * of a <a href= "https://en.wikipedia.org/wiki/Biblical_and_Talmudic_units_of_measurement" >Mil</a> based on an 18
-   * minute Mil, or 13.5 minutes. It is the sun's position at {@link #ZENITH_3_POINT_676 3.676&deg;} below the western
-   * horizon based on the calculations of Stanley Fishkind. This is a very early <em>zman</em> and should not be
-   * relied on without Rabbinical guidance.
-   * 
-   * @return the <code>Date</code> representing the time when the sun is 3.676&deg; below sea level. If the
-   *         calculation can't be computed such as northern and southern locations even south of the Arctic Circle and
-   *         north of the Antarctic Circle where the sun may not reach low enough below the horizon for this
-   *         calculation, a null will be returned. See detailed explanation on top of the {@link AstronomicalCalendar}
-   *         documentation.
-   * @see #ZENITH_3_POINT_676
-   */
-  public getTzaisGeonim3Point676Degrees(): Temporal.ZonedDateTime | null {
-    return this.getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_3_POINT_676);
   }
 
   /**
@@ -3879,38 +3831,6 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
   }
 
   /**
-   * A utility methos to calculate zmanim based on <a href="https://en.wikipedia.org/wiki/Moshe_Feinstein">Rav Moshe
-   * Feinstein</a> as calculated in <a href="https://en.wikipedia.org/wiki/Mesivtha_Tifereth_Jerusalem">MTJ</a>, <a href=
-   * "https://en.wikipedia.org/wiki/Mesivtha_Tifereth_Jerusalem">Yeshiva of Staten Island</a>, and Camp Yeshiva
-   * of Staten Island. The day is split in two, from <em>alos</em> / sunrise to fixed local <em>chatzos</em>, and the
-   * second half of the day, from fixed local <em>chatzos</em> to sunset / <em>tzais</em>. Morning based times are calculated
-   * based on the first 6 hours, and afternoon times based on the second half of the day.
-   * 
-   * @param startOfHalfDay
-   *            The start of the half day. This would be <em>alos</em> or sunrise for morning based times and fixed
-   *            local <em>chatzos</em> for the second half of the day.
-   * @param endOfHalfDay
-   *            The end of the half day. This would be fixed local <em>chatzos</em> for morning based times and sunset
-   *            or <em>tzais</em> for afternoon based times.
-   * @param hours
-   *            the number of hours to offset the beginning of the first or second half of the day
-   * 
-   * @return the <code>Date</code> of the later of {@link #getMinchaGedolaBaalHatanya()} and {@link #getMinchaGedola30Minutes()}.
-   *         If the calculation can't be computed such as in the Arctic Circle where there is at least one day a year
-   *         where the sun does not rise, and one where it does not set, a null will be returned. See detailed
-   *         explanation on top of the {@link AstronomicalCalendar} documentation.
-   *
-   * @see ComplexZmanimCalendar#getFixedLocalChatzos()
-   */
-  public getFixedLocalChatzosBasedZmanim(startOfHalfDay: Temporal.ZonedDateTime, endOfHalfDay: Temporal.ZonedDateTime, hours: number): Temporal.ZonedDateTime | null {
-    if (startOfHalfDay == null || endOfHalfDay == null) {
-      return null;
-    }
-    const shaahZmanis = startOfHalfDay.until(endOfHalfDay).total('nanoseconds') / 6;
-    return startOfHalfDay.add({ nanoseconds: Math.trunc(shaahZmanis * hours) });
-  }
-  
-  /**
    * This method returns <a href="https://en.wikipedia.org/wiki/Moshe_Feinstein">Rav Moshe Feinstein's</a> opinion of the
    * calculation of <em>sof zman krias shema</em> (latest time to recite <em>Shema</em> in the morning) according to the
    * opinion of the <a href="https://en.wikipedia.org/wiki/Avraham_Gombinern">Magen Avraham (MGA)</a> that the
@@ -3924,10 +3844,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getAlos18Degrees()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanShmaMGA18DegreesToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getAlos18Degrees()!, this.getFixedLocalChatzos()!, 3);
+    return this.getHalfDayBasedZman(this.getAlos18Degrees()!, this.getFixedLocalChatzos()!, 3);
   }
   
   /**
@@ -3944,10 +3864,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getAlos16Point1Degrees()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanShmaMGA16Point1DegreesToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getAlos16Point1Degrees()!, this.getFixedLocalChatzos()!, 3);
+    return this.getHalfDayBasedZman(this.getAlos16Point1Degrees()!, this.getFixedLocalChatzos()!, 3);
   }
   
   /**
@@ -3965,10 +3885,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getAlos90()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanShmaMGA90MinutesToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getAlos90()!, this.getFixedLocalChatzos()!, 3);
+    return this.getHalfDayBasedZman(this.getAlos90()!, this.getFixedLocalChatzos()!, 3);
   }
   
   /**
@@ -3986,10 +3906,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getAlos72()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanShmaMGA72MinutesToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getAlos72()!, this.getFixedLocalChatzos()!, 3);
+    return this.getHalfDayBasedZman(this.getAlos72()!, this.getFixedLocalChatzos()!, 3);
   }
     
   /**
@@ -4006,10 +3926,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getSunrise()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanShmaGRASunriseToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getSunrise()!, this.getFixedLocalChatzos()!, 3);
+    return this.getHalfDayBasedZman(this.getElevationAdjustedSunrise()!, this.getFixedLocalChatzos()!, 3);
   }
   
   /**
@@ -4026,10 +3946,10 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    *         See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
    * @see #getSunrise()
    * @see #getFixedLocalChatzos()
-   * @see #getFixedLocalChatzosBasedZmanim(Date, Date, double)
+   * @see #getHalfDayBasedZman(Date, Date, double)
    */
   public getSofZmanTfilaGRASunriseToFixedLocalChatzos(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getSunrise()!, this.getFixedLocalChatzos()!, 4);
+    return this.getHalfDayBasedZman(this.getElevationAdjustedSunrise()!, this.getFixedLocalChatzos()!, 4);
   }
   
   /**
@@ -4068,7 +3988,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see #getMinchaGedolaGRAFixedLocalChatzos30Minutes
    */
   public getMinchaKetanaGRAFixedLocalChatzosToSunset(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getFixedLocalChatzos()!, this.getSunset()!, 3.5);
+    return this.getHalfDayBasedZman(this.getFixedLocalChatzos()!, this.getElevationAdjustedSunset()!, 3.5);
   }
   
   /**
@@ -4088,7 +4008,7 @@ export class ComplexZmanimCalendar extends ZmanimCalendar {
    * @see #getMinchaGedolaGRAFixedLocalChatzos30Minutes
    */
   public getPlagHaminchaGRAFixedLocalChatzosToSunset(): Temporal.ZonedDateTime | null {
-    return this.getFixedLocalChatzosBasedZmanim(this.getFixedLocalChatzos()!, this.getSunset()!, 4.75);
+    return this.getHalfDayBasedZman(this.getFixedLocalChatzos()!, this.getElevationAdjustedSunset()!, 4.75);
   }
   
   /**

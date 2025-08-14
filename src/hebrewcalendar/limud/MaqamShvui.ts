@@ -162,7 +162,7 @@ export default class WeeklyMakamReading {
 							"YISHAQ YEQAR ARGENTINA": [makam.HIJAZ],
 							"IDELSOHN Pre1923": [makam.SABA],
 						}
-					else 
+					else
 						return {
 							"Eliahou Yaaqob DWECK-KESAR": [makam.HOSENI],
 							"YISHAQ YEQAR ARGENTINA": [makam.HIJAZ],

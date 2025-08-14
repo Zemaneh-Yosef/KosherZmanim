@@ -442,10 +442,8 @@ export class AstronomicalCalendar {
    *         {@link AstronomicalCalendar} documentation.
    */
     public getSolarMidnight(): Temporal.ZonedDateTime | null {
-      const clonedCal = this.clone();
-      clonedCal.setDate(this.getDate().add({ days: 1 }));
-      return this.getSunTransit()!
-        .add({nanoseconds: Math.trunc(this.getSunTransit()?.until(clonedCal.getSunTransit()!).total({ unit: "nanoseconds" })! / 2)});
+      const noon = this.getAstronomicalCalculator().getUTCMidnight(this.getAdjustedDate(), this.getGeoLocation());
+      return this.getDateFromTime(noon, SolarEvent.MIDNIGHT);
     }
 
   /**
@@ -484,20 +482,6 @@ export class AstronomicalCalendar {
     return this.getDateFromTime(noon, SolarEvent.NOON);
   }
 
-  public getSunLowerTransit(): Temporal.ZonedDateTime {
-		let cal: Temporal.PlainDate = this.getAdjustedDate();
-		const lowerGeoLocation: GeoLocation = this.getGeoLocation().clone();
-		const meridian: number = lowerGeoLocation.getLongitude();
-		let lowerMeridian: number = meridian + 180;
-		if (lowerMeridian > 180){
-			lowerMeridian = lowerMeridian - 360;
-      cal = cal.subtract({ days: 1 })
-		}
-		lowerGeoLocation.setLongitude(lowerMeridian);
-		const noon: number = this.getAstronomicalCalculator().getUTCNoon(cal, lowerGeoLocation);
-		return this.getDateFromTime(noon, SolarEvent.MIDNIGHT)!;
-	}
-
   /**
    * A method that returns a <code>Date</code> from the time passed in as a parameter.
    *
@@ -535,8 +519,8 @@ export class AstronomicalCalendar {
       cal = cal.subtract({ days: 1 });
     } else if (solarEvent == SolarEvent.SUNSET && localTimeHours + hours < 6) {
       cal = cal.add({ days: 1 });
-    } else if (solarEvent == SolarEvent.MIDNIGHT && localTimeHours + hours > 12) {
-			cal = cal.subtract({ days: 1 });
+    } else if (solarEvent == SolarEvent.MIDNIGHT && localTimeHours + hours < 12) {
+			cal = cal.add({ days: 1 });
 		}
 
     return cal.with({
@@ -570,10 +554,14 @@ export class AstronomicalCalendar {
     const incrementor: Big = new Big('0.0001');
 
     // If `minutes` is not `NaN` and `offsetByDegrees` is not null, `offsetByTime` should not be null
-    while (offsetByDegrees === null || ((duration.total('minutes') < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
+    while (offsetByDegrees !== null && ((duration.total('minutes') < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
       || (duration.total('minutes') > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!)) == 1)) {
       degrees = degrees[duration.total('minutes') > 0 ? 'add' : 'sub'](incrementor);
       offsetByDegrees = this.getSunriseOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + degrees.toNumber());
+    }
+
+    if (offsetByDegrees === null) {
+      degrees = degrees.sub(incrementor);
     }
 
     return degrees.toNumber();
@@ -597,13 +585,17 @@ export class AstronomicalCalendar {
     const offsetByTime: Temporal.ZonedDateTime | null = this.getSeaLevelSunset()?.add(duration)!
 
     let degrees: Big = new Big(0);
-    const incrementor: Big = new Big('0.001');
+    const incrementor: Big = new Big('0.0001');
 
     // If `minutes` is not `NaN` and `offsetByDegrees` is not null, `offsetByTime` should not be null
-    while (offsetByDegrees == null || ((duration.total('minutes') > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
+    while (offsetByDegrees !== null && ((duration.total('minutes') > 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == -1)
       || (duration.total('minutes') < 0 && Temporal.ZonedDateTime.compare(offsetByDegrees, offsetByTime!) == 1))) {
       degrees = degrees[duration.total('minutes') > 0 ? 'add' : 'sub'](incrementor);
       offsetByDegrees = this.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + degrees.toNumber());
+    }
+
+    if (offsetByDegrees === null) {
+      degrees = degrees.sub(incrementor);
     }
 
     return degrees.toNumber();

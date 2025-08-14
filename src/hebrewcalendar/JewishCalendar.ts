@@ -267,9 +267,9 @@ export class JewishCalendar extends JewishDate {
    * Is this calendar set to return modern Israeli national holidays. By default this value is false. The holidays
 	 * are {@link #YOM_HASHOAH <em>Yom HaShoah</em>}, {@link #YOM_HAZIKARON <em>Yom Hazikaron</em>}, {@link
    * #YOM_HAATZMAUT <em>Yom Ha'atzmaut</em>} and {@link #YOM_YERUSHALAYIM <em>Yom Yerushalayim</em>}.
-   * 
+   *
    * @return the useModernHolidays true if set to return modern Israeli national holidays
-   * 
+   *
    * @see #setUseModernHolidays(boolean)
    */
   public isUseModernHolidays(): boolean {
@@ -280,10 +280,10 @@ export class JewishCalendar extends JewishDate {
    * Sets the calendar to return modern Israeli national holidays. By default this value is false. The holidays are:
 	 * {@link #YOM_HASHOAH <em>Yom HaShoah</em>}, {@link #YOM_HAZIKARON <em>Yom Hazikaron</em>}, {@link
    * #YOM_HAATZMAUT <em>Yom Ha'atzmaut</em>} and {@link #YOM_YERUSHALAYIM <em>Yom Yerushalayim</em>}.
-   * 
+   *
    * @param useModernHolidays
    *            the useModernHolidays to set
-   * 
+   *
    * @see #isUseModernHolidays()
    */
   public setUseModernHolidays(useModernHolidays: boolean): void {
@@ -377,7 +377,7 @@ export class JewishCalendar extends JewishDate {
    *
    * @param inIsrael
    *            set to true for calculations for Israel
-   * 
+   *
 	 * @see #getInIsrael()
    */
   public setInIsrael(inIsrael: boolean): void {
@@ -388,7 +388,7 @@ export class JewishCalendar extends JewishDate {
    * Gets whether Israel holiday scheme is used or not. The default (if not set) is false.
    *
    * @return if the calendar is set to Israel
-	 * 
+	 *
 	 * @see #setInIsrael(boolean)
    */
   public getInIsrael(): boolean {
@@ -410,7 +410,7 @@ export class JewishCalendar extends JewishDate {
 	 * Sets if the location is surrounded by a wall from the time of Yehoshua, and Shushan Purim should be
 	 * celebrated as opposed to regular Purim. This should be set for Yerushalayim, Shushan and other cities.
 	 * @param isMukafChoma is the city surrounded by a wall from the time of Yehoshua.
-	 * 
+	 *
 	 * @see #getIsMukafChoma()
 	 */
   public setIsMukafChoma(isMukafChoma:boolean):void {
@@ -422,7 +422,7 @@ export class JewishCalendar extends JewishDate {
    * <em>Tekufas Shmuel</em> (Julian years) that a year is 365.25 days. The <a href="https://en.wikipedia.org/wiki/Maimonides"
 	 * >Rambam</a> in <a href="http://hebrewbooks.org/pdfpager.aspx?req=14278&amp;st=&amp;pgnum=323">Hilchos Kiddush Hachodesh 9:3</a>
 	 * states that <em>tekufas Nissan</em> of year 1 was 7 days + 9 hours before <em>molad Nissan</em>. This is calculated as every
-	 * 10,227 days (28 * 365.25).  
+	 * 10,227 days (28 * 365.25).
 	 * @return true for a day that <em>Birkas Hachamah</em> is recited.
    */
   public isBirkasHachamah(): boolean {
@@ -437,8 +437,7 @@ export class JewishCalendar extends JewishDate {
 		 * Rosh Hashana as 1, we have to add 1 day for a total of 171. To this add a day since the tekufah is on a Tuesday
 		 * night and we push off the bracha to Wednesday AM resulting in the 172 used in the calculation.
 		 */
-    // 28 years of 365.25 days + the offset from molad tohu mentioned above
-    return elapsedDays % (28 * 365.25) === 172;
+    return elapsedDays % (28 * 365.25) == 172; // 28 years of 365.25 days + the offset from molad tohu mentioned above
   }
 
   /**
@@ -647,7 +646,7 @@ export class JewishCalendar extends JewishDate {
 	 * Shabbos's <em>Parsha</em> will be returned. This is unlike {@link #getParshah()} that returns {@link Parsha#NONE} if
 	 * the date is not <em>Shabbos</em>. If the upcoming Shabbos is a <em>Yom Tov</em> and has no <em>Parsha</em>, the
 	 * following week's <em>Parsha</em> will be returned.
-	 * 
+	 *
 	 * @return the upcoming <em>parsha</em>.
 	 */
 	public getUpcomingParshah(): Parsha {
@@ -678,167 +677,105 @@ export class JewishCalendar extends JewishDate {
     const day: number = this.getJewishDayOfMonth();
     const dayOfWeek: number = this.getDayOfWeek();
 
-    // check by month (starting from Nissan)
-    switch (this.getJewishMonth()) {
-      case JewishCalendar.NISSAN:
-        if (day === 14) {
-          return JewishCalendar.EREV_PESACH;
-        } else if (day === 15 || day === 21 || (!this.inIsrael && (day === 16 || day === 22))) {
-          return JewishCalendar.PESACH;
-        } else if ((day >= 17 && day <= 20) || (day === 16 && this.inIsrael)) {
-          return JewishCalendar.CHOL_HAMOED_PESACH;
-        }
-
-        if (this.isUseModernHolidays()
-          && ((day === 26 && dayOfWeek === 5) || (day === 28 && dayOfWeek === 2)
-            || (day === 27 && dayOfWeek !== 1 && dayOfWeek !== 6))) {
-          return JewishCalendar.YOM_HASHOAH;
-        }
-        break;
-      case JewishCalendar.IYAR:
-        if (this.isUseModernHolidays()
-          && ((day === 4 && dayOfWeek === 3) || ((day === 3 || day === 2) && dayOfWeek === 4)
-            || (day === 5 && dayOfWeek === 2))) {
-          return JewishCalendar.YOM_HAZIKARON;
-        }
-
-        // if 5 Iyar falls on Wed Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos it is moved back to
-        // Thursday. If it falls on Monday it is moved to Tuesday
-        if (this.isUseModernHolidays() && ((day === 5 && dayOfWeek === 4)
-          || ((day === 4 || day === 3) && dayOfWeek === 5) || (day === 6 && dayOfWeek === 3))) {
-          return JewishCalendar.YOM_HAATZMAUT;
-        }
-
-        if (day === 14) {
-          return JewishCalendar.PESACH_SHENI;
-        }
-
-        if (day === 18) {
-          return JewishCalendar.LAG_BAOMER;
-        }
-
-        if (this.isUseModernHolidays() && day === 28) {
-          return JewishCalendar.YOM_YERUSHALAYIM;
-        }
-        break;
-      case JewishCalendar.SIVAN:
-        if (day === 5) {
-          return JewishCalendar.EREV_SHAVUOS;
-        } else if (day === 6 || (day === 7 && !this.inIsrael)) {
-          return JewishCalendar.SHAVUOS;
-        }
-        break;
-      case JewishCalendar.TAMMUZ:
-        // push off the fast day if it falls on Shabbos
-        if ((day === 17 && dayOfWeek !== 7) || (day === 18 && dayOfWeek === 1)) {
-          return JewishCalendar.SEVENTEEN_OF_TAMMUZ;
-        }
-        break;
-      case JewishCalendar.AV:
-        // if Tisha B'av falls on Shabbos, push off until Sunday
-        if ((dayOfWeek === 1 && day === 10) || (dayOfWeek !== 7 && day === 9)) {
-          return JewishCalendar.TISHA_BEAV;
-        } else if (day === 15) {
-          return JewishCalendar.TU_BEAV;
-        }
-        break;
-      case JewishCalendar.ELUL:
-        if (day === 29) {
-          return JewishCalendar.EREV_ROSH_HASHANA;
-        }
-        break;
-      case JewishCalendar.TISHREI:
-        if (day === 1 || day === 2) {
-          return JewishCalendar.ROSH_HASHANA;
-        } else if ((day === 3 && dayOfWeek !== 7) || (day === 4 && dayOfWeek === 1)) {
-          // push off Tzom Gedalia if it falls on Shabbos
-          return JewishCalendar.FAST_OF_GEDALYAH;
-        } else if (day === 9) {
-          return JewishCalendar.EREV_YOM_KIPPUR;
-        } else if (day === 10) {
-          return JewishCalendar.YOM_KIPPUR;
-        } else if (day === 14) {
-          return JewishCalendar.EREV_SUCCOS;
-        }
-
-        if (day === 15 || (day === 16 && !this.inIsrael)) {
-          return JewishCalendar.SUCCOS;
-        }
-
-        if ((day >= 17 && day <= 20) || (day === 16 && this.inIsrael)) {
-          return JewishCalendar.CHOL_HAMOED_SUCCOS;
-        }
-
-        if (day === 21) {
-          return JewishCalendar.HOSHANA_RABBA;
-        }
-
-        if (day === 22) {
-          return JewishCalendar.SHEMINI_ATZERES;
-        }
-
-        if (day === 23 && !this.inIsrael) {
-          return JewishCalendar.SIMCHAS_TORAH;
-        }
-        break;
-      case JewishCalendar.KISLEV: // no yomtov in CHESHVAN
-        // if (day == 24) {
-        // return EREV_CHANUKAH;
-        // } else
-        if (day >= 25) {
-          return JewishCalendar.CHANUKAH;
-        }
-        break;
-      case JewishCalendar.TEVES:
-        if (day === 1 || day === 2 || (day === 3 && this.isKislevShort())) {
-          return JewishCalendar.CHANUKAH;
-        } else if (day === 10) {
-          return JewishCalendar.TENTH_OF_TEVES;
-        }
-        break;
-      case JewishCalendar.SHEVAT:
-        if (day === 15) {
-          return JewishCalendar.TU_BESHVAT;
-        }
-        break;
-      case JewishCalendar.ADAR:
-        if (!this.isJewishLeapYear()) {
-          // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-          if (((day === 11 || day === 12) && dayOfWeek === 5) || (day === 13 && !(dayOfWeek === 6 || dayOfWeek === 7))) {
-            return JewishCalendar.FAST_OF_ESTHER;
-          }
-
-          if (day === 14) {
-            return JewishCalendar.PURIM;
-          } else if (day === 15) {
-            return JewishCalendar.SHUSHAN_PURIM;
-          }
-        } else {
-          // else if a leap year
-          if (day === 14) {
-            return JewishCalendar.PURIM_KATAN;
-          }
-
-          if (day === 15) {
-            return JewishCalendar.SHUSHAN_PURIM_KATAN;
-          }
-        }
-        break;
-      case JewishCalendar.ADAR_II:
-        // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-        if (((day === 11 || day === 12) && dayOfWeek === 5) || (day === 13 && !(dayOfWeek === 6 || dayOfWeek === 7))) {
-          return JewishCalendar.FAST_OF_ESTHER;
-        }
-
-        if (day === 14) {
-          return JewishCalendar.PURIM;
-        } else if (day === 15) {
-          return JewishCalendar.SHUSHAN_PURIM;
-        }
-        break;
+    const monthHolidayIndex: Record<number, Record<number, number|undefined>> = {
+      [JewishCalendar.NISSAN]: {
+        14: JewishCalendar.EREV_PESACH,
+        15: JewishCalendar.PESACH,
+        16: this.inIsrael ? JewishCalendar.CHOL_HAMOED_PESACH : JewishCalendar.PESACH,
+        21: JewishCalendar.PESACH,
+        22: this.inIsrael ? undefined : JewishCalendar.PESACH,
+        26: this.isUseModernHolidays() && dayOfWeek === Calendar.THURSDAY ? JewishCalendar.YOM_HASHOAH : undefined,
+        27: this.isUseModernHolidays() && ![Calendar.SUNDAY, Calendar.FRIDAY].includes(dayOfWeek) ? JewishCalendar.YOM_HASHOAH : undefined,
+        28: this.isUseModernHolidays() && dayOfWeek === Calendar.MONDAY ? JewishCalendar.YOM_HASHOAH : undefined,
+      },
+      [JewishCalendar.IYAR]: {
+        2: this.isUseModernHolidays() && dayOfWeek === Calendar.WEDNESDAY ? JewishCalendar.YOM_HAZIKARON : undefined,
+        3: this.isUseModernHolidays() ? {
+          [Calendar.WEDNESDAY]: JewishCalendar.YOM_HAZIKARON,
+          [Calendar.THURSDAY]: JewishCalendar.YOM_HAATZMAUT
+        }[dayOfWeek] : undefined,
+        4: this.isUseModernHolidays() ? {
+          [Calendar.TUESDAY]: JewishCalendar.YOM_HAZIKARON,
+          [Calendar.THURSDAY]: JewishCalendar.YOM_HAATZMAUT
+        }[dayOfWeek] : undefined,
+        5: this.isUseModernHolidays() ? {
+          [Calendar.MONDAY]: JewishCalendar.YOM_HAZIKARON,
+          [Calendar.WEDNESDAY]: JewishCalendar.YOM_HAATZMAUT,
+        }[dayOfWeek] : undefined,
+        14: JewishCalendar.PESACH_SHENI,
+        18: JewishCalendar.LAG_BAOMER,
+        28: this.isUseModernHolidays() ? JewishCalendar.YOM_YERUSHALAYIM : undefined
+      },
+      [JewishCalendar.SIVAN]: {
+        5: JewishCalendar.EREV_SHAVUOS,
+        6: JewishCalendar.SHAVUOS,
+        7: this.inIsrael ? undefined : JewishCalendar.SHAVUOS
+      },
+      [JewishCalendar.TAMMUZ]: {
+        17: dayOfWeek !== Calendar.SATURDAY ? JewishCalendar.SEVENTEEN_OF_TAMMUZ : undefined,
+        18: dayOfWeek == Calendar.SUNDAY ? JewishCalendar.SEVENTEEN_OF_TAMMUZ : undefined
+      },
+      [JewishCalendar.AV]: {
+        9: dayOfWeek !== Calendar.SATURDAY ? JewishCalendar.TISHA_BEAV : undefined,
+        10: dayOfWeek == Calendar.SUNDAY ? JewishCalendar.TISHA_BEAV : undefined,
+        15: JewishCalendar.TU_BEAV
+      },
+      [JewishCalendar.ELUL]: {
+        29: JewishCalendar.EREV_ROSH_HASHANA
+      },
+      [JewishCalendar.TISHREI]: {
+        1: JewishCalendar.ROSH_HASHANA,
+        2: JewishCalendar.ROSH_HASHANA,
+        3: dayOfWeek !== Calendar.SATURDAY ? JewishCalendar.FAST_OF_GEDALYAH : undefined,
+        4: dayOfWeek == Calendar.SUNDAY ? JewishCalendar.FAST_OF_GEDALYAH : undefined,
+        9: JewishCalendar.EREV_YOM_KIPPUR,
+        10: JewishCalendar.YOM_KIPPUR,
+        14: JewishCalendar.EREV_SUCCOS,
+        15: JewishCalendar.SUCCOS,
+        16: this.inIsrael ? JewishCalendar.SUCCOS : undefined,
+        21: JewishCalendar.HOSHANA_RABBA,
+        22: JewishCalendar.SHEMINI_ATZERES,
+        23: this.inIsrael ? undefined : JewishCalendar.SIMCHAS_TORAH
+      },
+      [JewishCalendar.CHESHVAN]: {}, // No Holiday
+      [JewishCalendar.KISLEV]: {}, // Loop will fill Hanuka
+      [JewishCalendar.TEVES]: {
+        1: JewishCalendar.CHANUKAH,
+        2: JewishCalendar.CHANUKAH,
+        3: this.isKislevShort() ? JewishCalendar.CHANUKAH : undefined,
+        10: JewishCalendar.TENTH_OF_TEVES
+      },
+      [JewishCalendar.SHEVAT]: {
+        15: JewishCalendar.TU_BESHVAT
+      },
+      [JewishCalendar.ADAR]: { // assume leap year Adar, because if it isn't, it will get replaced anyway
+        14: JewishCalendar.PURIM_KATAN,
+        15: JewishCalendar.SHUSHAN_PURIM_KATAN
+      }
     }
+
+    monthHolidayIndex[this.isJewishLeapYear() ? JewishCalendar.ADAR_II : JewishCalendar.ADAR] = {
+      11: dayOfWeek === Calendar.THURSDAY ? JewishCalendar.FAST_OF_ESTHER : undefined,
+      12: dayOfWeek === Calendar.THURSDAY ? JewishCalendar.FAST_OF_ESTHER : undefined,
+      13: ![Calendar.FRIDAY, Calendar.SATURDAY].includes(dayOfWeek) ? JewishCalendar.FAST_OF_ESTHER : undefined,
+      14: JewishCalendar.PURIM,
+      15: JewishCalendar.SHUSHAN_PURIM
+    }
+
+    // fill Kislev with Hanuka
+    for (let i = 25; i <= 30; i++) {
+      monthHolidayIndex[JewishCalendar.KISLEV][i] = JewishCalendar.CHANUKAH;
+    }
+
+    // fill Chol Hamoed
+    for (let i = 17; i <= 20; i++) {
+      monthHolidayIndex[JewishCalendar.NISSAN][i] = JewishCalendar.CHOL_HAMOED_PESACH;
+      monthHolidayIndex[JewishCalendar.TISHREI][i] = JewishCalendar.CHOL_HAMOED_SUCCOS;
+    }
+
     // if we get to this stage, then there are no holidays for the given date return -1
-    return -1;
+    const holiday = monthHolidayIndex[this.getJewishMonth()]?.[day];
+    return (holiday !== undefined) ? holiday : -1;
   }
 
   /**
@@ -859,8 +796,7 @@ export class JewishCalendar extends JewishDate {
   public isYomTov(): boolean {
     const holidayIndex: number = this.getYomTovIndex();
 
-    if ((this.isErevYomTov() && (holidayIndex !== JewishCalendar.HOSHANA_RABBA
-      || (holidayIndex === JewishCalendar.CHOL_HAMOED_PESACH && this.getJewishDayOfMonth() !== 20)))
+    if ((this.isErevYomTov() && !(holidayIndex == JewishCalendar.HOSHANA_RABBA || holidayIndex == JewishCalendar.CHOL_HAMOED_PESACH))
       || (this.isTaanis() && holidayIndex !== JewishCalendar.YOM_KIPPUR)) {
       return false;
     }
@@ -943,7 +879,7 @@ export class JewishCalendar extends JewishDate {
 
   /**
 	 * Returns true if the current day is <em>Pesach</em> (either  the <em>Yom Tov</em> of <em>Pesach</em> or<em>Chol Hamoed Pesach</em>).
-	 * 
+	 *
 	 * @return true if the current day is <em>Pesach</em> (either  the <em>Yom Tov</em> of <em>Pesach</em> or<em>Chol Hamoed Pesach</em>).
 	 * @see #isYomTov()
 	 * @see #isCholHamoedPesach()
@@ -954,7 +890,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.PESACH || holidayIndex == JewishCalendar.CHOL_HAMOED_PESACH;
   }
-	
+
   /**
    * Returns true if the current day is <em>Chol Hamoed</em> of <em>Pesach</em>.
    *
@@ -967,7 +903,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex: number = this.getYomTovIndex();
     return holidayIndex === JewishCalendar.CHOL_HAMOED_PESACH;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Shavuos</em>.
 	 *
@@ -979,7 +915,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.SHAVUOS;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Rosh Hashana</em>.
 	 *
@@ -991,7 +927,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.ROSH_HASHANA;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Yom Kippur</em>.
 	 *
@@ -1003,11 +939,11 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.YOM_KIPPUR;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Succos</em> (either  the <em>Yom Tov</em> of <em>Succos</em> or<em>Chol Hamoed Succos</em>).
 	 * It will return false for {@link #isShminiAtzeres() Shmini Atzeres} and {@link #isSimchasTorah() Simchas Torah}.
-	 * 
+	 *
 	 * @return true if the current day is <em>Succos</em> (either  the <em>Yom Tov</em> of <em>Succos</em> or<em>Chol Hamoed Succos</em>.
 	 * @see #isYomTov()
 	 * @see #isCholHamoedSuccos()
@@ -1020,7 +956,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.SUCCOS || holidayIndex == JewishCalendar.CHOL_HAMOED_SUCCOS || holidayIndex == JewishCalendar.HOSHANA_RABBA;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Hoshana Rabba</em>.
 	 *
@@ -1032,7 +968,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex: number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.HOSHANA_RABBA;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Shmini Atzeres</em>.
 	 *
@@ -1044,7 +980,7 @@ export class JewishCalendar extends JewishDate {
     const holidayIndex:number = this.getYomTovIndex();
     return holidayIndex == JewishCalendar.SHEMINI_ATZERES;
   }
-	
+
   /**
 	 * Returns true if the current day is <em>Simchas Torah</em>. This will always return false if {@link #getInIsrael() in Israel}
 	 *
@@ -1120,7 +1056,7 @@ export class JewishCalendar extends JewishDate {
 	 * Returns true if the current day is <em>Yom Kippur Katan</em>. Returns false for <em>Erev Rosh Hashana</em>,
 	 * <em>Erev Rosh Chodesh Cheshvan</em>, <em>Teves</em> and <em>Iyyar</em>. If <em>Erev Rosh Chodesh</em> occurs
 	 * on a Friday or <em>Shabbos</em>, <em>Yom Kippur Katan</em> is moved back to Thursday.
-	 * 
+	 *
 	 * @return true if the current day is <em>Erev Rosh Chodesh</em>. Returns false for <em>Erev Rosh Hashana</em>.
 	 * @see #isRoshChodesh()
 	 */
@@ -1230,9 +1166,9 @@ export class JewishCalendar extends JewishDate {
 
   	/**
 	 * Returns if the day is Purim (<a href="https://en.wikipedia.org/wiki/Purim#Shushan_Purim">Shushan Purim</a>
-	 * in a mukaf choma and regular Purim in a non-mukaf choma). 
+	 * in a mukaf choma and regular Purim in a non-mukaf choma).
 	 * @return if the day is Purim (Shushan Purim in a mukaf choma and regular Purin in a non-mukaf choma)
-	 * 
+	 *
 	 * @see #getIsMukafChoma()
 	 * @see #setIsMukafChoma(boolean)
 	 */
@@ -1460,9 +1396,9 @@ export class JewishCalendar extends JewishDate {
 	 * Umatar</em> in <em>Birkas Hashanim</em> from 60 days after <em>tekufas Tishrei</em>. The 60 days include the day of
 	 * the <em>tekufah</em> and the day we start reciting <em>Tal Umatar</em>. 60 days from the tekufah == 47D and 9H
 	 * from <em>Rosh Hashana</em> year 1.
-	 * 
+	 *
 	 * @return the number of elapsed days since <em>tekufas Tishrei</em>.
-	 * 
+	 *
 	 * @see #isVeseinTalUmatarStartDate()
 	 * @see #isVeseinTalUmatarStartingTonight()
 	 * @see #isVeseinTalUmatarRecited()
@@ -1479,7 +1415,7 @@ export class JewishCalendar extends JewishDate {
   /**
 	 * Returns true if the current day is <em>Isru Chag</em>. The method returns true for the day following <em>Pesach</em>
 	 * <em>Shavuos</em> and <em>Succos</em>. It utilizes {@see #getInIsrael()} to return the proper date.
-	 * 
+	 *
 	 * @return true if the current day is <em>Isru Chag</em>. The method returns true for the day following <em>Pesach</em>
 	 * <em>Shavuos</em> and <em>Succos</em>. It utilizes {@see #getInIsrael()} to return the proper date.
 	 */

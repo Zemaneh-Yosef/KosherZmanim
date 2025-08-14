@@ -46,12 +46,11 @@ const temporalExtended = { rangeDates };
 
 export * from './util/Time.ts';
 export * from './util/GeoLocation.ts';
-export * from './util/GeoLocationUtils.ts';
 //export * from './util/Zman.ts';
 export * from './polyfills/Utils.ts';
 
 export * from './util/NOAACalculator.ts';
-export * from './util/SunTimesCalculator.ts';
+//export * from './util/SunTimesCalculator.ts';
 
 export * from './AstronomicalCalendar.ts';
 export * from './ZmanimCalendar.ts';

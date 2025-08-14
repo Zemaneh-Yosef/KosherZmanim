@@ -1,11 +1,12 @@
-import * as esbuild from 'esbuild'
+import { defineConfig } from 'tsup'
 
-await esbuild.build({
+export default defineConfig({
   entryPoints: ['src/kosher-zmanim.ts'],
   bundle: true,
   minify: true,
   sourcemap: true,
   target: ['chrome80', 'firefox76', 'safari14', 'edge80'],
-  outfile: 'dist/kosher-zmanim.esm.js',
-  format: "esm"
+  dts: true,
+  format: "esm",
+  noExternal: [ /(.*)/ ]
 })
