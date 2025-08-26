@@ -1,4 +1,4 @@
-import { JewishDate } from "../JewishDate.ts";
+import { JewishDate } from "../JewishDate";
 import ccyNl from "./dataSets/ccy-nonleap.json" assert { type: "json" }
 import ccyL from "./dataSets/ccy-leap.json" assert { type: "json" }
 
