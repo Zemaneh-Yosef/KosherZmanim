@@ -1,9 +1,9 @@
 import { Big } from 'big.js';
-import { Temporal } from 'temporal-polyfill'
+
 
 import { GeoLocation } from './util/GeoLocation.ts';
-import { AstronomicalCalculator } from './util/AstronomicalCalculator.ts';
-import { NOAACalculator } from './util/NOAACalculator.ts';
+import { AstronomicalCalculator } from './util/Calculator/AstronomicalCalculator.ts';
+import { NOAACalculator } from './util/Calculator/NOAACalculator.ts';
 import { IllegalArgumentException, UnsupportedError } from './polyfills/errors.ts';
 import { TimeZone } from './polyfills/Utils.ts';
 

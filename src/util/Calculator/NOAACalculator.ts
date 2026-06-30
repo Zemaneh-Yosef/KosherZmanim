@@ -1,7 +1,6 @@
-import { GeoLocation } from './GeoLocation.ts';
+import { GeoLocation } from '../GeoLocation.ts';
 import { AstronomicalCalculator } from './AstronomicalCalculator.ts';
-import { MathUtils, TimeZone } from '../polyfills/Utils.ts';
-import { Temporal } from 'temporal-polyfill'
+import { MathUtils, TimeZone } from '../../polyfills/Utils.ts';
 
 enum SolarEvent {
 	/**SUNRISE A solar event related to sunrise*/SUNRISE, /**SUNSET A solar event related to sunset*/SUNSET,
@@ -50,7 +49,7 @@ export class NOAACalculator extends AstronomicalCalculator {
 			adjustedZenith, SolarEvent.SUNRISE);
 		sunrise = sunrise / 60;
 
-		return sunrise > 0  ? sunrise % 24 : sunrise % 24 + 24; // ensure that the time is >= 0 and < 24
+		return sunrise > 0 ? sunrise % 24 : sunrise % 24 + 24; // ensure that the time is >= 0 and < 24
 	}
 
 	/**
@@ -281,74 +280,92 @@ export class NOAACalculator extends AstronomicalCalculator {
 		return hourAngle;
 	}
 
-	/**Add commentMore actions
-	 * @see com.kosherjava.zmanim.util.AstronomicalCalculator#getSolarElevation(Calendar, GeoLocation)
-	 */
-	/*public getSolarElevation(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
-		return this.getSolarElevationAzimuth(calendar, geoLocation, false);
-	}*/
+	public getSolarElevation(dateTime: Temporal.ZonedDateTime, geoLocation: GeoLocation): number {
+		return this.getSolarElevationAzimuth(dateTime, geoLocation, false);
+	}
 
-	/**Add commentMore actions
-	 * @see com.kosherjava.zmanim.util.AstronomicalCalculator#getSolarAzimuth(Calendar, GeoLocation)
-	 */
-	/*public getSolarAzimuth(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
-		return this.getSolarElevationAzimuth(calendar, geoLocation, true);
-	}*/
+	public getSolarAzimuth(dateTime: Temporal.ZonedDateTime, geoLocation: GeoLocation): number {
+		return this.getSolarElevationAzimuth(dateTime, geoLocation, true);
+	}
 
-	/**
-	 * Return the <a href="https://en.wikipedia.org/wiki/Celestial_coordinate_system">Solar Elevation</a> or
-	 * <a href="https://en.wikipedia.org/wiki/Celestial_coordinate_system">Solar Azimuth</a> at the given location
-	 * and time. Can be negative if the sun is below the horizon. Elevation is based on sea-level and is not
-	 * adjusted for altitude.
-	 *
-	 * @param date
-	 *            time of calculation
-	 * @param geoLocation
-	 *            The location for calculating the elevation or azimuth.
-	 * @param isAzimuth
-	 *            true for azimuth, false for elevation
-	 * @return solar elevation or azimuth in degrees.
-	 *
-	 * @see #getSolarElevation(Calendar, GeoLocation)
-	 * @see #getSolarAzimuth(Calendar, GeoLocation)
-	 */
-	/*private getSolarElevationAzimuth(date: Temporal.PlainDate, geoLocation: GeoLocation, isAzimuth: boolean) {
+	private getSolarElevationAzimuth(zdt: Temporal.ZonedDateTime, geoLocation: GeoLocation, isAzimuth: boolean): number {
 		const latitude = geoLocation.getLatitude();
 		const longitude = geoLocation.getLongitude();
 
-		const tzAdjustedDate = date.toZonedDateTime("UTC").withTimeZone(geoLocation.getTimeZone())
-		const reconStructedDate = tzAdjustedDate.with({ hour: 0, minute: 0, second: 0, millisecond: 0, nanosecond: 0 }).until(tzAdjustedDate, { largestUnit: 'day' });
+		// offsetNanoseconds is what Temporal gives us directly — no need for TimeZone.getOffset
+		const offsetHours = zdt.offsetNanoseconds / 3_600_000_000_000;
 
-		const julianDay = NOAACalculator.getJulianDay(tzAdjustedDate.toPlainDate()) + ;
-		const julianCenturies = NOAACalculator.getJulianCenturiesFromJulianDay(julianDay);
+		// Replicate Java: subtract offset to get UTC-equivalent hour
+		const utcHour = zdt.hour - offsetHours;
+		const minute = zdt.minute;
+		const second = zdt.second;
+		const milli = zdt.millisecond;
+
+		const time = (utcHour + (minute + (second + milli / 1000) / 60) / 60) / 24;
+
+		// Julian day with fractional time
+		const julianDay =
+			NOAACalculator.getJulianDay(zdt.toPlainDate()) + time;
+
+		const julianCenturies =
+			NOAACalculator.getJulianCenturiesFromJulianDay(julianDay);
+
 		const eot = NOAACalculator.getEquationOfTime(julianCenturies);
 		const theta = NOAACalculator.getSunDeclination(julianCenturies);
 
-		const adjustment = eot / 1440;
-		const trueSolarTime = ((adjustment + longitude / 360) + 2) % 1; // adding 2 to ensure that it never ends up negative
-		const hourAngelRad = trueSolarTime * Math.PI * 2 - Math.PI;
-		const cosZenith = Math.sin(MathUtils.degreesToRadians(latitude)) * Math.sin(MathUtils.degreesToRadians(theta))
-				+  Math.cos(MathUtils.degreesToRadians(latitude)) * Math.cos(MathUtils.degreesToRadians(theta)) * Math.cos(hourAngelRad);
-		const zenith = MathUtils.radiansToDegrees(Math.acos(cosZenith > 1 ? 1 : cosZenith < -1 ? -1 : cosZenith));
+		const adjustment = time + eot / 1440;
+
+		// True solar time (always positive)
+		const trueSolarTime = ((adjustment + longitude / 360) + 2) % 1;
+
+		const hourAngleRad = trueSolarTime * Math.PI * 2 - Math.PI;
+
+		const cosZenith =
+			Math.sin(MathUtils.degreesToRadians(latitude)) *
+			Math.sin(MathUtils.degreesToRadians(theta)) +
+			Math.cos(MathUtils.degreesToRadians(latitude)) *
+			Math.cos(MathUtils.degreesToRadians(theta)) *
+			Math.cos(hourAngleRad);
+
+		const zenith = MathUtils.radiansToDegrees(Math.acos(
+			cosZenith > 1 ? 1 : cosZenith < -1 ? -1 : cosZenith
+		));
+
 		const azDenom = Math.cos(MathUtils.degreesToRadians(latitude)) * Math.sin(MathUtils.degreesToRadians(zenith));
-		const refractionAdjustment = 0;
-		const elevation = 90.0 - (zenith - refractionAdjustment);
+
+		// Elevation (no refraction correction, matching Java)
+		const elevation = 90 - zenith;
+
+		// --- Azimuth ---
 		let azimuth = 0;
-		const azRad = (Math.sin(MathUtils.degreesToRadians(latitude)) * Math.cos(MathUtils.degreesToRadians(zenith))
-				- Math.sin(MathUtils.degreesToRadians(theta))) / azDenom;
-		if(Math.abs(azDenom) > 0.001) {
-			azimuth = 180 - MathUtils.radiansToDegrees(Math.acos(azRad > 1 ? 1 : azRad < -1? -1 : azRad)) * (hourAngelRad > 0 ? -1 : 1) ;
+
+		const azRad =
+			(Math.sin(MathUtils.degreesToRadians(latitude)) *
+				Math.cos(MathUtils.degreesToRadians(zenith)) -
+				Math.sin(MathUtils.degreesToRadians(theta))) /
+			azDenom;
+
+		if (Math.abs(azDenom) > 0.001) {
+			azimuth =
+				180 -
+				MathUtils.radiansToDegrees(
+					Math.acos(
+						azRad > 1 ? 1 : azRad < -1 ? -1 : azRad
+					)
+				) *
+				(hourAngleRad > 0 ? -1 : 1);
 		} else {
 			azimuth = latitude > 0 ? 180 : 0;
 		}
-		return isAzimuth ? azimuth % 360 : elevation;
-	} */
+
+		return isAzimuth ? (azimuth % 360) : elevation;
+	}
 
 	public getUTCNoon(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
 		let noon = NOAACalculator.getSolarNoonMidnightUTC(NOAACalculator.getJulianDay(calendar), -geoLocation.getLongitude(), SolarEvent.NOON);
 		noon = noon / 60;
 
-		return noon > 0  ? noon % 24 : noon % 24 + 24; // ensure that the time is >= 0 and < 24
+		return noon > 0 ? noon % 24 : noon % 24 + 24; // ensure that the time is >= 0 and < 24
 	}
 
 	/**
@@ -372,7 +389,7 @@ export class NOAACalculator extends AstronomicalCalculator {
 	public getUTCMidnight(calendar: Temporal.PlainDate, geoLocation: GeoLocation) {
 		let midnight = NOAACalculator.getSolarNoonMidnightUTC(NOAACalculator.getJulianDay(calendar), -geoLocation.getLongitude(), SolarEvent.MIDNIGHT);
 		midnight = midnight / 60;
-		return midnight > 0  ? midnight % 24 : midnight % 24 + 24; // ensure that the time is >= 0 and < 24
+		return midnight > 0 ? midnight % 24 : midnight % 24 + 24; // ensure that the time is >= 0 and < 24
 	}
 
 	/**
@@ -414,7 +431,7 @@ export class NOAACalculator extends AstronomicalCalculator {
 	 *            the zenith
 	 * @return the time in minutes from zero Universal Coordinated Time (UTC)
 	 */
-	private static getSunRiseSetUTC(calendar: Temporal.PlainDate, latitude: number, longitude: number, zenith: number, solarEvent:SolarEvent): number {
+	private static getSunRiseSetUTC(calendar: Temporal.PlainDate, latitude: number, longitude: number, zenith: number, solarEvent: SolarEvent): number {
 		const julianDay: number = NOAACalculator.getJulianDay(calendar);
 
 		// Find the time of solar noon at the location, and use that declination. This is better than start of the

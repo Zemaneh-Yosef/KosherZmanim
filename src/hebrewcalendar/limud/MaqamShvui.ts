@@ -1,5 +1,6 @@
 import { Calendar } from "../../polyfills/Utils";
-import { Parsha, JewishCalendar } from "../JewishCalendar";
+import { JewishCalendar } from "../JewishCalendar";
+import { Parsha } from "../../util/Parsha/ParshaMap";
 
 /**
  * This class's main goal is to return the Weekly Haftorah reading said after the Weekly Parasha

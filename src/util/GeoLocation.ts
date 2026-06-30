@@ -1,6 +1,6 @@
 import { MathUtils, TimeZone } from '../polyfills/Utils.ts';
 import { IllegalArgumentException, UnsupportedError } from '../polyfills/errors.ts';
-import { Temporal } from 'temporal-polyfill'
+
 
 /**
  * A class that contains location information such as latitude and longitude required for astronomical calculations. The

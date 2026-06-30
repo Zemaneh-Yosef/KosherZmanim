@@ -1,5 +1,4 @@
 import { Calendar } from '../../polyfills/Utils.ts';
-const { SUNDAY, FRIDAY, SATURDAY } = Calendar;
 
 import { JewishDate } from "../JewishDate";
 export default class TehilimYomi {

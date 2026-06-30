@@ -1,5 +1,3 @@
-import { Temporal } from 'temporal-polyfill';
-
 import { AstronomicalCalendar } from './AstronomicalCalendar.ts';
 import { JewishCalendar } from './hebrewcalendar/JewishCalendar.ts';
 import { IllegalArgumentException, NullPointerException } from './polyfills/errors.ts';

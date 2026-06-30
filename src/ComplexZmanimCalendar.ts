@@ -1,4 +1,4 @@
-import { Temporal } from 'temporal-polyfill'
+
 
 import { Calendar, TimeZone } from './polyfills/Utils.ts';
 import { GeoLocation } from './util/GeoLocation.ts';

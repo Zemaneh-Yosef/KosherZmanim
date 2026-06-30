@@ -1,7 +1,6 @@
-import { GeoLocation } from './GeoLocation.ts';
+import { GeoLocation } from '../GeoLocation.ts';
 import { AstronomicalCalculator } from './AstronomicalCalculator.ts';
-import { MathUtils } from '../polyfills/Utils.ts';
-import { Temporal } from 'temporal-polyfill'
+import { MathUtils } from '../../polyfills/Utils.ts';
 
 /**
  * Implementation of sunrise and sunset methods to calculate astronomical times. This calculator uses the Java algorithm

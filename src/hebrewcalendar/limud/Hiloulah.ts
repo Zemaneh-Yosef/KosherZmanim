@@ -1,51 +1,63 @@
 import { JewishDate } from "../JewishDate.ts";
-type hiloulahObj = { name: string; src: string; }[]
+
+type HiloulahObj = { name: string; src: string }[];
 
 export class HiloulahYomiCalculator {
-	folderWithHiloulotJSON = (new URL(import.meta.url)).pathname.substring(0, (new URL(import.meta.url)).pathname.lastIndexOf('/'));
-	initFlag = false;
-	hiloulot_en: Record<string, hiloulahObj> = {};
-	hiloulot_he: Record<string, hiloulahObj> = {};
-	constructor (dir = (new URL(import.meta.url)).pathname.substring(0, (new URL(import.meta.url)).pathname.lastIndexOf('/'))) {
-		this.folderWithHiloulotJSON = dir;
-		this.init();
-	}
+    private folderWithHiloulotJSON: string;
+    private initPromise: Promise<void> | null = null;
+    private hiloulot_en: Record<string, HiloulahObj> = {};
+    private hiloulot_he: Record<string, HiloulahObj> = {};
 
-	public async init() {
-		if (this.initFlag) return;
+    constructor(dir: string = new URL('.', import.meta.url).href) {
+        this.folderWithHiloulotJSON = dir.endsWith('/') ? dir : dir + '/';
+        this.init();
+    }
 
-		this.hiloulot_en = (await (await fetch(this.folderWithHiloulotJSON + '/hiloulah-en.json')).json()) as Record<string, hiloulahObj>;
-		this.hiloulot_he = (await (await fetch(this.folderWithHiloulotJSON + '/hiloulah-he.json')).json()) as Record<string, hiloulahObj>;
+    public init(): Promise<void> {
+        if (!this.initPromise) {
+            this.initPromise = Promise.all([
+                fetch(this.folderWithHiloulotJSON + 'hiloulah-en.json').then(r => r.json()),
+                fetch(this.folderWithHiloulotJSON + 'hiloulah-he.json').then(r => r.json()),
+            ]).then(([en, he]) => {
+                this.hiloulot_en = en as Record<string, HiloulahObj>;
+                this.hiloulot_he = he as Record<string, HiloulahObj>;
+            });
+        }
+        return this.initPromise;
+    }
 
-		this.initFlag = true;
-	}
+    public async getHiloulah(jewishCalendar: JewishDate): Promise<{ en: HiloulahObj; he: HiloulahObj }> {
+        await this.init();
+        return this.useHiloulahData(jewishCalendar);
+    }
 
-	public getHiloulah(jewishCalendar: JewishDate) {
-		let en: hiloulahObj|null = null;
-		let he: hiloulahObj|null = null;
-		if (!this.initFlag)
-			this.init().then(() => ({ en, he } = this.useHiloulahData(jewishCalendar)))
-		else
-			({ en, he } = this.useHiloulahData(jewishCalendar));
+    private useHiloulahData(jewishCalendar: JewishDate): { en: HiloulahObj; he: HiloulahObj } {
+        const day = jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0');
+        const month = jewishCalendar.getJewishMonth().toString().padStart(2, '0');
+        const key = month + day;
 
-		return {en, he} as { en: hiloulahObj; he: hiloulahObj;}
-	}
+        if (!jewishCalendar.isJewishLeapYear() && jewishCalendar.getJewishMonth() === JewishDate.ADAR) {
+            const keys = ['12', '13'].map(m => m + day);
+            return {
+                en: this.mergeHiloulot(keys, this.hiloulot_en),
+                he: this.mergeHiloulot(keys, this.hiloulot_he),
+            };
+        }
 
-	private useHiloulahData(jewishCalendar: JewishDate) {
-		const key = jewishCalendar.getJewishMonth().toString().padStart(2, '0') + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0')
+        return {
+            en: this.hiloulot_en[key] ?? [],
+            he: this.hiloulot_he[key] ?? [],
+        };
+    }
 
-		let en = (key in this.hiloulot_en ? this.hiloulot_en[key] : []);
-		let he = (key in this.hiloulot_he ? this.hiloulot_he[key] : []);
-
-		if (!jewishCalendar.isJewishLeapYear() && jewishCalendar.getJewishMonth() == JewishDate.ADAR) {
-			en = Array.from(new Set(...(["12", "13"]
-				.map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
-				.map(key => (key in this.hiloulot_en ? this.hiloulot_en[key] : [])))))
-			he = Array.from(new Set(...(["12", "13"]
-				.map(numString => numString + jewishCalendar.getJewishDayOfMonth().toString().padStart(2, '0'))
-				.map(key => (key in this.hiloulot_he ? this.hiloulot_he[key] : [])))))
-		}
-
-		return { en, he }
-	}
+    private mergeHiloulot(keys: string[], hiloulot: Record<string, HiloulahObj>): HiloulahObj {
+        const seen = new Set<string>();
+        return keys
+            .flatMap(k => hiloulot[k] ?? [])
+            .filter(entry => {
+                if (seen.has(entry.name)) return false;
+                seen.add(entry.name);
+                return true;
+            });
+    }
 }

@@ -1,4 +1,3 @@
-import { Temporal } from 'temporal-polyfill'
 import _Big from 'big.js';
 
 import { GeoLocation } from './util/GeoLocation.ts';
@@ -49,7 +48,7 @@ export * from './util/GeoLocation.ts';
 //export * from './util/Zman.ts';
 export * from './polyfills/Utils.ts';
 
-export * from './util/NOAACalculator.ts';
+export * from './util/Calculator/NOAACalculator.ts';
 //export * from './util/SunTimesCalculator.ts';
 
 export * from './AstronomicalCalendar.ts';
@@ -70,7 +69,9 @@ export { default as Haftara } from './hebrewcalendar/limud/HaftarahShvui.ts'
 export { default as Makam } from './hebrewcalendar/limud/MaqamShvui.ts'
 export { default as MishnaYomi} from "./hebrewcalendar/limud/MishnaYomi.ts"
 
+export * from "./util/Parsha/ParshaMap.ts"
+
 //export * from './hebrewcalendar/HebrewDateFormatter.ts';
 //export * from './util/ZmanimFormatter.ts';
 
-export { _Big, Temporal, temporalExtended };
+export { _Big, temporalExtended };

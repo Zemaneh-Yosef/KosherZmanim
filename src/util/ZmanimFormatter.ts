@@ -1,4 +1,4 @@
-import { Temporal } from 'temporal-polyfill'
+
 
 import { TimeZone, Utils, padZeros } from '../polyfills/Utils.ts';
 import { Time } from './Time.ts';
@@ -307,7 +307,7 @@ export class ZmanimFormatter {
    */
   public formatDateTime(dateTime: Temporal.ZonedDateTime): string {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const _dateTime = dateTime.with({ timeZone: this.getTimeZone() });
+    const _dateTime = dateTime.withTimeZone(this.getTimeZone());
 
     // @ts-ignore
     return _dateTime.toLocaleString(...this.dateFormat);
@@ -327,7 +327,7 @@ export class ZmanimFormatter {
    * @return the XSD dateTime
    */
   public getXSDateTime(dateTime: Temporal.ZonedDateTime): string {
-    return dateTime.with({ timeZone: this.getTimeZone() }).toString();
+    return dateTime.withTimeZone(this.getTimeZone()).toString();
   }
 
   /**
