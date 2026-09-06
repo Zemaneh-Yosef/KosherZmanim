@@ -1,6 +1,6 @@
-import { JewishDate } from "../JewishDate";
-import ccyNl from "./dataSets/ccy-nonleap.json" assert { type: "json" }
-import ccyL from "./dataSets/ccy-leap.json" assert { type: "json" }
+import JewishDate from"../JewishDate";
+import ccyNl from "./dataSets/ccy-nonleap.json" with { type: "json" }
+import ccyL from "./dataSets/ccy-leap.json" with { type: "json" }
 
 export class ChafetzChayimYomiCalculator {
 	public static getChafetzChayimYomi(jewishCalendar: JewishDate) {

@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { Daf } from '../src/hebrewcalendar/Daf';
 import { YerushalmiYomiCalculator } from '../src/hebrewcalendar/OzVahadarYerushalmiYomiCalculator';
-import { JewishDate } from '../src/hebrewcalendar/JewishDate';
+import JewishDate from'../src/hebrewcalendar/JewishDate';
 import { JewishCalendar } from '../src/hebrewcalendar/JewishCalendar';
 
 describe('Test YerushalmiYomiCalculator', function () {

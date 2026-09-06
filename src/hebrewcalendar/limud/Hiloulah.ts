@@ -1,4 +1,4 @@
-import { JewishDate } from "../JewishDate.ts";
+import JewishDate from"../JewishDate.ts";
 
 type HiloulahObj = { name: string; src: string }[];
 

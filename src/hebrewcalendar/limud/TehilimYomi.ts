@@ -1,6 +1,6 @@
 import { Calendar } from '../../polyfills/Utils.ts';
 
-import { JewishDate } from "../JewishDate";
+import JewishDate from"../JewishDate";
 export default class TehilimYomi {
     static byDayOfMonth(jDate: JewishDate) {
         return ({

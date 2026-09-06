@@ -1,5 +1,5 @@
 import { Parsha, ParshaMap } from "./ParshaMap";
-import { JewishDate } from "../../hebrewcalendar/JewishDate";
+import { default as JewishDate } from "../../hebrewcalendar/JewishDate";
 
 export class NationalMap implements ParshaMap {
  /**

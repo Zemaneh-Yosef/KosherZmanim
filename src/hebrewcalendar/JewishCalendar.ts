@@ -1,9 +1,9 @@
 
 
 import { GeoLocation } from '../util/GeoLocation.ts';
-import { JewishDate } from './JewishDate.ts';
+import JewishDate from './JewishDate.ts';
 import { Calendar } from '../polyfills/Utils.ts';
-import { DafBavliYomi, YomiCalculator } from './limud/YomiCalculator.ts';
+import { DafBavliYomi, default as YomiCalculator } from './limud/YomiCalculator.ts';
 import { DafYomiYerushalmi, YerushalmiYomiCalculator } from './limud/YerushalmiYomiCalculator.ts';
 import { ChafetzChayimYomiCalculator } from './limud/ChafetzChayimYomiCalculator.ts';
 import { ParshaMap, Parsha } from '../util/Parsha/ParshaMap.ts';

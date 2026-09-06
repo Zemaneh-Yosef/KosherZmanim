@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 
 import { YomiCalculator, DafBavliYomi } from '../src/hebrewcalendar/limud/YomiCalculator';
-import { JewishDate } from '../src/hebrewcalendar/JewishDate';
+import JewishDate from'../src/hebrewcalendar/JewishDate';
 import { JewishCalendar } from '../src/hebrewcalendar/JewishCalendar';
 
 describe('Test YomiCalculator', function () {

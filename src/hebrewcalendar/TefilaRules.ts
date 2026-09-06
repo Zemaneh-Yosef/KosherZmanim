@@ -17,7 +17,7 @@
 
 import { Calendar } from '../polyfills/Utils.ts';
 import { JewishCalendar } from './JewishCalendar.ts';
-import { JewishDate } from './JewishDate.ts';
+import JewishDate from'./JewishDate.ts';
 const { SUNDAY, FRIDAY, SATURDAY } = Calendar;
 
 /**

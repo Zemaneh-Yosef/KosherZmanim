@@ -1,9 +1,8 @@
 import { Big } from 'big.js';
 
-
 import { GeoLocation } from './util/GeoLocation.ts';
 import { AstronomicalCalculator } from './util/Calculator/AstronomicalCalculator.ts';
-import { NOAACalculator } from './util/Calculator/NOAACalculator.ts';
+import SPACalculator from './util/Calculator/SPACalculator.ts';
 import { IllegalArgumentException, UnsupportedError } from './polyfills/errors.ts';
 import { TimeZone } from './polyfills/Utils.ts';
 
@@ -313,7 +312,7 @@ export class AstronomicalCalendar {
   constructor(geoLocation: GeoLocation) {
     this.setDate(Temporal.Now.plainDateISO());
     this.setGeoLocation(geoLocation); // duplicate call
-    this.setAstronomicalCalculator(new NOAACalculator());
+    this.setAstronomicalCalculator(new SPACalculator());
   }
 
   /**

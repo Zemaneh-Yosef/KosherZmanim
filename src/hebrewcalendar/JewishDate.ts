@@ -41,7 +41,7 @@ type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate
  * @author &copy; Avrom Finkelstien 2002
  * @author &copy; Eliyahu Hershfeld 2011 - 2015
  */
-export class JewishDate {
+export default class JewishDate {
   /**
    * Value of the month field indicating Nissan, the first numeric month of the year in the Jewish calendar. With the
    * year starting at {@link #TISHREI}, it would actually be the 7th (or 8th in a {@link #isJewishLeapYear() leap
@@ -1059,11 +1059,6 @@ export class JewishDate {
     this.date = Temporal.PlainDate.from({ year, month: fixedMonth, day: dayOfMonth, calendar: "hebrew" }).withCalendar("iso8601")
   }
 
-  /**
-   * Returns this object's date as a {@link java.util.Calendar} object.
-   *
-   * @return The {@link java.util.Calendar}
-   */
   public getDate(): Temporal.PlainDate {
     return this.date;
   }
